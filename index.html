@@ -59,7 +59,7 @@
   <!-- <div id="btnall"
     style="opacity:0.5;width:45vw;height:45vw;background-size:45vw 45vw;background-image:url('./img/btn.png');background-repeat:no-repeat;position:fixed;left:5vw;top:5vw;transform: rotate(90deg);">
   </div> -->
-  <!-- <div id="btnup"
+  <div id="btnup"
     style="opacity:0.5;width:15vw;height:15vw;background-size:15vw 15vw;background-image:url('./img/btn.png');background-repeat:no-repeat;position:fixed;left:35vw;top:20vw;transform: rotate(90deg);">
   </div>
   <div id="btnright"
@@ -82,7 +82,7 @@
   </div>
   <div id="btn14"
     style="width:15vw;height:15vw;background-size:15vw 15vw;background-image:url('./img/empty.png');background-repeat:no-repeat;position:fixed;left:35vw;top:5vw;transform: rotate(180deg);">
-  </div> -->
+  </div>
   <div id="btnselect"
     style="opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/btnselect.png');background-repeat:no-repeat;position:fixed;right:2vw;bottom:35vw;transform: rotate(90deg);">
   </div>
@@ -95,338 +95,7 @@
   <div id="btna"
     style="opacity:0.5;width:20vw;height:20vw;background-size:20vw 20vw;background-image:url('./img/btna.png');background-repeat:no-repeat;position:fixed;left:5vw;bottom:5vw;transform: rotate(90deg);">
   </div>
-  <style>
-      .ctrl {
-      display: none;
-      position: absolute;
-      top: 300px;
-      left: 200px;
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      border: 2px solid skyblue;
-      /* background-color: green; */
-      box-sizing: border-box;
-      opacity: .5;
-      z-index: 1;
-    }
 
-    .ctrl .circle {
-      position: absolute;
-      top: calc(50px - 5px);
-      left: calc(50px - 5px);
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      border: 10px solid skyblue;
-      box-sizing: border-box;
-    }
-  </style>
-  <div class="ctrl" onclick="console.log(1)">
-    <div class="circle"></div>
-  </div>
-  <script>
-    function updateTime(time) {
-        window.time = time;
-        document.getElementById('time').innerText = time;
-    }
-    window.onload = function () {
-      var isCtrling = false;
-      var outTop = 300;
-      var outLeft = 200;
-      var cTop = 38;
-      var cLeft = 38;
-      var maxR = 75;
-      var userSize = 20;
-      var maxUserX = document.body.clientWidth;
-      var maxUserY = document.body.clientHeight;
-      window.x = cLeft;
-      window.y = cTop;
-      var ctrl = document.getElementsByClassName('ctrl')[0];
-      console.log(ctrl)
-      document.addEventListener('touchstart', addCtrl);
-      document.addEventListener('mousedown', addCtrlMouse);
-      // ctrl.addEventListener('touchstart', startCtrl);
-      // ctrl.addEventListener('mousedown', startCtrl);
-      document.addEventListener('touchend', stopCtrl);
-      document.addEventListener('mouseup', stopCtrl);
-      ctrl.onclick = function () {
-        console.log('click');
-      }
-      document.addEventListener('touchmove', touchMoveCtrl);
-      document.addEventListener('mousemove', mouseMoveCtrl);
-
-      var canvas = document.createElement('canvas');
-      canvas.setAttribute('width', maxUserX + 'px');
-      canvas.setAttribute('height', maxUserY + 'px');
-      document.querySelector('body').appendChild(canvas);
-      var ctx = canvas.getContext('2d');
-      ctx.strokeStyle = "black";
-
-      function addCtrl(e) {
-        let ctrl = document.querySelector('.ctrl');
-        let clientX = e.touches[0].clientX;
-        let clientY = e.touches[0].clientY;
-        outLeft = clientX - cLeft;
-        outTop = clientY - cTop;
-        ctrl.style.left = outLeft + 'px';
-        ctrl.style.top = outTop + 'px';
-        ctrl.style.display = 'inline-block';
-        startCtrl(e);
-      }
-      function addCtrlMouse(e) {
-        let ctrl = document.querySelector('.ctrl');
-        let clientX = e.x;
-        let clientY = e.y;
-        outLeft = clientX - cTop;
-        outTop = clientY - cLeft;
-        ctrl.style.left = outLeft + 'px';
-        ctrl.style.top = outTop + 'px';
-        ctrl.style.display = 'inline-block';
-        startCtrl(e);
-      }
-
-      function addHome(x, y) {
-        let _x = (x / userSize) | 0;
-        let _y = (y / userSize) | 0;
-        ctx.fillStyle = 'green';
-        ctx.fillRect(_x * userSize, _y * userSize, userSize - 1, userSize - 1);
-      }
-      function addDestroy(x, y) {
-        let _x = (x / userSize) | 0;
-        let _y = (y / userSize) | 0;
-        ctx.fillStyle = 'yellow';
-        ctx.fillRect(_x * userSize, _y * userSize, userSize - 1, userSize - 1);
-      }
-
-      function startCtrl(e) {
-        isCtrling = true;
-        console.log(e);
-      }
-      function touchMoveCtrl(e) {
-        try {
-          if (isCtrling) {
-            let clientX = e.touches[0].clientX;
-            let clientY = e.touches[0].clientY;
-            updateCircle(clientX, clientY);
-          }
-        } catch (e) {
-          console.log(e);
-        }
-      }
-      function mouseMoveCtrl(e) {
-        try {
-          if (isCtrling) {
-            let clientX = e.x;
-            let clientY = e.y;
-            updateCircle(clientX, clientY);
-          }
-        } catch (e) {
-          console.log(e);
-        }
-      }
-      function moveCtrl(e) {
-        if (isCtrling) {
-          console.log(e);
-        }
-      }
-      function stopCtrl(e) {
-        isCtrling = false;
-        circleBackStart();
-        hideCtrl();
-      }
-
-      // 让控制器圆点回到原点
-      function circleBackStart() {
-        moveCircle(38, 38);
-      }
-      // 隐藏控制器
-      function hideCtrl() {
-        let ctrl = document.querySelector('.ctrl');
-        ctrl.style.display = 'none';
-      }
-
-      // 自动控制器圆点
-      function moveCircle(x, y) {
-        let circle;
-        if (window.circle) {
-          circle = window.circle;
-        } else {
-          circle = document.querySelector('.ctrl .circle');
-          window.circle = circle;
-        }
-        window.x = x;
-        window.y = y;
-        circle.style.left = x + 'px';
-        circle.style.top = y + 'px';
-      }
-
-      // 更新控制圆点位置
-      function updateCircle(x, y) {
-        x = (x - cLeft - outLeft);
-        y = (y - cTop - outTop);
-        let r = Math.sqrt(x * x + y * y);
-        if (r > maxR) {
-          x = x * maxR / r;
-          y = y * maxR / r;
-        }
-        moveCircle(x + cLeft, y + cTop)
-        console.log(x, y, '13241234')
-      }
-      function updateUser(x, y) {
-        if (x > maxUserX - userSize) {
-          x = maxUserX - userSize;
-        }
-        if (x < 0) {
-          x = 0;
-        }
-        if (y > maxUserY - userSize) {
-          y = maxUserY - userSize;
-        }
-        if (y < 0) {
-          y = 0;
-        }
-        moveUser(x, y)
-      }
-      function moveUser(x, y) {
-        let user;
-        if (window.user) {
-          user = window.user;
-        } else {
-          user = document.querySelector('#user');
-          window.user = user;
-        }
-        window.userX = x;
-        window.userY = y;
-        user.style.left = x + 'px';
-        user.style.top = y + 'px';
-      }
-      let cout = 1;
-
-      function getNum(val) {
-        if (typeof (val) == 'string') {
-          return Number(val.replace('px', ''));
-        } else if (typeof (val) == 'number') {
-          return val;
-        } else {
-          console.log('val', val)
-          return 0;
-        }
-      }
-
-      /**
-       * Socket 连接部分
-       * 
-       * 
-       * 
-       */
-      // var ws = new WebSocket('ws://192.168.1.19:10086/');
-      var ws = new WebSocket('ws://maxmon.top:10086/')
-      // var ws = new WebSocket('ws://m.imcks.cn/ws/');
-      // var ws = new WebSocket('ws://m.maxmon.top/ws/');
-      // var ws = new WebSocket('ws://m.ko-orz.com/ws/');
-      // var ws = new WebSocket('ws://www.imcks.cn:11234/');
-      // Socket.readyState
-      // Socket.bufferedAmount
-      ws.onopen = open;
-      ws.onmessage = message;
-      ws.onerror = error;
-      ws.onclose = close;
-
-      function open(e) {
-        log('open', e);
-        ws.send('hello');
-      }
-      function message(e) {
-        // log('message', e);
-        let msg = e.data;
-        if (msg.substr(0, 3) == 'UHO') {
-          // usr home
-          msg = msg.replace('UHO:', '');
-          let x = Number(msg.split(',')[0]);
-          let y = Number(msg.split(',')[1]);
-          addHome(x, y);
-        }
-        if (msg == 'BOW') {
-          document.body.innerHTML = '';
-          alert('BOSS胜利，未在规定时间内恢复家园')
-        }
-        if (msg == 'USW') {
-          document.body.innerHTML = '';
-          alert('用户胜利，重建了家园')
-        }
-        if (msg.substr(0, 3) == 'TIM') {
-          updateTime(msg.replace('TIM:', ''))
-        }
-        if (msg.substr(0, 3) == 'MAP') {
-          // usr home
-          msg = msg.replace('MAP:', '');
-          let map = JSON.parse(msg);
-          window.map = map;
-          console.log(map)
-          for (let i = 0; i < map.length; i++) {
-            if (map[i]) {
-              for (let j = 0; j < map[i].length; j++) {
-                if (map[i][j] && map[i][j] == 2) {
-                  addHome(i * userSize, j * userSize);
-                  console.log('addHome(x*userSize, y*userSize)', i * userSize, j * userSize);
-                }
-                if (map[i][j] && map[i][j] == 1) {
-                  addDestroy(i * userSize, j * userSize);
-                }
-              }
-            }
-          }
-          // for (let i = 0; i < map.length; i++) {
-          //   if (map[i]) {
-          //     for (let j = 0; j < map[i].length; j++) {
-          //       if (map[i][j] && map[i][j] == 1) {
-          //         addDestroy(x*userSize, y*userSize);
-          //       }
-          //     }
-          //   }
-          // }
-        }
-        // log('< ' + e.data);
-      }
-      function error(e) {
-        log('error', e);
-        console.log(e);
-      }
-      function close(e) {
-        log('close', e);
-      }
-
-      function log(msg) {
-        console.log(msg);
-        // document.body.innerHTML += '<p>' + msg + '</p>';
-      }
-      window.say = function (msg) {
-        // log('> ' + msg);
-        try {
-          ws.send(msg);
-        } catch (e) {
-          console.log(e)
-        }
-
-      }
-
-      window.inter = setInterval(function (ele) {
-        let _x = (window.x - cTop) / 10;
-        let _y = (window.y - cLeft) / 10;
-        let user = document.getElementById('user')
-        let uX = getNum(user.style.left);
-        let uY = getNum(user.style.top);
-        let fX = uX + _x;
-        let fY = uY + _y;
-        updateUser(fX, fY);
-        addHome(fX, fY);
-        window.say('UHO:' + fX + ',' + fY);
-        // if (cout++ >10) 
-        // clearInterval(window.inter)
-      }, 200)
-    }
-  </script>
   <!-- <script type="text/javascript" src="https://unpkg.com/jsnes/dist/jsnes.min.js"></script> -->
   <script type="text/javascript" src="./js/jsnes.min.js"></script>
   <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.0.min.js"></script> -->
@@ -823,89 +492,89 @@
       //   // nes.buttonDown(KEYS[38][0], KEYS[38][1]);
 
       // });
-      // $('#btnup').bind("touchstart mousedown", function (evt) {
-      // // $('#btnup').bind("touchstart", function (evt) {
+      $('#btnup').bind("touchstart mousedown", function (evt) {
+      // $('#btnup').bind("touchstart", function (evt) {
 
-      //   evt.preventDefault();
-      //   nes.buttonDown(KEYS[38][0], KEYS[38][1]);
+        evt.preventDefault();
+        nes.buttonDown(KEYS[38][0], KEYS[38][1]);
 
-      // });
-      // $('#btnup').bind("touchend mouseup", function (evt) {
-      //   evt.preventDefault();
-      //   nes.buttonUp(KEYS[38][0], KEYS[38][1]);
+      });
+      $('#btnup').bind("touchend mouseup", function (evt) {
+        evt.preventDefault();
+        nes.buttonUp(KEYS[38][0], KEYS[38][1]);
 
-      // });
+      });
 
-      // $('#btnright').bind("touchstart mousedown", function (evt) {
-      //   evt.preventDefault();
-      //   nes.buttonDown(KEYS[39][0], KEYS[39][1]);
-      // });
-      // $('#btnright').bind("touchend mouseup", function (evt) {
-      //   evt.preventDefault();
-      //   nes.buttonUp(KEYS[39][0], KEYS[39][1]);
-      // });
+      $('#btnright').bind("touchstart mousedown", function (evt) {
+        evt.preventDefault();
+        nes.buttonDown(KEYS[39][0], KEYS[39][1]);
+      });
+      $('#btnright').bind("touchend mouseup", function (evt) {
+        evt.preventDefault();
+        nes.buttonUp(KEYS[39][0], KEYS[39][1]);
+      });
 
-      // $('#btn12').bind("touchstart mousedown", function (evt) {
-      //   evt.preventDefault();
-      //   nes.buttonDown(KEYS[38][0], KEYS[38][1]);
-      //   nes.buttonDown(KEYS[39][0], KEYS[39][1]);
-      // });
-      // $('#btn12').bind("touchend mouseup", function (evt) {
-      //   evt.preventDefault();
-      //   nes.buttonUp(KEYS[38][0], KEYS[38][1]);
-      //   nes.buttonUp(KEYS[39][0], KEYS[39][1]);
-      // });
-      // $('#btn14').bind("touchstart mousedown", function (evt) {
-      //   evt.preventDefault();
-      //   nes.buttonDown(KEYS[38][0], KEYS[38][1]);
-      //   nes.buttonDown(KEYS[37][0], KEYS[37][1]);
-      // });
-      // $('#btn14').bind("touchend mouseup", function (evt) {
-      //   evt.preventDefault();
-      //   nes.buttonUp(KEYS[38][0], KEYS[38][1]);
-      //   nes.buttonUp(KEYS[37][0], KEYS[37][1]);
-      // });
+      $('#btn12').bind("touchstart mousedown", function (evt) {
+        evt.preventDefault();
+        nes.buttonDown(KEYS[38][0], KEYS[38][1]);
+        nes.buttonDown(KEYS[39][0], KEYS[39][1]);
+      });
+      $('#btn12').bind("touchend mouseup", function (evt) {
+        evt.preventDefault();
+        nes.buttonUp(KEYS[38][0], KEYS[38][1]);
+        nes.buttonUp(KEYS[39][0], KEYS[39][1]);
+      });
+      $('#btn14').bind("touchstart mousedown", function (evt) {
+        evt.preventDefault();
+        nes.buttonDown(KEYS[38][0], KEYS[38][1]);
+        nes.buttonDown(KEYS[37][0], KEYS[37][1]);
+      });
+      $('#btn14').bind("touchend mouseup", function (evt) {
+        evt.preventDefault();
+        nes.buttonUp(KEYS[38][0], KEYS[38][1]);
+        nes.buttonUp(KEYS[37][0], KEYS[37][1]);
+      });
 
 
-      // $('#btndown').bind("touchstart mousedown", function (evt) {
-      //   evt.preventDefault();
-      //   nes.buttonDown(KEYS[40][0], KEYS[40][1]);
-      // });
-      // $('#btndown').bind("touchend mouseup", function (evt) {
-      //   evt.preventDefault();
-      //   nes.buttonUp(KEYS[40][0], KEYS[40][1]);
-      // });
+      $('#btndown').bind("touchstart mousedown", function (evt) {
+        evt.preventDefault();
+        nes.buttonDown(KEYS[40][0], KEYS[40][1]);
+      });
+      $('#btndown').bind("touchend mouseup", function (evt) {
+        evt.preventDefault();
+        nes.buttonUp(KEYS[40][0], KEYS[40][1]);
+      });
 
-      // $('#btn23').bind("touchstart mousedown", function (evt) {
-      //   evt.preventDefault();
-      //   nes.buttonDown(KEYS[39][0], KEYS[39][1]);
-      //   nes.buttonDown(KEYS[40][0], KEYS[40][1]);
-      // });
-      // $('#btn23').bind("touchend mouseup", function (evt) {
-      //   evt.preventDefault();
-      //   nes.buttonUp(KEYS[39][0], KEYS[39][1]);
-      //   nes.buttonUp(KEYS[40][0], KEYS[40][1]);
-      // });
+      $('#btn23').bind("touchstart mousedown", function (evt) {
+        evt.preventDefault();
+        nes.buttonDown(KEYS[39][0], KEYS[39][1]);
+        nes.buttonDown(KEYS[40][0], KEYS[40][1]);
+      });
+      $('#btn23').bind("touchend mouseup", function (evt) {
+        evt.preventDefault();
+        nes.buttonUp(KEYS[39][0], KEYS[39][1]);
+        nes.buttonUp(KEYS[40][0], KEYS[40][1]);
+      });
 
-      // $('#btnleft').bind("touchstart mousedown", function (evt) {
-      //   evt.preventDefault();
-      //   nes.buttonDown(KEYS[37][0], KEYS[37][1]);
-      // });
-      // $('#btnleft').bind("touchend mouseup", function (evt) {
-      //   evt.preventDefault();
-      //   nes.buttonUp(KEYS[37][0], KEYS[37][1]);
-      // });
+      $('#btnleft').bind("touchstart mousedown", function (evt) {
+        evt.preventDefault();
+        nes.buttonDown(KEYS[37][0], KEYS[37][1]);
+      });
+      $('#btnleft').bind("touchend mouseup", function (evt) {
+        evt.preventDefault();
+        nes.buttonUp(KEYS[37][0], KEYS[37][1]);
+      });
 
-      // $('#btn34').bind("touchstart mousedown", function (evt) {
-      //   evt.preventDefault();
-      //   nes.buttonDown(KEYS[40][0], KEYS[40][1]);
-      //   nes.buttonDown(KEYS[37][0], KEYS[37][1]);
-      // });
-      // $('#btn34').bind("touchend mouseup", function (evt) {
-      //   evt.preventDefault();
-      //   nes.buttonUp(KEYS[40][0], KEYS[40][1]);
-      //   nes.buttonUp(KEYS[37][0], KEYS[37][1]);
-      // });
+      $('#btn34').bind("touchstart mousedown", function (evt) {
+        evt.preventDefault();
+        nes.buttonDown(KEYS[40][0], KEYS[40][1]);
+        nes.buttonDown(KEYS[37][0], KEYS[37][1]);
+      });
+      $('#btn34').bind("touchend mouseup", function (evt) {
+        evt.preventDefault();
+        nes.buttonUp(KEYS[40][0], KEYS[40][1]);
+        nes.buttonUp(KEYS[37][0], KEYS[37][1]);
+      });
       $('#btnselect').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
         nes.buttonDown(KEYS[17][0], KEYS[17][1]);
