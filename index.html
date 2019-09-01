@@ -105,6 +105,17 @@
   <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.0.min.js"></script> -->
   <script type="text/javascript" src="./js/jquery-3.4.0.min.js"></script>
   <script>
+    let isIn = false;
+    let steps = {};
+    if (!isIn) {
+      steps = JSON.parse(localStorage.steps);
+    }
+    let isNesIn = false;
+    var nes = null;
+    var nes2 = null;
+    if (!isNesIn) {
+      nes2 = JSON.parse(localStorage.nes);
+    }
     $(function () {
       // var romurl = "https://bmob-cdn-22939.bmobcloud.com/2019/06/23/7184934a405e956a804a676bc29c15ba.nes";
       var romurl = "./rom/Chip To Dale No Daisakusen 2 (J).nes"
@@ -245,7 +256,7 @@
           // ignore empty buffers... assume audio has just stopped
           var bufferSize = this.buffer.size() / 2;
           if (bufferSize > 0) {
-            console.log(`Buffer underrun (needed ${size}, got ${bufferSize})`);
+            // console.log(`Buffer underrun (needed ${size}, got ${bufferSize})`);
           }
           for (var j = 0; j < size; j++) {
             left[j] = 0;
@@ -277,7 +288,6 @@
       var context = screen[0].getContext('2d');
       var imageData = context.getImageData(0, 0, 256, 240);
       // $("#emulator").append(screen);
-      var nes = null;
       this.player = 0;
       var frame = 0;
       var prevBuffer = new Array(256 * 240);
@@ -295,32 +305,85 @@
           }
         }
       );
+      let lastTs = new Date().getTime();
+      let sendDic = {};
       function createNes() {
         frame = 0;
+        console.log('nes', nes)
         nes = new jsnes.NES({
           onFrame: function (buffer) {
             var data = imageData.data;
             var pixel, i, j;
-            for (i = 0; i < 256 * 240; i++) {
-              pixel = buffer[i];
-              if (pixel != prevBuffer[i]) {
-                j = i * 4;
-                data[j] = pixel & 0xFF;
-                data[j + 1] = (pixel >> 8) & 0xFF;
-                data[j + 2] = (pixel >> 16) & 0xFF;
-                prevBuffer[i] = pixel;
+            let c = 0;
+            let transDic = {};
+            if (frame > 0) {
+              for (i = 0; i < 256 * 240; i++) {
+                pixel = buffer[i];
+                if (pixel != prevBuffer[i]) {
+                  j = i * 4;
+                  data[j] = pixel & 0xFF;
+                  data[j + 1] = (pixel >> 8) & 0xFF;
+                  data[j + 2] = (pixel >> 16) & 0xFF;
+                  prevBuffer[i] = pixel;
+                  c++
+                  transDic[i] = pixel;
+                }
               }
+              // console.log(c)
+              // console.log('transDic', JSON.stringify(transDic).length);
+              let len = Object.keys(transDic).length;
+              if (len) {
+                let ts = new Date().getTime();
+                if (ts - lastTs > 200) {
+                  // for (i = 0; i < 256 * 240; i++) {
+                  //   pixel = buffer[i];
+                  //   if (pixel != sendDic[i]) {
+                  //     sendDic[i] = pixel;
+                  //   }
+                  // }
+                  // socket.emit("message", {
+                  //   "transDic": transDic,
+                  //   ts,
+                  //   len
+                  // });
+                  lastTs = ts;
+                }
+              }
+              context.putImageData(imageData, 0, 0);
             }
+            // 重要！！！按钮回放功能
+            // if (steps[frame]) {
+            //   for (let i = 0; i < steps[frame].length; i++) {
+            //     let dic = steps[frame][i];
+            //     let key = KEYS[dic.keyCode];
+            //     if(dic.type == 'up') {
+            //       nes.buttonUp(key[0], key[1]);
+            //     } else if (dic.type == 'down') {
+            //       console.log(frame, dic.type, dic, key)
+            //       nes.buttonDown(key[0], key[1]);
+            //     }
+            //   }
+            // }
             frame += 1;
-            context.putImageData(imageData, 0, 0);
+            // if (frame < 2500) {
+            //   console.log(frame);
+            //   nes.frame()
+            // }
             // send at 30 fps
-            if (frame === 2) {
-              // sendScreen();
-              // drawData(data);
-              frame = 0;
+            // if (frame === 2) {
+            //   // sendScreen();
+            //   // drawData(data);
+            //   frame = 0;
+            // }
+            if (frame > 500 && frame % 100 == 0 && isNesIn) {
+              console.log('save frame', nes);
+              localStorage.nes = JSON.stringify(nes);
             }
           },
-          onAudioSample: speakers.writeSample.bind(speakers),
+          onAudioSample: (...arg) => {
+            // console.log(arg);
+            speakers.writeSample.bind(speakers)(...arg)
+          },
           sampleRate: speakers.getSampleRate()
         });
       }
@@ -453,13 +516,25 @@
       $(document).bind("contextmenu", function (evt) {
         evt.preventDefault();
       })
-
+      // localStorage.step = '';
 
       $(document).bind("keydown", function (evt) {
 
         var key = KEYS[evt.keyCode];
         if (key) {
           nes.buttonDown(key[0], key[1]);
+          console.log(key);
+          socket.emit("message", {
+            type: "down",
+            key
+          })
+          steps[frame] = steps[frame] || [];
+          steps[frame].push({
+            type: "down",
+            keyCode: evt.keyCode,
+            frame
+          })
+          if (isIn) localStorage.steps = JSON.stringify(steps);
         }
         // nes.buttonDown(1, jsnes.Controller.BUTTON_A);
         // nes.keyboard.keyDown(evt);
@@ -471,6 +546,17 @@
         var key = KEYS[evt.keyCode];
         if (key) {
           nes.buttonUp(key[0], key[1]);
+          socket.emit("message", {
+            type: "up",
+            key
+          })
+          steps[frame] = steps[frame] || [];
+          steps[frame].push({
+            type: "up",
+            keyCode: evt.keyCode,
+            frame
+          })
+          if (isIn) localStorage.steps = JSON.stringify(steps);
         }
         // if (window.player == 1) { nes.keyboard.keyUp(evt); }
         // if (window.player == 2 && keyMap[code]) { evt.preventDefault(); sendKey("keyup", keyMap[code]); }
@@ -497,123 +583,219 @@
 
       // });
       $('#btnup').bind("touchstart mousedown", function (evt) {
-      // $('#btnup').bind("touchstart", function (evt) {
+        // $('#btnup').bind("touchstart", function (evt) {
 
         evt.preventDefault();
         nes.buttonDown(KEYS[38][0], KEYS[38][1]);
 
+        socket.emit("message", {
+            type: "down",
+            key: [KEYS[38][0], KEYS[38][1]]
+          })
       });
       $('#btnup').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
         nes.buttonUp(KEYS[38][0], KEYS[38][1]);
 
+        socket.emit("message", {
+            type: "up",
+            key: [KEYS[38][0], KEYS[38][1]]
+          })
       });
 
       $('#btnright').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
         nes.buttonDown(KEYS[39][0], KEYS[39][1]);
+        socket.emit("message", {
+            type: "down",
+            key: [KEYS[39][0], KEYS[39][1]]
+          })
       });
       $('#btnright').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
         nes.buttonUp(KEYS[39][0], KEYS[39][1]);
+        socket.emit("message", {
+            type: "up",
+            key: [KEYS[39][0], KEYS[39][1]]
+          })
       });
 
       $('#btn12').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
         nes.buttonDown(KEYS[38][0], KEYS[38][1]);
         nes.buttonDown(KEYS[39][0], KEYS[39][1]);
+        socket.emit("message", {
+            type: "down",
+            key: [KEYS[39][0], KEYS[39][1]]
+          })
       });
       $('#btn12').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
         nes.buttonUp(KEYS[38][0], KEYS[38][1]);
         nes.buttonUp(KEYS[39][0], KEYS[39][1]);
+        socket.emit("message", {
+            type: "up",
+            key: [KEYS[39][0], KEYS[39][1]]
+          })
       });
       $('#btn14').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
         nes.buttonDown(KEYS[38][0], KEYS[38][1]);
         nes.buttonDown(KEYS[37][0], KEYS[37][1]);
+        socket.emit("message", {
+            type: "down",
+            key: [KEYS[37][0], KEYS[37][1]]
+          })
       });
       $('#btn14').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
         nes.buttonUp(KEYS[38][0], KEYS[38][1]);
         nes.buttonUp(KEYS[37][0], KEYS[37][1]);
+        socket.emit("message", {
+            type: "up",
+            key: [KEYS[37][0], KEYS[37][1]]
+          })
       });
 
 
       $('#btndown').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
         nes.buttonDown(KEYS[40][0], KEYS[40][1]);
+        socket.emit("message", {
+            type: "down",
+            key: [KEYS[40][0], KEYS[40][1]]
+          })
       });
       $('#btndown').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
         nes.buttonUp(KEYS[40][0], KEYS[40][1]);
+        socket.emit("message", {
+            type: "up",
+            key: [KEYS[40][0], KEYS[40][1]]
+          })
       });
 
       $('#btn23').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
         nes.buttonDown(KEYS[39][0], KEYS[39][1]);
         nes.buttonDown(KEYS[40][0], KEYS[40][1]);
+        socket.emit("message", {
+            type: "down",
+            key: [KEYS[40][0], KEYS[40][1]]
+          })
       });
       $('#btn23').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
         nes.buttonUp(KEYS[39][0], KEYS[39][1]);
         nes.buttonUp(KEYS[40][0], KEYS[40][1]);
+        socket.emit("message", {
+            type: "up",
+            key: [KEYS[40][0], KEYS[40][1]]
+          })
       });
 
       $('#btnleft').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
         nes.buttonDown(KEYS[37][0], KEYS[37][1]);
+        socket.emit("message", {
+            type: "down",
+            key: [KEYS[37][0], KEYS[37][1]]
+          })
       });
       $('#btnleft').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
         nes.buttonUp(KEYS[37][0], KEYS[37][1]);
+        socket.emit("message", {
+            type: "up",
+            key: [KEYS[37][0], KEYS[37][1]]
+          })
       });
 
       $('#btn34').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
         nes.buttonDown(KEYS[40][0], KEYS[40][1]);
         nes.buttonDown(KEYS[37][0], KEYS[37][1]);
+        socket.emit("message", {
+            type: "down",
+            key: [KEYS[37][0], KEYS[37][1]]
+          })
       });
       $('#btn34').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
         nes.buttonUp(KEYS[40][0], KEYS[40][1]);
         nes.buttonUp(KEYS[37][0], KEYS[37][1]);
+        socket.emit("up", {
+            type: "up",
+            key: [KEYS[37][0], KEYS[37][1]]
+          })
       });
       $('#btnselect').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
         nes.buttonDown(KEYS[17][0], KEYS[17][1]);
+        socket.emit("message", {
+            type: "down",
+            key: [KEYS[17][0], KEYS[17][1]]
+          })
         if (speakers.audioCtx)
           speakers.audioCtx.resume();
       });
       $('#btnselect').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
         nes.buttonUp(KEYS[17][0], KEYS[17][1]);
+        socket.emit("message", {
+            type: "up",
+            key: [KEYS[17][0], KEYS[17][1]]
+          })
       });
       $('#btnstart').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
         nes.buttonDown(KEYS[13][0], KEYS[13][1]);
+        socket.emit("message", {
+            type: "down",
+            key: [KEYS[13][0], KEYS[13][1]]
+          })
         if (speakers.audioCtx)
           speakers.audioCtx.resume();
       });
       $('#btnstart').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
         nes.buttonUp(KEYS[13][0], KEYS[13][1]);
+        socket.emit("message", {
+            type: "up",
+            key: [KEYS[13][0], KEYS[13][1]]
+          })
       });
       $('#btna').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
         nes.buttonDown(KEYS[88][0], KEYS[88][1]);
+        socket.emit("message", {
+            type: "down",
+            key: [KEYS[88][0], KEYS[88][1]]
+          })
       });
       $('#btna').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
         nes.buttonUp(KEYS[88][0], KEYS[88][1]);
+        socket.emit("message", {
+            type: "up",
+            key: [KEYS[88][0], KEYS[88][1]]
+          })
       });
       $('#btnb').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
         nes.buttonDown(KEYS[89][0], KEYS[89][1]);
+        socket.emit("message", {
+            type: "down",
+            key: [KEYS[89][0], KEYS[89][1]]
+          })
       });
       $('#btnb').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
         nes.buttonUp(KEYS[89][0], KEYS[89][1]);
+        socket.emit("message", {
+            type: "up",
+            key: [KEYS[89][0], KEYS[89][1]]
+          })
       });
       clearScreen();
       createNes();
@@ -645,14 +827,83 @@
       }
 
       var interval;
+      function setB2A(a,b) {
+        for (const key in b) {
+          if (b.hasOwnProperty(key)) {
+            const bV = b[key];
+            if (bV instanceof Object) {
+              if (a[key]) {
+                // 透明度好了 step1 加上了这个好了
+                if (key == 'opaque') {
+                  return;
+                  console.log('keykeykeyk', opaque)
+                }
+                setB2A(a[key], b[key]);
+              } else {
+                // a[key] = {};
+                // 这个地方很神奇，如果转换了 就报错了Cannot read property 'opaque' of undefined，但能显示主角，不显示背景
+                // 如果把这里注释掉，就能显示背景，但主角和怪物什么的 都会变成马赛克
+                a[key] = {}; // 透明度好了 step2 加上了这个好了
+                setB2A(a[key], b[key]);
+                // console.log('key', key, bV)
+              }
+            } else {
+              a[key] = b[key];
+            }
+          }
+        }
+      }
       loadBinary(romurl, (err, data) => {
         if (err) {
           // this.setState({ error: `Error loading ROM: ${err.message}` });
           console.log(err);
         } else {
           nes.loadROM(data);
+          
           interval = setInterval(function () { nes.frame(); }, 16);
+          // 重要！！！ 这里可以证明 只要把整个 nes存下来 就可以 做到存档
+          // setTimeout(()=>{
+          //   nes2 = nes;
+          //   createNes();
+          //   nes.loadROM(data);
+          // }, 15000)
+          // setTimeout(()=>{
+          //   nes = nes2;
+          // }, 20000)
+          // console.log("nes2['cpu']['mem']", nes2['cpu']['mem'])
+          // nes['cpu']['mem'] = nes2['cpu']['mem'];
           speakers.start();
+          let c = 0;
+          /// 哇塞塞！！！好像成功了耶
+          // for (const key in nes2) {
+          //   c++
+          //   if (c==4) {
+          //     console.log('key', key);
+          //     const element = nes2[key];
+          //     let d = 0;
+          //     for (const key2 in element) {
+          //       // if (element.hasOwnProperty(key2)) {
+          //       //   const element2 = element[key2];
+          //       //   nes[key] = nes[key] || nes2[key];
+          //       //   nes[key][key2] = element2;
+          //       // }
+          //       console.log(key2);
+          //     }
+          //     continue;
+          //   }
+          //   if (nes2.hasOwnProperty(key) && c != 4) {
+          //     console.log(key);
+          //     const element = nes2[key];
+          //     for (const key2 in element) {
+          //       if (element.hasOwnProperty(key2)) {
+          //         const element2 = element[key2];
+          //         nes[key] = nes[key] || nes2[key];
+          //         nes[key][key2] = element2;
+          //       }
+          //     }
+          //   }
+          // }
+          setB2A(nes, nes2);
           // this.handleLoaded(data);
         }
       }, null)
@@ -663,6 +914,19 @@
         speakers.stop();
         console.log('onunload');
       };
+    });
+    function doSth(key) {
+      
+    }
+  </script>
+  <script src="http://192.168.1.47:3000/socket.io/socket.io.js"></script>
+  <script>
+    socket = io.connect('ws://192.168.1.47:3000');
+    socket.emit("message", {
+      "name": navigator.userAgent, "msg": "hello world"
+    });
+    socket.on("message", function (obj) {
+      // console.log(obj);
     });
   </script>
 </body>

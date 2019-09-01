@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en" style="position: fixed;width: 100vw;height: 100vh;left: 0;top: 0;">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
+    <title>红白机模拟器</title>
+    <style>
+        body {
+            overflow: hidden;
+            background-color: black;
+        }
+
+        * {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        #emulator {
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        #canvas {
+            position: fixed;
+            /* width: 100%; */
+            /* transform: rotate(90deg); */
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: 0 auto;
+        }
+
+        #message {
+            font-family: sans-serif;
+            padding: 30px;
+            font-weight: 500;
+        }
+
+        #keys {
+            font-size: 14px;
+            font-family: sans-serif;
+            padding-bottom: 15px;
+        }
+
+        #games-list {
+            padding-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" width='256px' height='240px'></canvas>
+    <script type="text/javascript" src="./js/jsnes.min.js"></script>
+    <script type="text/javascript" src="./js/jquery-3.4.0.min.js"></script>
+    <script>
+        $(function () {
+            // var romurl = "https://bmob-cdn-22939.bmobcloud.com/2019/06/23/7184934a405e956a804a676bc29c15ba.nes";
+            var romurl = "./rom/Chip To Dale No Daisakusen 2 (J).nes"
+            console.log($(document).width());//浏览器时下窗口文档对于象宽度
+            console.log($(document).height());//浏览器时下窗口文档对于象宽度
+
+            function RingBuffer(capacity, evictedCb) {
+                this._elements = new Array(capacity || 50);
+                this._first = 0;
+                this._last = 0;
+                this._size = 0;
+                this._evictedCb = evictedCb;
+            }
+            RingBuffer.prototype.capacity = function () {
+                return this._elements.length;
+            };
+            RingBuffer.prototype.isEmpty = function () {
+                return this.size() === 0;
+            };
+            RingBuffer.prototype.isFull = function () {
+                return this.size() === this.capacity();
+            };
+            RingBuffer.prototype.peek = function () {
+                if (this.isEmpty()) throw new Error('RingBuffer is empty');
+                return this._elements[this._first];
+            };
+            RingBuffer.prototype.peekN = function (count) {
+                if (count > this._size) throw new Error('Not enough elements in RingBuffer');
+                var end = Math.min(this._first + count, this.capacity());
+                var firstHalf = this._elements.slice(this._first, end);
+                if (end < this.capacity()) {
+                    return firstHalf;
+                }
+                var secondHalf = this._elements.slice(0, count - firstHalf.length);
+                return firstHalf.concat(secondHalf);
+            };
+            RingBuffer.prototype.deq = function () {
+                var element = this.peek();
+
+                this._size--;
+                this._first = (this._first + 1) % this.capacity();
+
+                return element;
+            };
+            RingBuffer.prototype.deqN = function (count) {
+                var elements = this.peekN(count);
+
+                this._size -= count;
+                this._first = (this._first + count) % this.capacity();
+
+                return elements;
+            };
+
+            RingBuffer.prototype.enq = function (element) {
+                this._end = (this._first + this.size()) % this.capacity();
+                var full = this.isFull()
+                if (full && this._evictedCb) {
+                    this._evictedCb(this._elements[this._end]);
+                }
+                this._elements[this._end] = element;
+
+                if (full) {
+                    this._first = (this._first + 1) % this.capacity();
+                } else {
+                    this._size++;
+                }
+
+                return this.size();
+            };
+
+            RingBuffer.prototype.size = function () {
+                return this._size;
+            };
+
+            function Speakers(onBufferUnderrun) {
+                this.onBufferUnderrun = onBufferUnderrun;
+                this.bufferSize = 8192;
+                this.buffer = new RingBuffer(this.bufferSize * 2);
+            }
+            Speakers.prototype.handleError = function (error, errorInfo) {
+                console.error(error);
+                // Raven.captureException(error, { extra: errorInfo });
+            }
+            Speakers.prototype.getSampleRate = function () {
+                if (!window.AudioContext) {
+                    return 44100;
+                }
+                let myCtx = new window.AudioContext();
+                let sampleRate = myCtx.sampleRate;
+                myCtx.close();
+                return sampleRate;
+            }
+            Speakers.prototype.start = function () {
+                // Audio is not supported
+                if (!window.AudioContext && !window.webkitAudioContext) {
+                    return;
+                }
+                if (!this.audioCtx) {
+                    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                    this.audioCtx = new window.AudioContext();
+                    this.scriptNode = this.audioCtx.createScriptProcessor(1024, 0, 2);
+                    this.scriptNode.onaudioprocess = this.onaudioprocess.bind(this);
+                    this.scriptNode.connect(this.audioCtx.destination);
+                }
+            }
+            Speakers.prototype.stop = function () {
+                if (this.scriptNode) {
+                    this.scriptNode.disconnect(this.audioCtx.destination);
+                    this.scriptNode.onaudioprocess = null;
+                    this.scriptNode = null;
+                }
+                if (this.audioCtx) {
+                    this.audioCtx.close().catch(handleError);
+                    this.audioCtx = null;
+                }
+            }
+            Speakers.prototype.writeSample = function (left, right) {
+                if (this.buffer.size() / 2 >= this.bufferSize) {
+                    // console.log(`Buffer overrun`);
+                    this.buffer.deqN(this.bufferSize / 2);
+                }
+                this.buffer.enq(left);
+                this.buffer.enq(right);
+            };
+            Speakers.prototype.onaudioprocess = function (e) {
+                var left = e.outputBuffer.getChannelData(0);
+                var right = e.outputBuffer.getChannelData(1);
+                var size = left.length;
+                // We're going to buffer underrun. Attempt to fill the buffer.
+                if (this.buffer.size() < size * 2 && this.onBufferUnderrun) {
+                    this.onBufferUnderrun(this.buffer.size(), size * 2);
+                }
+                try {
+                    var samples = this.buffer.deqN(size * 2);
+                } catch (e) {
+                    // onBufferUnderrun failed to fill the buffer, so handle a real buffer
+                    // underrun
+                    // ignore empty buffers... assume audio has just stopped
+                    var bufferSize = this.buffer.size() / 2;
+                    if (bufferSize > 0) {
+                        // console.log(`Buffer underrun (needed ${size}, got ${bufferSize})`);
+                    }
+                    for (var j = 0; j < size; j++) {
+                        left[j] = 0;
+                        right[j] = 0;
+                    }
+                    return;
+                }
+                for (var i = 0; i < size; i++) {
+                    left[i] = samples[i * 2];
+                    right[i] = samples[i * 2 + 1];
+                }
+            };
+            // var url = "ws://" + window.location.host + "/ws";
+            // var ws = new WebSocket(url);
+
+            // var screen = $("<canvas width='256' height='240'>");
+            var screen = $("#canvas");
+            // screen[0].style.height ="500px";
+            screen[0].style.height = window.innerWidth + "px";
+            var m = (window.innerWidth / 240 * 256 - window.innerWidth) / 2;
+            var n = (window.innerHeight / 240 * 256 - window.innerHeight) / 2;
+            // screen[0].style.transform="translate(-50%, -50%)";
+            screen[0].style.transform = "rotate(90deg) translate(0px," + m + "px)";
+            screen[0].style.left = 0;
+            screen[0].style.right = 0;
+            screen[0].style.top = 0;
+            screen[0].style.bottom = 0;
+            screen[0].style.margin = "auto auto";
+            var context = screen[0].getContext('2d');
+            var imageData = context.getImageData(0, 0, 256, 240);
+            // $("#emulator").append(screen);
+            var nes = null;
+            this.player = 0;
+            var frame = 0;
+            var prevBuffer = new Array(256 * 240);
+            function clearScreen() {
+                context.fillStyle = "black";
+                context.fillRect(0, 0, 256, 240);
+                for (var i = 3; i < imageData.data.length - 3; i += 4) {
+                    imageData.data[i] = 0xFF;
+                }
+            }
+            var speakers = new Speakers(
+                function (actualSize, desiredSize) {
+                    if (this.props && this.props.paused) {
+                        return;
+                    }
+                }
+            );
+            function createNes() {
+                frame = 0;
+                nes = new jsnes.NES({
+                    onFrame: function (buffer) {
+                        var data = imageData.data;
+                        var pixel, i, j;
+                        let c = 0;
+                        let transDic = {};
+                        for (i = 0; i < 256 * 240; i++) {
+                            pixel = buffer[i];
+                            if (pixel != prevBuffer[i]) {
+                                j = i * 4;
+                                data[j] = pixel & 0xFF;
+                                data[j + 1] = (pixel >> 8) & 0xFF;
+                                data[j + 2] = (pixel >> 16) & 0xFF;
+                                prevBuffer[i] = pixel;
+                                c++
+                                transDic[i] = pixel;
+                            }
+                        }
+                        frame += 1;
+                        context.putImageData(imageData, 0, 0);
+                        // send at 30 fps
+                        if (frame === 2) {
+                            // sendScreen();
+                            // drawData(data);
+                            frame = 0;
+                        }
+                    },
+                    onAudioSample: (...arg) => {
+                        // console.log(arg);
+                        speakers.writeSample.bind(speakers)(...arg)
+                    },
+                    sampleRate: speakers.getSampleRate()
+                });
+            }
+            function loadGames() {
+                // $.getJSON('/gamelist', function (data) {
+                var data = {
+                    games: ['lj65.nes']
+                }
+                var html = '';
+                var len = data.games.length;
+                for (var i = 0; i < len; i++) {
+                    html += '<option value="' + data.games[i] + '">' + data.games[i].replace(".nes", "") + '</option>';
+                }
+                $('#current-game').append(html);
+                // });
+            }
+            function loadROM(url) {
+                $.ajax({
+                    url: escape(url),
+                    xhr: function () {
+                        var xhr = $.ajaxSettings.xhr();
+                        xhr.overrideMimeType('text/plain; charset=x-user-defined');
+                        return xhr;
+                    },
+                    complete: function (xhr, status) {
+                        nes.loadROM(xhr.responseText);
+                        // nes.start();
+                    }
+                });
+            }
+            function triggerKey(type, keyCode) {
+                var e = jQuery.Event(type);
+                e.which = keyCode;
+                e.keyCode = keyCode;
+                $(document).trigger(e);
+            }
+            function sendKey(type, keyCode) {
+                ws.send(type + " " + keyCode);
+            }
+            function sendScreen(buffer) {
+                var image = screen[0].toDataURL();
+                ws.send("data " + image);
+            }
+            function drawData(data) {
+                var img = new Image();
+                img.src = data;
+                context.drawImage(img, 0, 0);
+            }
+            function startPlaying(data) {
+                window.player = parseInt(data, 10);
+                if (window.player == 1) {
+                    newGame();
+                    $("#games-list").show();
+                    $("#message").text("You are Player 1");
+                }
+                if (window.player == 2) {
+                    $("#games-list").hide();
+                    $("#message").text("You are Player 2");
+                }
+            }
+            function newGame() {
+                var rom = document.getElementById("current-game").value;
+                if (window.player == 1 && rom != "") {
+                    clearScreen();
+                    createNes();
+                    loadROM("/games?name=" + rom);
+                }
+            }
+            window.newGame = newGame;
+            function stopPlaying() {
+                if (nes !== null) {
+                    nes.stop();
+                    nes = null;
+                }
+                clearScreen();
+                window.player = 0;
+                $("#message").text("Waiting for Player 2");
+            }
+            // ws.onmessage = function (msg) {
+            //   var parts = msg.data.split(" ");
+            //   var cmd = parts[0];
+            //   var data = parts[1];
+
+            //   if (cmd === "join") {
+            //     startPlaying(data);
+            //   }
+
+            //   if (cmd === "part") {
+            //     stopPlaying();
+            //   }
+
+            //   if (cmd === "keyup" || cmd === "keydown") {
+            //     triggerKey(cmd, parseInt(data, 10));
+            //   }
+
+            //   if (cmd === "data") {
+            //     drawData(data);
+            //   }
+            // };
+            var keyMap = {
+                88: 103,
+                90: 105,
+                17: 99,
+                13: 97,
+                38: 104,
+                40: 98,
+                37: 100,
+                39: 102
+            };
+
+            const KEYS = {
+                88: [1, jsnes.Controller.BUTTON_A, "X"], // X
+                89: [1, jsnes.Controller.BUTTON_B, "Y"], // Y (Central European keyboard)
+                90: [1, jsnes.Controller.BUTTON_B, "Z"], // Z
+                17: [1, jsnes.Controller.BUTTON_SELECT, "Right Ctrl"], // Right Ctrl
+                13: [1, jsnes.Controller.BUTTON_START, "Enter"], // Enter
+                38: [1, jsnes.Controller.BUTTON_UP, "Up"], // Up
+                40: [1, jsnes.Controller.BUTTON_DOWN, "Down"], // Down
+                37: [1, jsnes.Controller.BUTTON_LEFT, "Left"], // Left
+                39: [1, jsnes.Controller.BUTTON_RIGHT, "Right"], // Right
+                103: [2, jsnes.Controller.BUTTON_A, "Num-7"], // Num-7
+                105: [2, jsnes.Controller.BUTTON_B, "Num-9"], // Num-9
+                99: [2, jsnes.Controller.BUTTON_SELECT, "Num-3"], // Num-3
+                97: [2, jsnes.Controller.BUTTON_START, "Num-1"], // Num-1
+                104: [2, jsnes.Controller.BUTTON_UP, "Num-8"], // Num-8
+                98: [2, jsnes.Controller.BUTTON_DOWN, "Num-2"], // Num-2
+                100: [2, jsnes.Controller.BUTTON_LEFT, "Num-4"], // Num-4
+                102: [2, jsnes.Controller.BUTTON_RIGHT, "Num-6"] // Num-6
+            };
+            $(document).bind("contextmenu", function (evt) {
+                evt.preventDefault();
+            })
+
+
+            $(document).bind("keydown", function (evt) {
+
+                var key = KEYS[evt.keyCode];
+                if (key) {
+                    nes.buttonDown(key[0], key[1]);
+                }
+                // nes.buttonDown(1, jsnes.Controller.BUTTON_A);
+                // nes.keyboard.keyDown(evt);
+                // if (window.player == 1) { nes.keyboard.keyDown(evt); }
+                // if (window.player == 2 && keyMap[code]) { evt.preventDefault(); sendKey("keydown", keyMap[code]); }
+            });
+
+            $(document).bind("keyup", function (evt) {
+                var key = KEYS[evt.keyCode];
+                if (key) {
+                    nes.buttonUp(key[0], key[1]);
+                }
+                // if (window.player == 1) { nes.keyboard.keyUp(evt); }
+                // if (window.player == 2 && keyMap[code]) { evt.preventDefault(); sendKey("keyup", keyMap[code]); }
+            });
+            // $('#btnall').bind("touchstart mousedown", function (evt) {
+            //   console.log('touchstart');
+            //   console.log(evt);
+            //   // evt.preventDefault();
+            //   // nes.buttonDown(KEYS[38][0], KEYS[38][1]);
+
+            // });
+            // $('#btnall').bind("touchmove mousemove", function (evt) {
+            //   // console.log('touch');
+            //   // console.log(evt);
+            //   // evt.preventDefault();
+            //   // nes.buttonDown(KEYS[38][0], KEYS[38][1]);
+
+            // });
+            // $('#btnall').bind("touchend mouseup", function (evt) {
+            //   console.log('touchend');
+            //   console.log(evt);
+            //   // evt.preventDefault();
+            //   // nes.buttonDown(KEYS[38][0], KEYS[38][1]);
+
+            // });
+            $('#btnup').bind("touchstart mousedown", function (evt) {
+                // $('#btnup').bind("touchstart", function (evt) {
+
+                evt.preventDefault();
+                nes.buttonDown(KEYS[38][0], KEYS[38][1]);
+
+            });
+            $('#btnup').bind("touchend mouseup", function (evt) {
+                evt.preventDefault();
+                nes.buttonUp(KEYS[38][0], KEYS[38][1]);
+
+            });
+
+            $('#btnright').bind("touchstart mousedown", function (evt) {
+                evt.preventDefault();
+                nes.buttonDown(KEYS[39][0], KEYS[39][1]);
+            });
+            $('#btnright').bind("touchend mouseup", function (evt) {
+                evt.preventDefault();
+                nes.buttonUp(KEYS[39][0], KEYS[39][1]);
+            });
+
+            $('#btn12').bind("touchstart mousedown", function (evt) {
+                evt.preventDefault();
+                nes.buttonDown(KEYS[38][0], KEYS[38][1]);
+                nes.buttonDown(KEYS[39][0], KEYS[39][1]);
+            });
+            $('#btn12').bind("touchend mouseup", function (evt) {
+                evt.preventDefault();
+                nes.buttonUp(KEYS[38][0], KEYS[38][1]);
+                nes.buttonUp(KEYS[39][0], KEYS[39][1]);
+            });
+            $('#btn14').bind("touchstart mousedown", function (evt) {
+                evt.preventDefault();
+                nes.buttonDown(KEYS[38][0], KEYS[38][1]);
+                nes.buttonDown(KEYS[37][0], KEYS[37][1]);
+            });
+            $('#btn14').bind("touchend mouseup", function (evt) {
+                evt.preventDefault();
+                nes.buttonUp(KEYS[38][0], KEYS[38][1]);
+                nes.buttonUp(KEYS[37][0], KEYS[37][1]);
+            });
+
+
+            $('#btndown').bind("touchstart mousedown", function (evt) {
+                evt.preventDefault();
+                nes.buttonDown(KEYS[40][0], KEYS[40][1]);
+            });
+            $('#btndown').bind("touchend mouseup", function (evt) {
+                evt.preventDefault();
+                nes.buttonUp(KEYS[40][0], KEYS[40][1]);
+            });
+
+            $('#btn23').bind("touchstart mousedown", function (evt) {
+                evt.preventDefault();
+                nes.buttonDown(KEYS[39][0], KEYS[39][1]);
+                nes.buttonDown(KEYS[40][0], KEYS[40][1]);
+            });
+            $('#btn23').bind("touchend mouseup", function (evt) {
+                evt.preventDefault();
+                nes.buttonUp(KEYS[39][0], KEYS[39][1]);
+                nes.buttonUp(KEYS[40][0], KEYS[40][1]);
+            });
+
+            $('#btnleft').bind("touchstart mousedown", function (evt) {
+                evt.preventDefault();
+                nes.buttonDown(KEYS[37][0], KEYS[37][1]);
+            });
+            $('#btnleft').bind("touchend mouseup", function (evt) {
+                evt.preventDefault();
+                nes.buttonUp(KEYS[37][0], KEYS[37][1]);
+            });
+
+            $('#btn34').bind("touchstart mousedown", function (evt) {
+                evt.preventDefault();
+                nes.buttonDown(KEYS[40][0], KEYS[40][1]);
+                nes.buttonDown(KEYS[37][0], KEYS[37][1]);
+            });
+            $('#btn34').bind("touchend mouseup", function (evt) {
+                evt.preventDefault();
+                nes.buttonUp(KEYS[40][0], KEYS[40][1]);
+                nes.buttonUp(KEYS[37][0], KEYS[37][1]);
+            });
+            $('#btnselect').bind("touchstart mousedown", function (evt) {
+                evt.preventDefault();
+                nes.buttonDown(KEYS[17][0], KEYS[17][1]);
+                if (speakers.audioCtx)
+                    speakers.audioCtx.resume();
+            });
+            $('#btnselect').bind("touchend mouseup", function (evt) {
+                evt.preventDefault();
+                nes.buttonUp(KEYS[17][0], KEYS[17][1]);
+            });
+            $('#btnstart').bind("touchstart mousedown", function (evt) {
+                evt.preventDefault();
+                nes.buttonDown(KEYS[13][0], KEYS[13][1]);
+                if (speakers.audioCtx)
+                    speakers.audioCtx.resume();
+            });
+            $('#btnstart').bind("touchend mouseup", function (evt) {
+                evt.preventDefault();
+                nes.buttonUp(KEYS[13][0], KEYS[13][1]);
+            });
+            $('#btna').bind("touchstart mousedown", function (evt) {
+                evt.preventDefault();
+                nes.buttonDown(KEYS[88][0], KEYS[88][1]);
+            });
+            $('#btna').bind("touchend mouseup", function (evt) {
+                evt.preventDefault();
+                nes.buttonUp(KEYS[88][0], KEYS[88][1]);
+            });
+            $('#btnb').bind("touchstart mousedown", function (evt) {
+                evt.preventDefault();
+                nes.buttonDown(KEYS[89][0], KEYS[89][1]);
+            });
+            $('#btnb').bind("touchend mouseup", function (evt) {
+                evt.preventDefault();
+                nes.buttonUp(KEYS[89][0], KEYS[89][1]);
+            });
+            clearScreen();
+            createNes();
+
+            function loadBinary(path, callback, handleProgress) {
+                var req = new XMLHttpRequest();
+                req.open("GET", path);
+                req.overrideMimeType("text/plain; charset=x-user-defined");
+                req.onload = function () {
+                    if (this.status === 200) {
+                        if (req.responseText.match(/^<!doctype html>/i)) {
+                            // Got HTML back, so it is probably falling back to index.html due to 404
+                            return callback(new Error("Page not found"));
+                        }
+
+                        callback(null, this.responseText);
+                    } else if (this.status === 0) {
+                        // Aborted, so ignore error
+                    } else {
+                        callback(new Error(req.statusText));
+                    }
+                };
+                req.onerror = function () {
+                    callback(new Error(req.statusText));
+                };
+                req.onprogress = handleProgress;
+                req.send();
+                return req;
+            }
+
+            var interval;
+            loadBinary(romurl, (err, data) => {
+                if (err) {
+                    // this.setState({ error: `Error loading ROM: ${err.message}` });
+                    console.log(err);
+                } else {
+                    // nes.loadROM(data);
+                    // interval = setInterval(function () { nes.frame(); }, 16);
+                    // speakers.start();
+                    // this.handleLoaded(data);
+                }
+            }, null)
+
+            window.onunload = function () {
+                if (interval)
+                    clearInterval(interval);
+                speakers.stop();
+                console.log('onunload');
+            };
+        });
+    </script>
+    <script src="http://127.0.0.1:3000/socket.io/socket.io.js"></script>
+    <script>
+        var prevBuffer = [];
+        socket = io.connect('ws://127.0.0.1:3000');
+        socket.emit("message", {
+            "name": navigator.userAgent, "msg": "hello world"
+        });
+        socket.on("message", function (obj) {
+            var screen = $("#canvas");
+            var context = screen[0].getContext("2d");
+            var imageData = context.getImageData(0, 0, 256, 240);
+              console.log(obj);
+            var buffer = obj.transDic;
+            var data = imageData.data;
+            var pixel, i, j;
+            let c = 0;
+            for (i in buffer) {
+                pixel = buffer[i];
+                if (pixel != prevBuffer[i]) {
+                    j = i * 4;
+                    data[j] = pixel & 0xFF;
+                    data[j + 1] = (pixel >> 8) & 0xFF;
+                    data[j + 2] = (pixel >> 16) & 0xFF;
+                    prevBuffer[i] = pixel;
+                    c++
+                }
+            }
+            context.putImageData(imageData, 0, 0);
+        });
+    </script>
+</body>
+
+</html>
