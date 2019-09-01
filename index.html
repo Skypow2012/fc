@@ -83,6 +83,12 @@
   <div class="btn" id="btn14"
     style="width:15vw;height:15vw;background-size:15vw 15vw;background-image:url('./img/empty.png');background-repeat:no-repeat;position:fixed;left:35vw;top:5vw;transform: rotate(180deg);">
   </div>
+  <div class="btn" id="btnsave"
+    style="opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/btnsave.png');background-repeat:no-repeat;position:fixed;right:2vw;top:10vw;transform: rotate(90deg);">
+  </div>
+  <div class="btn" id="btnspeed"
+    style="opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/btnspeed.png');background-repeat:no-repeat;position:fixed;right:2vw;top:35vw;transform: rotate(90deg);">
+  </div>
   <div class="btn" id="btnselect"
     style="opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/btnselect.png');background-repeat:no-repeat;position:fixed;right:2vw;bottom:35vw;transform: rotate(90deg);">
   </div>
@@ -105,17 +111,21 @@
   <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.0.min.js"></script> -->
   <script type="text/javascript" src="./js/jquery-3.4.0.min.js"></script>
   <script>
-    let isIn = false;
+    // 是否记录操作，不是 就自动按按钮
+    let isIn = true;
     let steps = {};
     if (!isIn) {
       steps = JSON.parse(localStorage.steps);
     }
+    // 是否是存入档案阶段，不是 就自动读档
     let isNesIn = false;
     var nes = null;
     var nes2 = null;
     if (!isNesIn) {
-      nes2 = JSON.parse(localStorage.nes);
+      localStorage.nes ? (nes2 = JSON.parse(localStorage.nes)) : '';
     }
+    // 加载速度
+    let frameSpeed = 1;
     $(function () {
       // var romurl = "https://bmob-cdn-22939.bmobcloud.com/2019/06/23/7184934a405e956a804a676bc29c15ba.nes";
       var romurl = "./rom/Chip To Dale No Daisakusen 2 (J).nes"
@@ -375,10 +385,11 @@
             //   // drawData(data);
             //   frame = 0;
             // }
-            if (frame > 500 && frame % 100 == 0 && isNesIn) {
-              console.log('save frame', nes);
-              localStorage.nes = JSON.stringify(nes);
-            }
+            // 测试自动存储
+            // if (frame > 500 && frame % 100 == 0 && isNesIn) {
+            //   console.log('save frame', nes);
+            //   localStorage.nes = JSON.stringify(nes);
+            // }
           },
           onAudioSample: (...arg) => {
             // console.log(arg);
@@ -729,6 +740,22 @@
             key: [KEYS[37][0], KEYS[37][1]]
           })
       });
+      $('#btnsave').bind("touchstart mousedown", function (evt) {
+        evt.preventDefault();
+        localStorage.nes = JSON.stringify(nes);
+      });
+      $('#btnsave').bind("touchend mouseup", function (evt) {
+        evt.preventDefault();
+      });
+      $('#btnspeed').bind("touchstart mousedown", function (evt) {
+        if (frameSpeed == 1) frameSpeed = 5;
+        else frameSpeed = 1;
+        evt.preventDefault();
+      });
+      $('#btnspeed').bind("touchend mouseup", function (evt) {
+        evt.preventDefault();
+      });
+      
       $('#btnselect').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
         nes.buttonDown(KEYS[17][0], KEYS[17][1]);
@@ -860,7 +887,13 @@
         } else {
           nes.loadROM(data);
           
-          interval = setInterval(function () { nes.frame(); }, 16);
+          interval = setInterval(function () {
+            nes.frame();
+            if (frameSpeed == 5) {
+              nes.frame();
+              nes.frame();
+            }
+          }, 16);
           // 重要！！！ 这里可以证明 只要把整个 nes存下来 就可以 做到存档
           // setTimeout(()=>{
           //   nes2 = nes;
