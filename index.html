@@ -4,6 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
+  <!-- <script src="https://www.norchant.com/js/vconsole.min.js"></script> -->
   <title>红白机模拟器</title>
   <style>
     body {
@@ -114,6 +115,9 @@
   <div class="btn" id="btnsave"
     style="opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/btnsave.png');background-repeat:no-repeat;position:fixed;right:2vw;top:10vw;transform: rotate(90deg);">
   </div>
+  <div class="btn" id="btnload"
+    style="display:none;opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/btnload.png');background-repeat:no-repeat;position:fixed;right:2vw;top:10vw;transform: rotate(90deg);">
+  </div>
   <div class="btn" id="btnspeed"
     style="opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/btnspeed.png');background-repeat:no-repeat;position:fixed;right:2vw;top:35vw;transform: rotate(90deg);">
   </div>
@@ -188,6 +192,37 @@
     }
     // 加载速度
     let frameSpeed = 1;
+    let isConfigShow = false;
+      var interval;
+      function setB2A(a,b) {
+        for (const key in b) {
+          if (b.hasOwnProperty(key)) {
+            const bV = b[key];
+            if (bV instanceof Object) {
+              if (a[key]) {
+                // 透明度好了 step1 加上了这个好了
+                if (key == 'opaque') {
+                  return;
+                  console.log('keykeykeyk', opaque)
+                }
+                setB2A(a[key], b[key]);
+              } else {
+                // a[key] = {};
+                // 这个地方很神奇，如果转换了 就报错了Cannot read property 'opaque' of undefined，但能显示主角，不显示背景
+                // 如果把这里注释掉，就能显示背景，但主角和怪物什么的 都会变成马赛克
+                a[key] = {}; // 透明度好了 step2 加上了这个好了
+                setB2A(a[key], b[key]);
+                // console.log('key', key, bV)
+              }
+            } else {
+              a[key] = b[key];
+            }
+          }
+        }
+      }
+    function loadSavedData() {
+      setB2A(nes, nes2);
+    }
     $(function () {
       // var romurl = "https://bmob-cdn-22939.bmobcloud.com/2019/06/23/7184934a405e956a804a676bc29c15ba.nes";
       var romurl = localStorage.romurl ? localStorage.romurl : "./rom/mario.nes";
@@ -809,6 +844,13 @@
       $('#btnsave').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
       });
+      $('#btnload').bind("touchstart mousedown", function (evt) {
+        evt.preventDefault();
+        loadSavedData();
+      });
+      $('#btnload').bind("touchend mouseup", function (evt) {
+        evt.preventDefault();
+      });
       $('#btnspeed').bind("touchstart mousedown", function (evt) {
         if (frameSpeed == 1) frameSpeed = 5;
         else frameSpeed = 1;
@@ -886,15 +928,18 @@
             key: [KEYS[89][0], KEYS[89][1]]
           })
       });
-      let isConfigShow = false;
       $('#config-btn').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
         nes.buttonDown(KEYS[89][0], KEYS[89][1]);
         isConfigShow = !isConfigShow;
         if (isConfigShow) {
           $('#game-list-box').show();
+          $('#btnsave').hide();
+          $('#btnload').show();
         } else {
           $('#game-list-box').hide();
+          $('#btnsave').show();
+          $('#btnload').hide();
         }
       });
       
@@ -927,33 +972,6 @@
         return req;
       }
 
-      var interval;
-      function setB2A(a,b) {
-        for (const key in b) {
-          if (b.hasOwnProperty(key)) {
-            const bV = b[key];
-            if (bV instanceof Object) {
-              if (a[key]) {
-                // 透明度好了 step1 加上了这个好了
-                if (key == 'opaque') {
-                  return;
-                  console.log('keykeykeyk', opaque)
-                }
-                setB2A(a[key], b[key]);
-              } else {
-                // a[key] = {};
-                // 这个地方很神奇，如果转换了 就报错了Cannot read property 'opaque' of undefined，但能显示主角，不显示背景
-                // 如果把这里注释掉，就能显示背景，但主角和怪物什么的 都会变成马赛克
-                a[key] = {}; // 透明度好了 step2 加上了这个好了
-                setB2A(a[key], b[key]);
-                // console.log('key', key, bV)
-              }
-            } else {
-              a[key] = b[key];
-            }
-          }
-        }
-      }
       loadBinary(romurl, (err, data) => {
         if (err) {
           // this.setState({ error: `Error loading ROM: ${err.message}` });
@@ -1010,7 +1028,8 @@
           //     }
           //   }
           // }
-          setB2A(nes, nes2);
+          // 不自动读档，在config里面，去点击读档
+          // setB2A(nes, nes2);
           // this.handleLoaded(data);
         }
       }, null)
