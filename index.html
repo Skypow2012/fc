@@ -51,6 +51,34 @@
     #games-list {
       padding-bottom: 15px;
     }
+    #game-list-box {
+      display:none;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: -140px;
+      width: 50vw;
+      height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      opacity: .8;
+      transform: rotateZ(90deg);
+    }
+    #game-list {
+      margin-top: 0;
+      height: 60vw;
+      overflow: auto;
+      background-color: black;
+    }
+    #game-list-box p {
+      margin: 0;
+      height: 3rem;
+      font-size: 1.5rem;
+      line-height: 3rem;
+      color: #ffffff;
+      border: 1px solid #ffffff;
+    }
   </style>
 </head>
 
@@ -101,6 +129,30 @@
   <div class="btn" id="btna"
     style="opacity:0.5;width:20vw;height:20vw;background-size:20vw 20vw;background-image:url('./img/btna.png');background-repeat:no-repeat;position:fixed;left:5vw;bottom:5vw;transform: rotate(90deg);">
   </div>
+  <div class="config-btn" id="config-btn"
+    style="opacity: 0.5;width: 6vh;height: 6vh;background-size: 100% 100%;background-image: url(./img/config.png);background-repeat: no-repeat;position: fixed;top: 47vh;right: -3vw;transform: rotate(90deg);">
+  </div>
+  <div class="game-list-box" id="game-list-box">
+    <div class="game-list" id="game-list">
+      <p onclick="localStorage.romurl = './rom/Chip To Dale No Daisakusen 2 (J).nes';window.location.href = window.location.href;">松鼠大作战</p>
+      <p onclick="localStorage.romurl = './rom/mario.nes';window.location.href = window.location.href;">马里奥</p>
+      <p onclick="localStorage.romurl = './rom/希特勒复活.nes';window.location.href = window.location.href;">希特勒复活</p>
+      <p onclick="localStorage.romurl = './rom/c31.nes';window.location.href = window.location.href;">中国象棋</p>
+      <p onclick="localStorage.romurl = './rom/Double Dragon (U).nes';window.location.href = window.location.href;">双截龙1(美版)</p>
+      <p onclick="localStorage.romurl = './rom/Yie Ar Kung-Fu (J).nes';window.location.href = window.location.href;">功夫</p>
+      <p onclick="localStorage.romurl = './rom/iceclimb.nes';window.location.href = window.location.href;">雪人兄弟</p>
+      <p onclick="localStorage.romurl = './rom/Dragonlance - Dragons of Flame (J).nes';window.location.href = window.location.href;">龙之矛-龙的火焰</p>
+      <p onclick="localStorage.romurl = './rom/vs dr mario.nes';window.location.href = window.location.href;">马里奥医生</p>
+      <p onclick="localStorage.romurl = './rom/马戏团.nes';window.location.href = window.location.href;">马戏团(中文)</p>
+      <p onclick="localStorage.romurl = './rom/Makaimura (J).nes';window.location.href = window.location.href;">魔界村</p>
+      <p onclick="localStorage.romurl = './rom/Battle City (J).nes';window.location.href = window.location.href;">坦克大战</p>
+      <p onclick="localStorage.romurl = './rom/CONTRA.nes';window.location.href = window.location.href;">魂斗罗</p>
+      <p onclick="localStorage.romurl = './rom/NINJAGA3.nes';window.location.href = window.location.href;">忍者龙剑传3</p>
+      
+      
+      
+    </div>
+  </div>
   <style>
     .btn:active {
       opacity: 0.2 !important;
@@ -138,7 +190,7 @@
     let frameSpeed = 1;
     $(function () {
       // var romurl = "https://bmob-cdn-22939.bmobcloud.com/2019/06/23/7184934a405e956a804a676bc29c15ba.nes";
-      var romurl = "./rom/Chip To Dale No Daisakusen 2 (J).nes"
+      var romurl = localStorage.romurl ? localStorage.romurl : "./rom/mario.nes";
       console.log($(document).width());//浏览器时下窗口文档对于象宽度
       console.log($(document).height());//浏览器时下窗口文档对于象宽度
 
@@ -834,6 +886,18 @@
             key: [KEYS[89][0], KEYS[89][1]]
           })
       });
+      let isConfigShow = false;
+      $('#config-btn').bind("touchstart mousedown", function (evt) {
+        evt.preventDefault();
+        nes.buttonDown(KEYS[89][0], KEYS[89][1]);
+        isConfigShow = !isConfigShow;
+        if (isConfigShow) {
+          $('#game-list-box').show();
+        } else {
+          $('#game-list-box').hide();
+        }
+      });
+      
       clearScreen();
       createNes();
 
