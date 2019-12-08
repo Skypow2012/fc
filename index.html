@@ -1045,15 +1045,21 @@
       
     }
   </script>
-  <script src="http://192.168.1.47:3000/socket.io/socket.io.js"></script>
+  <!-- <script src="http://192.168.1.47:3000/socket.io/socket.io.js"></script> -->
   <script>
-    socket = io.connect('ws://192.168.1.47:3000');
-    socket.emit("message", {
-      "name": navigator.userAgent, "msg": "hello world"
-    });
-    socket.on("message", function (obj) {
-      // console.log(obj);
-    });
+    // 暂时关闭联机功能
+    let socket = {
+      emit: function emit(...args){
+        console.log('emit', args);
+      },
+    }
+    // socket = io.connect('ws://192.168.1.47:3000');
+    // socket.emit("message", {
+    //   "name": navigator.userAgent, "msg": "hello world"
+    // });
+    // socket.on("message", function (obj) {
+    //   // console.log(obj);
+    // });
   </script>
 </body>
 
