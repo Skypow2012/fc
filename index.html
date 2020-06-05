@@ -4,7 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
-  <!-- <script src="https://www.norchant.com/js/vconsole.min.js"></script> -->
+  <script src="https://www.norchant.com/js/vconsole.min.js"></script>
   <title>红白机模拟器</title>
   <style>
     body {
@@ -725,17 +725,17 @@
       });
 
       $(document).on('touchstart', function (e) {
-        let touches = e.originalEvent.changedTouches;
+        let touches = e.originalEvent.touches;
         touchBtn(touches);
       })
       $(document).on('touchend', function (e) {
-        let touches = e.originalEvent.changedTouches;
-        console.log('touchend', touches)
+        let touches = e.originalEvent.touches;
+        // console.log('touchend', touches, e)
         touchBtn(touches, 'touchend');
       })
       $(document).on('touchmove', function (e) {
-        let touches = e.originalEvent.changedTouches;
-        console.log('touchmove', touches)
+        let touches = e.originalEvent.touches;
+        // console.log('touchmove', touches, e)
         touchBtn(touches);
       })
 
@@ -759,21 +759,13 @@
           let x = tarTouch.clientX;
           let y = tarTouch.clientY;
           let dom = document.elementFromPoint(x, y);
-          if (type == 'touchend') {
-            touchDic[dom.id] = 0;
+          if (touchDic[dom.id] === 0) {
+            touchDic[dom.id] = 2;
             processBtn(dom, touchDic[dom.id])
-          } else {
-            if (touchDic[dom.id] === 0) {
-              touchDic[dom.id] = 2;
-              processBtn(dom, touchDic[dom.id])
-            }
-            if (touchDic[dom.id] === 1) {
-              touchDic[dom.id] = 2;
-            }
           }
-        }
-        if (type == 'touchend') {
-          return;
+          if (touchDic[dom.id] === 1) {
+            touchDic[dom.id] = 2;
+          }
         }
         for (const i in touchDic) {
           if (type) {
