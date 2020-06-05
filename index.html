@@ -233,6 +233,7 @@
       }
     }
     function loadSavedData() {
+      localStorage.nes ? (nes2 = JSON.parse(localStorage.nes)) : '';
       setB2A(nes, nes2);
     }
     $(function () {
