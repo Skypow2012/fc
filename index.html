@@ -4,7 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
-  <script src="https://www.norchant.com/js/vconsole.min.js"></script>
+  <!-- <script src="https://www.norchant.com/js/vconsole.min.js"></script> -->
   <title>红白机模拟器</title>
   <style>
     body {
@@ -131,10 +131,10 @@
     style="opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/btnstart.png');background-repeat:no-repeat;position:fixed;right:2vw;bottom:10vw;transform: rotate(90deg);">
   </div>
   <div class="btn" id="btnb"
-    style="opacity:0.5;width:20vw;height:20vw;background-size:20vw 20vw;background-image:url('./img/btnb.png');background-repeat:no-repeat;position:fixed;left:5vw;bottom:26vw;transform: rotate(90deg);">
+    style="opacity:0.5;width:22vw;height:22vw;background-size:22vw 22vw;background-image:url('./img/btnb.png');background-repeat:no-repeat;position:fixed;left:5vw;bottom:26vw;transform: rotate(90deg);">
   </div>
   <div class="btn" id="btna"
-    style="opacity:0.5;width:20vw;height:20vw;background-size:20vw 20vw;background-image:url('./img/btna.png');background-repeat:no-repeat;position:fixed;left:5vw;bottom:5vw;transform: rotate(90deg);">
+    style="opacity:0.5;width:22vw;height:22vw;background-size:22vw 22vw;background-image:url('./img/btna.png');background-repeat:no-repeat;position:fixed;left:5vw;bottom:5vw;transform: rotate(90deg);">
   </div>
   <div class="config-btn" id="config-btn"
     style="opacity: 0.5;width: 6vh;height: 6vh;background-size: 100% 100%;background-image: url(./img/config.png);background-repeat: no-repeat;position: fixed;top: 47vh;right: -3vw;transform: rotate(90deg);">
@@ -760,8 +760,7 @@
           let y = tarTouch.clientY;
           let dom = document.elementFromPoint(x, y);
           if (touchDic[dom.id] === 0) {
-            touchDic[dom.id] = 2;
-            processBtn(dom, touchDic[dom.id])
+            touchDic[dom.id] = 3;
           }
           if (touchDic[dom.id] === 1) {
             touchDic[dom.id] = 2;
@@ -780,6 +779,12 @@
             if (touchDic[i] === 2) {
               touchDic[i] = 1;
             }
+          }
+        }
+        for (const i in touchDic) {
+          if (touchDic[i] === 3) {
+            touchDic[i] = 1;
+            processBtn({id:i}, 1)
           }
         }
         console.log(touchDic);
