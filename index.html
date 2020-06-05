@@ -67,14 +67,12 @@
       opacity: .8;
       transform: rotateZ(90deg);
     }
-
     #game-list {
       margin-top: 0;
       height: 60vw;
       overflow: auto;
       background-color: black;
     }
-
     #game-list-box p {
       margin: 0;
       height: 3rem;
@@ -189,18 +187,38 @@
      *   回放功能
      *   后台存储存档/存储nes文件
      */
+     var frame = 0;
+     var nextActs = {};
     // 是否记录操作，不是 就自动按按钮
-    let isIn = true;
+    let isIn = false;
     let steps = {};
     if (!isIn) {
-      steps = JSON.parse(localStorage.steps);
+      // steps = JSON.parse(localStorage.steps);
     }
     // 是否是存入档案阶段，不是 就自动读档
     let isNesIn = false;
     var nes = null;
     var nes2 = null;
     if (!isNesIn) {
-      localStorage.nes ? (nes2 = JSON.parse(localStorage.nes)) : '';
+      // localStorage.nes ? (nes2 = JSON.parse(localStorage.nes)) : '';
+    }
+    function btnAct(key1, key2, downOrUp){
+      // console.log(socket)
+      socket.emit("message", {
+        key1,
+        key2,
+        frame,
+        type: 'plan3',
+        downOrUp
+      })
+    }
+    function btnDown(...arg) {
+      console.log('btnDown')
+      btnAct(arg[0], arg[1], 'down')
+    }
+    function btnUp(...arg) {
+      console.log('btnUp')
+      btnAct(arg[0], arg[1], 'up')
     }
     // 加载速度
     let frameSpeed = 1;
@@ -408,7 +426,7 @@
       var imageData = context.getImageData(0, 0, 256, 240);
       // $("#emulator").append(screen);
       this.player = 0;
-      var frame = 0;
+      frame = 0;
       var prevBuffer = new Array(256 * 240);
       function clearScreen() {
         context.fillStyle = "black";
@@ -470,20 +488,32 @@
               }
               context.putImageData(imageData, 0, 0);
             }
+            
             // 重要！！！按钮回放功能
             // if (steps[frame]) {
             //   for (let i = 0; i < steps[frame].length; i++) {
             //     let dic = steps[frame][i];
             //     let key = KEYS[dic.keyCode];
             //     if(dic.type == 'up') {
-            //       nes.buttonUp(key[0], key[1]);
+            //       btnUp(key[0], key[1]);
             //     } else if (dic.type == 'down') {
             //       console.log(frame, dic.type, dic, key)
-            //       nes.buttonDown(key[0], key[1]);
+            //       btnDown(key[0], key[1]);
             //     }
             //   }
             // }
             frame += 1;
+            if (nextActs[frame]) {
+              let acts = nextActs[frame];
+              for (let i = 0; i < acts.length; i++) {
+                const act = acts[i];
+                if (act.downOrUp == 'down') {
+                  nes.buttonDown(act['key1'], act['key2']);
+                } else if (act.downOrUp == 'up') {
+                  nes.buttonUp(act['key1'], act['key2']);
+                }
+              }
+            }
             // if (frame < 2500) {
             //   console.log(frame);
             //   nes.frame()
@@ -642,7 +672,7 @@
 
         var key = KEYS[evt.keyCode];
         if (key) {
-          nes.buttonDown(key[0], key[1]);
+          btnDown(key[0], key[1]);
           console.log(key);
           socket.emit("message", {
             type: "down",
@@ -656,7 +686,7 @@
           })
           if (isIn) localStorage.steps = JSON.stringify(steps);
         }
-        // nes.buttonDown(1, jsnes.Controller.BUTTON_A);
+        // btnDown(1, jsnes.Controller.BUTTON_A);
         // nes.keyboard.keyDown(evt);
         // if (window.player == 1) { nes.keyboard.keyDown(evt); }
         // if (window.player == 2 && keyMap[code]) { evt.preventDefault(); sendKey("keydown", keyMap[code]); }
@@ -665,7 +695,7 @@
       $(document).bind("keyup", function (evt) {
         var key = KEYS[evt.keyCode];
         if (key) {
-          nes.buttonUp(key[0], key[1]);
+          btnUp(key[0], key[1]);
           socket.emit("message", {
             type: "up",
             key
@@ -685,21 +715,21 @@
       //   console.log('touchstart');
       //   console.log(evt);
       //   // evt.preventDefault();
-      //   // nes.buttonDown(KEYS[38][0], KEYS[38][1]);
+      //   // btnDown(KEYS[38][0], KEYS[38][1]);
 
       // });
       // $('#btnall').bind("touchmove mousemove", function (evt) {
       //   // console.log('touch');
       //   // console.log(evt);
       //   // evt.preventDefault();
-      //   // nes.buttonDown(KEYS[38][0], KEYS[38][1]);
+      //   // btnDown(KEYS[38][0], KEYS[38][1]);
 
       // });
       // $('#btnall').bind("touchend mouseup", function (evt) {
       //   console.log('touchend');
       //   console.log(evt);
       //   // evt.preventDefault();
-      //   // nes.buttonDown(KEYS[38][0], KEYS[38][1]);
+      //   // btnDown(KEYS[38][0], KEYS[38][1]);
 
       // });
       // 直接添加监听事件
@@ -707,7 +737,7 @@
         // $('#btnup').bind("touchstart", function (evt) {
 
         evt.preventDefault();
-        nes.buttonDown(KEYS[38][0], KEYS[38][1]);
+        btnDown(KEYS[38][0], KEYS[38][1]);
 
         socket.emit("message", {
           type: "down",
@@ -716,7 +746,7 @@
       });
       $('#btnup').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
-        nes.buttonUp(KEYS[38][0], KEYS[38][1]);
+        btnUp(KEYS[38][0], KEYS[38][1]);
 
         socket.emit("message", {
           type: "up",
@@ -975,6 +1005,13 @@
       $('#btnload').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
       });
+      $('#btnload').bind("touchstart mousedown", function (evt) {
+        evt.preventDefault();
+        loadSavedData();
+      });
+      $('#btnload').bind("touchend mouseup", function (evt) {
+        evt.preventDefault();
+      });
       $('#btnspeed').bind("touchstart mousedown", function (evt) {
         if (frameSpeed == 1) frameSpeed = 5;
         else frameSpeed = 1;
@@ -986,7 +1023,7 @@
 
       $('#btnselect').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
-        nes.buttonDown(KEYS[17][0], KEYS[17][1]);
+        btnDown(KEYS[17][0], KEYS[17][1]);
         socket.emit("message", {
           type: "down",
           key: [KEYS[17][0], KEYS[17][1]]
@@ -996,7 +1033,7 @@
       });
       $('#btnselect').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
-        nes.buttonUp(KEYS[17][0], KEYS[17][1]);
+        btnUp(KEYS[17][0], KEYS[17][1]);
         socket.emit("message", {
           type: "up",
           key: [KEYS[17][0], KEYS[17][1]]
@@ -1004,7 +1041,7 @@
       });
       $('#btnstart').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
-        nes.buttonDown(KEYS[13][0], KEYS[13][1]);
+        btnDown(KEYS[13][0], KEYS[13][1]);
         socket.emit("message", {
           type: "down",
           key: [KEYS[13][0], KEYS[13][1]]
@@ -1014,7 +1051,7 @@
       });
       $('#btnstart').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
-        nes.buttonUp(KEYS[13][0], KEYS[13][1]);
+        btnUp(KEYS[13][0], KEYS[13][1]);
         socket.emit("message", {
           type: "up",
           key: [KEYS[13][0], KEYS[13][1]]
@@ -1104,6 +1141,9 @@
           nes.loadROM(data);
 
           interval = setInterval(function () {
+            if (--fastFramesCount>0) {
+              return;
+            }
             nes.frame();
             if (frameSpeed == 5) {
               nes.frame();

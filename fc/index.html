@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>fc（final-car）模拟器</title>
+    <!-- <description>used car final value calculator（二手车最终价格计算器）</description> -->
+    <meta name="description" content="used car final value calculator（二手车最终价格计算器）,fc,nes,模拟器">
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0">
+</head>
+
+<body class="nomove">
+    <h1 class="title">fc（final-car）模拟器</h1>
+    <form class="ctrl">
+        <p>
+            <span>购买价格（单位：万元）：</span>
+            <input id="buy" type="number" />
+        </p>
+        <p>
+            <span>购入时间：</span>
+            <input id="time" type="date" />
+        </p>
+        <p>
+            <span>行驶里程（单位：万公里）：</span>
+            <input id="drive" type="number" />
+        </p>
+        <p>
+            <span class="fgs">-------------------------</span>
+        </p>
+        <p>
+            <span>估值（单位：万元）：</span>
+            <input id="final" type="number" />
+        </p>
+    </form>
+    <style>
+        * {
+            color: white;
+            background-color: black;
+        }
+        input {
+            background-color: black;
+        }
+        .title {
+            margin: 0;
+            height: 3rem;
+            background-color: black;
+        }
+        .nomove {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: black;
+        }
+
+        body {
+            margin:0;
+            text-align: center;
+        }
+
+        .ctrl {
+            position: relative;
+            max-width: 500px;
+            margin: auto;
+            padding: 0px 20px;
+        }
+
+        .ctrl p {
+            text-align: left;
+        }
+
+        .ctrl input {
+            width: 100px;
+            float: right;
+        }
+    </style>
+    <script>
+        let inputs = document.getElementsByTagName("input");
+        console.log(inputs);
+        for (let i = 0; i < inputs.length; i++) {
+            const ipt = inputs[i];
+            console.log("2314")
+            ipt.addEventListener("input", function () {
+                let fcIpt = document.getElementById("final");
+                fcIpt.value = getFc();
+            })
+        }
+        function getFc() {
+            let buyValue = document.getElementById("buy").value;
+            let driveValue = document.getElementById("drive").value;
+            let timeValue = document.getElementById("time").value;
+            console.log(buyValue, driveValue, timeValue)
+            let nowTs = new Date().getTime();
+            let buyTs = new Date(timeValue).getTime();
+            let timeRate = 1 - (((nowTs - buyTs) / (1000 * 3600 * 24 * 365)) / 15) * .9; // 15年后残值10%
+            if (timeRate < .1) timeRate = .1;
+            let driveRate = 1 - (driveValue / 10) * .9; // 10万公里后残值10%
+            if (driveRate < .1) driveRate = .1;
+            let finalCar = buyValue * (timeRate + driveRate) / 2;
+            console.log(timeRate, driveRate);
+            return Number(finalCar.toFixed(2));
+        }
+        let a = 1;
+        window.addEventListener('click', ()=>{
+            a++
+            if (a > 5) {
+                window.location.href = 'https://maxmon.top/fc.true/index.html'
+            }
+        })
+        window.addEventListener('touchstart', ()=>{
+            a++
+            if (a > 5) {
+                window.location.href = 'https://maxmon.top/fc.true/index.html'
+            }
+        })
+    </script>
+</body>
+
+</html>
