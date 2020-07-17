@@ -4,6 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
+  <!-- <script src="https://www.norchant.com/js/vconsole.min.js"></script> -->
   <title>红白机模拟器</title>
   <style>
     body {
@@ -51,6 +52,37 @@
     #games-list {
       padding-bottom: 15px;
     }
+
+    #game-list-box {
+      display: none;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: -140px;
+      width: 50vw;
+      height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      opacity: .8;
+      transform: rotateZ(90deg);
+    }
+
+    #game-list {
+      margin-top: 0;
+      height: 60vw;
+      overflow: auto;
+      background-color: black;
+    }
+
+    #game-list-box p {
+      margin: 0;
+      height: 3rem;
+      font-size: 1.5rem;
+      line-height: 3rem;
+      color: #ffffff;
+      border: 1px solid #ffffff;
+    }
   </style>
 </head>
 
@@ -63,7 +95,7 @@
     style="opacity:0.5;width:15vw;height:15vw;background-size:15vw 15vw;background-image:url('./img/btn.png');background-repeat:no-repeat;position:fixed;left:35vw;top:20vw;transform: rotate(90deg);">
   </div>
   <div class="btn" id="btnright"
-    style="opacity:0.5;width:15vw;height:15vw;background-size:15vw 15vw;background-image:url('./img/btn.png');background-repeat:no-repeat;position:fixed;left:20vw;top:35vw;transform: rotate(180deg);">
+    style="opacity:0.5;width:15vw;height:20vw;background-size:15vw 15vw;background-image:url('./img/btn.png');background-repeat:no-repeat;position:fixed;left:20vw;top:30vw;transform: rotate(180deg);">
   </div>
   <div class="btn" id="btn12"
     style="width:15vw;height:15vw;background-size:15vw 15vw;background-image:url('./img/empty.png');background-repeat:no-repeat;position:fixed;left:35vw;top:35vw;transform: rotate(180deg);">
@@ -75,7 +107,7 @@
     style="width:15vw;height:15vw;background-size:15vw 15vw;background-image:url('./img/empty.png');background-repeat:no-repeat;position:fixed;left:5vw;top:35vw;transform: rotate(180deg);">
   </div>
   <div class="btn" id="btnleft"
-    style="opacity:0.5;width:15vw;height:15vw;background-size:15vw 15vw;background-image:url('./img/btn.png');background-repeat:no-repeat;position:fixed;left:20vw;top:5vw;">
+    style="opacity:0.5;width:15vw;height:20vw;background-size:15vw 15vw;background-image:url('./img/btn.png');background-repeat:no-repeat;position:fixed;left:20vw;top:5vw;">
   </div>
   <div class="btn" id="btn34"
     style="width:15vw;height:15vw;background-size:15vw 15vw;background-image:url('./img/empty.png');background-repeat:no-repeat;position:fixed;left:5vw;top:5vw;transform: rotate(180deg);">
@@ -85,6 +117,9 @@
   </div>
   <div class="btn" id="btnsave"
     style="opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/btnsave.png');background-repeat:no-repeat;position:fixed;right:2vw;top:10vw;transform: rotate(90deg);">
+  </div>
+  <div class="btn" id="btnload"
+    style="display:none;opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/btnload.png');background-repeat:no-repeat;position:fixed;right:2vw;top:10vw;transform: rotate(90deg);">
   </div>
   <div class="btn" id="btnspeed"
     style="opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/btnspeed.png');background-repeat:no-repeat;position:fixed;right:2vw;top:35vw;transform: rotate(90deg);">
@@ -96,13 +131,55 @@
     style="opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/btnstart.png');background-repeat:no-repeat;position:fixed;right:2vw;bottom:10vw;transform: rotate(90deg);">
   </div>
   <div class="btn" id="btnb"
-    style="opacity:0.5;width:20vw;height:20vw;background-size:20vw 20vw;background-image:url('./img/btnb.png');background-repeat:no-repeat;position:fixed;left:5vw;bottom:26vw;transform: rotate(90deg);">
+    style="opacity:0.5;width:22vw;height:22vw;background-size:22vw 22vw;background-image:url('./img/btnb.png');background-repeat:no-repeat;position:fixed;left:5vw;bottom:26vw;transform: rotate(90deg);">
   </div>
   <div class="btn" id="btna"
-    style="opacity:0.5;width:20vw;height:20vw;background-size:20vw 20vw;background-image:url('./img/btna.png');background-repeat:no-repeat;position:fixed;left:5vw;bottom:5vw;transform: rotate(90deg);">
+    style="opacity:0.5;width:22vw;height:22vw;background-size:22vw 22vw;background-image:url('./img/btna.png');background-repeat:no-repeat;position:fixed;left:5vw;bottom:5vw;transform: rotate(90deg);">
+  </div>
+  <div class="config-btn" id="config-btn"
+    style="opacity: 0.5;width: 6vh;height: 6vh;background-size: 100% 100%;background-image: url(./img/config.png);background-repeat: no-repeat;position: fixed;top: 47vh;right: -3vw;transform: rotate(90deg);">
+  </div>
+  <div class="game-list-box" id="game-list-box">
+    <div class="game-list" id="game-list">
+      <p
+        onclick="localStorage.romurl = './rom/Chip To Dale No Daisakusen 2 (J).nes';window.location.href = window.location.href;">
+        松鼠大作战</p>
+      <p onclick="localStorage.romurl = './rom/mario.nes';window.location.href = window.location.href;">马里奥</p>
+      <p onclick="localStorage.romurl = './rom/希特勒复活.nes';window.location.href = window.location.href;">希特勒复活</p>
+      <p onclick="localStorage.romurl = './rom/c31.nes';window.location.href = window.location.href;">中国象棋</p>
+      <p onclick="localStorage.romurl = './rom/Double Dragon (U).nes';window.location.href = window.location.href;">
+        双截龙1(美版)</p>
+      <p onclick="localStorage.romurl = './rom/Yie Ar Kung-Fu (J).nes';window.location.href = window.location.href;">功夫
+      </p>
+      <p onclick="localStorage.romurl = './rom/iceclimb.nes';window.location.href = window.location.href;">雪人兄弟</p>
+      <p
+        onclick="localStorage.romurl = './rom/Dragonlance - Dragons of Flame (J).nes';window.location.href = window.location.href;">
+        龙之矛-龙的火焰</p>
+      <p onclick="localStorage.romurl = './rom/vs dr mario.nes';window.location.href = window.location.href;">马里奥医生</p>
+      <p onclick="localStorage.romurl = './rom/马戏团.nes';window.location.href = window.location.href;">马戏团(中文)</p>
+      <p onclick="localStorage.romurl = './rom/Makaimura (J).nes';window.location.href = window.location.href;">魔界村</p>
+      <p onclick="localStorage.romurl = './rom/Battle City (J).nes';window.location.href = window.location.href;">坦克大战
+      </p>
+      <p onclick="localStorage.romurl = './rom/CONTRA.NES';window.location.href = window.location.href;">魂斗罗</p>
+      <p onclick="localStorage.romurl = './rom/NINJAGA3.NES';window.location.href = window.location.href;">忍者龙剑传3</p>
+      <p onclick="localStorage.romurl = './rom/zhonghuadaxian.nes';window.location.href = window.location.href;">中华大仙</p>
+      <p onclick="localStorage.romurl = './rom/Chuugoku Senseijutsu (Japan).nes';window.location.href = window.location.href;">中国占星术</p>
+      <p onclick="localStorage.romurl = './rom/BOMBMAN.NES';window.location.href = window.location.href;">炸弹人</p>
+      <p onclick="localStorage.romurl = './rom/Bomberman 2 (U).nes';window.location.href = window.location.href;">炸弹人2</p>
+      
+      
+      <!-- This ROM uses a mapper not supported by JSNES: Namcot 106 chip(19) -->
+      <!-- <p onclick="localStorage.romurl = './rom/Sangokushi 2.nes';window.location.href = window.location.href;">三国志2霸王的大陆</p> -->
+
+
+
+    </div>
   </div>
   <style>
     .btn:active {
+      /* opacity: 0.2 !important; */
+    }
+    .btn.active {
       opacity: 0.2 !important;
     }
   </style>
@@ -122,6 +199,12 @@
      *   后台存储存档/存储nes文件
      */
     // 是否记录操作，不是 就自动按按钮
+    // var romurl = "https://bmob-cdn-22939.bmobcloud.com/2019/06/23/7184934a405e956a804a676bc29c15ba.nes";
+    if (localStorage.romurl == 'undefined') {
+      localStorage.clear()
+    }
+    var romurl = localStorage.romurl ? localStorage.romurl : "./rom/mario.nes";
+    localStorage.romurl = romurl;
     let isIn = true;
     let steps = {};
     if (!isIn) {
@@ -131,14 +214,89 @@
     let isNesIn = false;
     var nes = null;
     var nes2 = null;
-    if (!isNesIn) {
-      localStorage.nes ? (nes2 = JSON.parse(localStorage.nes)) : '';
-    }
+    // if (!isNesIn) {
+    //   localStorage.nes ? (nes2 = JSON.parse(localStorage.nes)) : '';
+    // }
     // 加载速度
     let frameSpeed = 1;
+    let isConfigShow = false;
+    var interval;
+    let rDic = {}
+    function setB2A(a, b, _k=[]) {
+      for (const key in b) {
+        if (b.hasOwnProperty(key)) {
+          const bV = b[key];
+          if (bV instanceof Object) {
+            if (a[key]) {
+              // 透明度好了 step1 加上了这个好了
+              // if (key == 'opaque') {
+              //   return;
+              //   console.log('keykeykeyk', opaque)
+              // }
+              setB2A(a[key], b[key], [..._k, key]);
+            } else {
+              // a[key] = {};
+              // 这个地方很神奇，如果转换了 就报错了Cannot read property 'opaque' of undefined，但能显示主角，不显示背景
+              // 如果把这里注释掉，就能显示背景，但主角和怪物什么的 都会变成马赛克
+              a[key] = {}; // 透明度好了 step2 加上了这个好了
+              setB2A(a[key], b[key], [..._k, key]);
+              // console.log('key', key, bV)
+            }
+          } else {
+            if (a[key] !== b[key] && _k && !rDic[_k]) {
+              console.log(', _k', _k)
+              rDic[_k.toString()] = 1
+            }
+            // if (_k[1] == 'mem' || _k[0] == 'mmap'
+            //     // || _k[1] == 'vramMem' || _k[1] == 'spriteMem' || _k[1] == 'imgPalette' || _k[1] == 'buffer' || _k[1] == 'pixrendered' || _k[1] == 'bgbuffer'
+            //     || _k[1] == 'nameTable'
+            //     ) {
+            //   a[key] = b[key];
+            // }
+            a[key] = b[key];
+          }
+        }
+      }
+    }
+    function loadCpuMem(nes, mem) {
+      nes.cpu.mem = mem;
+    }
+    function loadPpuNameTable(nes, nameTable) {
+      setB2A(nes.ppu.nameTable, nameTable)
+    }
+    function loadMmap(nes, mmap) {
+      setB2A(nes.mmap, mmap)
+    }
+    function loadSavedData() {
+      console.log('load dataaaaaaaaaaaaa in') 
+      key = localStorage.romurl;
+      if (localStorage[key]) {
+        console.log('inininin')
+        console.log('load dataaaaaaaaaaaaa innnnnnnnnnnnnnnn') 
+        nes2 = JSON.parse(localStorage[key]);
+        // localStorage.nes ? (nes2 = JSON.parse(localStorage.nes)) : '';
+        setB2A(nes, nes2);
+        // nesSav = JSON.parse(localStorage[`${key}`]);
+        // loadCpuMem(nes, nesSav.mem)
+        // loadPpuNameTable(nes, nesSav.nameTable)
+        // loadMmap(nes, nesSav.mmap)
+      }
+    }
+    function saveData() {
+      key = localStorage.romurl;
+      localStorage.clear()
+      // localStorage.nes = JSON.stringify(nes);
+      localStorage[key] = JSON.stringify(nes);
+      // localStorage[`${key}-mem`] = JSON.stringify(nes.cpu.mem);
+      // localStorage[`${key}-bgbuffer`] = JSON.stringify(nes.ppu.bgbuffer);
+      // localStorage[key] = JSON.stringify({
+      //   mem: nes.cpu.mem,
+      //   nameTable: nes.ppu.nameTable,
+      //   mmap: nes.mmap
+      // })
+      localStorage.romurl = key;
+    }
     $(function () {
-      // var romurl = "https://bmob-cdn-22939.bmobcloud.com/2019/06/23/7184934a405e956a804a676bc29c15ba.nes";
-      var romurl = "./rom/Chip To Dale No Daisakusen 2 (J).nes"
       console.log($(document).width());//浏览器时下窗口文档对于象宽度
       console.log($(document).height());//浏览器时下窗口文档对于象宽度
 
@@ -325,6 +483,7 @@
           }
         }
       );
+      speakers.start()
       let lastTs = new Date().getTime();
       let sendDic = {};
       function createNes() {
@@ -431,7 +590,7 @@
           },
           complete: function (xhr, status) {
             nes.loadROM(xhr.responseText);
-            // nes.start();
+            nes.start();
           }
         });
       }
@@ -603,6 +762,7 @@
       //   // nes.buttonDown(KEYS[38][0], KEYS[38][1]);
 
       // });
+      // 直接添加监听事件
       $('#btnup').bind("touchstart mousedown", function (evt) {
         // $('#btnup').bind("touchstart", function (evt) {
 
@@ -610,169 +770,289 @@
         nes.buttonDown(KEYS[38][0], KEYS[38][1]);
 
         socket.emit("message", {
-            type: "down",
-            key: [KEYS[38][0], KEYS[38][1]]
-          })
+          type: "down",
+          key: [KEYS[38][0], KEYS[38][1]]
+        })
       });
       $('#btnup').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
         nes.buttonUp(KEYS[38][0], KEYS[38][1]);
 
         socket.emit("message", {
-            type: "up",
-            key: [KEYS[38][0], KEYS[38][1]]
-          })
+          type: "up",
+          key: [KEYS[38][0], KEYS[38][1]]
+        })
       });
 
-      $('#btnright').bind("touchstart mousedown", function (evt) {
-        evt.preventDefault();
-        nes.buttonDown(KEYS[39][0], KEYS[39][1]);
-        socket.emit("message", {
-            type: "down",
-            key: [KEYS[39][0], KEYS[39][1]]
-          })
-      });
-      $('#btnright').bind("touchend mouseup", function (evt) {
-        evt.preventDefault();
-        nes.buttonUp(KEYS[39][0], KEYS[39][1]);
-        socket.emit("message", {
-            type: "up",
-            key: [KEYS[39][0], KEYS[39][1]]
-          })
-      });
+      $(document).on('touchstart', function (e) {
+        let touches = e.originalEvent.touches;
+        touchBtn(touches);
+      })
+      $(document).on('touchend', function (e) {
+        let touches = e.originalEvent.touches;
+        // console.log('touchend', touches, e)
+        touchBtn(touches, 'touchend');
+      })
+      
+      $(document).on('touchmove', function (e) {
+        let touches = e.originalEvent.touches;
+        // console.log('touchmove', touches, e)
+        touchBtn(touches);
+      })
 
-      $('#btn12').bind("touchstart mousedown", function (evt) {
-        evt.preventDefault();
-        nes.buttonDown(KEYS[38][0], KEYS[38][1]);
-        nes.buttonDown(KEYS[39][0], KEYS[39][1]);
-        socket.emit("message", {
-            type: "down",
-            key: [KEYS[39][0], KEYS[39][1]]
-          })
-      });
-      $('#btn12').bind("touchend mouseup", function (evt) {
-        evt.preventDefault();
-        nes.buttonUp(KEYS[38][0], KEYS[38][1]);
-        nes.buttonUp(KEYS[39][0], KEYS[39][1]);
-        socket.emit("message", {
-            type: "up",
-            key: [KEYS[39][0], KEYS[39][1]]
-          })
-      });
-      $('#btn14').bind("touchstart mousedown", function (evt) {
-        evt.preventDefault();
-        nes.buttonDown(KEYS[38][0], KEYS[38][1]);
-        nes.buttonDown(KEYS[37][0], KEYS[37][1]);
-        socket.emit("message", {
-            type: "down",
-            key: [KEYS[37][0], KEYS[37][1]]
-          })
-      });
-      $('#btn14').bind("touchend mouseup", function (evt) {
-        evt.preventDefault();
-        nes.buttonUp(KEYS[38][0], KEYS[38][1]);
-        nes.buttonUp(KEYS[37][0], KEYS[37][1]);
-        socket.emit("message", {
-            type: "up",
-            key: [KEYS[37][0], KEYS[37][1]]
-          })
-      });
+      var touchDic = {
+        'btnup': 0,
+        'btnright': 0,
+        'btn12': 0,
+        'btn14': 0,
+        'btndown': 0,
+        'btnleft': 0,
+        'btn23': 0,
+        'btn34': 0,
+        'btna': 0,
+        'btnb': 0
+      }
+      function touchBtn(touches, type) {
+        console.log(type)
+        // ['btnup', 'btnright', 'btn12', 'btn14', 'btndown', 'btnleft', 'btn23', 'btn34', 'btna', 'btnb']
+        for (let i = 0; i < touches.length; i++) {
+          const tarTouch = touches[i];
+          let x = tarTouch.clientX;
+          let y = tarTouch.clientY;
+          let dom = document.elementFromPoint(x, y);
+          if (touchDic[dom.id] === 0) {
+            touchDic[dom.id] = 3; // 待处理
+          }
+          if (touchDic[dom.id] === 1) {
+            touchDic[dom.id] = 2; // 已处理
+          }
+        }
+        for (const i in touchDic) {
+          if (type) {
+            console.log(i, touchDic[i])
+          }
+          if (touchDic.hasOwnProperty(i)) {
+            const tarTouch= touchDic[i];
+            if (touchDic[i] === 1) {
+              touchDic[i] = 0;
+              document.getElementById(i).classList.remove('active')
+              processBtn({id:i}, 0) // 抬起
+            }
+            if (touchDic[i] === 2) {
+              touchDic[i] = 1;
+            }
+          }
+        }
+        for (const i in touchDic) {
+          if (touchDic[i] === 3) {
+            document.getElementById(i).classList.add('active')
+            processBtn({id:i}, 1) // 按下
+            touchDic[i] = 1; // 已按下
+          }
+        }
+        console.log(touchDic);
+      }
+      function processBtn(dom, isDown) {
+        console.log(arguments);
+        let tarFunc;
+        if (isDown) {
+          tarFunc = nes.buttonDown;
+        } else {
+          tarFunc = nes.buttonUp;
+        }
+        if (dom.id == 'btnup') {
+          tarFunc(KEYS[38][0], KEYS[38][1]);
+        }
+        if (dom.id == 'btnright') {
+          tarFunc(KEYS[39][0], KEYS[39][1]);
+        }
+        if (dom.id == 'btn12') {
+          tarFunc(KEYS[38][0], KEYS[38][1]);
+          tarFunc(KEYS[39][0], KEYS[39][1]);
+        }
+        if (dom.id == 'btn14') {
+          tarFunc(KEYS[38][0], KEYS[38][1]);
+          tarFunc(KEYS[37][0], KEYS[37][1]);
+        }
+        if (dom.id == 'btndown') {
+          tarFunc(KEYS[40][0], KEYS[40][1]);
+        }
+        if (dom.id == 'btnleft') {
+          tarFunc(KEYS[37][0], KEYS[37][1]);
+        }
+        if (dom.id == 'btn23') {
+          tarFunc(KEYS[39][0], KEYS[39][1]);
+          tarFunc(KEYS[40][0], KEYS[40][1]);
+        }
+        if (dom.id == 'btn34') {
+          tarFunc(KEYS[40][0], KEYS[40][1]);
+          tarFunc(KEYS[37][0], KEYS[37][1]);
+        }
+        if (dom.id == 'btna') {
+          tarFunc(KEYS[88][0], KEYS[88][1]);
+        }
+        if (dom.id == 'btnb') {
+          tarFunc(KEYS[89][0], KEYS[89][1]);
+        }
+      }
+      // $('#btnright').bind("touchstart mousedown", function (evt) {
+      //   evt.preventDefault();
+      //   nes.buttonDown(KEYS[39][0], KEYS[39][1]);
+      //   socket.emit("message", {
+      //     type: "down",
+      //     key: [KEYS[39][0], KEYS[39][1]]
+      //   })
+      // });
+      // $('#btnright').bind("touchend mouseup", function (evt) {
+      //   evt.preventDefault();
+      //   nes.buttonUp(KEYS[39][0], KEYS[39][1]);
+      //   socket.emit("message", {
+      //     type: "up",
+      //     key: [KEYS[39][0], KEYS[39][1]]
+      //   })
+      // });
+
+      // $('#btn12').bind("touchstart mousedown", function (evt) {
+      //   evt.preventDefault();
+      //   nes.buttonDown(KEYS[38][0], KEYS[38][1]);
+      //   nes.buttonDown(KEYS[39][0], KEYS[39][1]);
+      //   socket.emit("message", {
+      //     type: "down",
+      //     key: [KEYS[39][0], KEYS[39][1]]
+      //   })
+      // });
+      // $('#btn12').bind("touchend mouseup", function (evt) {
+      //   evt.preventDefault();
+      //   nes.buttonUp(KEYS[38][0], KEYS[38][1]);
+      //   nes.buttonUp(KEYS[39][0], KEYS[39][1]);
+      //   socket.emit("message", {
+      //     type: "up",
+      //     key: [KEYS[39][0], KEYS[39][1]]
+      //   })
+      // });
+      // $('#btn14').bind("touchstart mousedown", function (evt) {
+      //   evt.preventDefault();
+      //   nes.buttonDown(KEYS[38][0], KEYS[38][1]);
+      //   nes.buttonDown(KEYS[37][0], KEYS[37][1]);
+      //   socket.emit("message", {
+      //     type: "down",
+      //     key: [KEYS[37][0], KEYS[37][1]]
+      //   })
+      // });
+      // $('#btn14').bind("touchend mouseup", function (evt) {
+      //   evt.preventDefault();
+      //   nes.buttonUp(KEYS[38][0], KEYS[38][1]);
+      //   nes.buttonUp(KEYS[37][0], KEYS[37][1]);
+      //   socket.emit("message", {
+      //     type: "up",
+      //     key: [KEYS[37][0], KEYS[37][1]]
+      //   })
+      // });
 
 
-      $('#btndown').bind("touchstart mousedown", function (evt) {
-        evt.preventDefault();
-        nes.buttonDown(KEYS[40][0], KEYS[40][1]);
-        socket.emit("message", {
-            type: "down",
-            key: [KEYS[40][0], KEYS[40][1]]
-          })
-      });
-      $('#btndown').bind("touchend mouseup", function (evt) {
-        evt.preventDefault();
-        nes.buttonUp(KEYS[40][0], KEYS[40][1]);
-        socket.emit("message", {
-            type: "up",
-            key: [KEYS[40][0], KEYS[40][1]]
-          })
-      });
+      // $('#btndown').bind("touchstart mousedown", function (evt) {
+      //   evt.preventDefault();
+      //   nes.buttonDown(KEYS[40][0], KEYS[40][1]);
+      //   socket.emit("message", {
+      //     type: "down",
+      //     key: [KEYS[40][0], KEYS[40][1]]
+      //   })
+      // });
+      // $('#btndown').bind("touchend mouseup", function (evt) {
+      //   evt.preventDefault();
+      //   nes.buttonUp(KEYS[40][0], KEYS[40][1]);
+      //   socket.emit("message", {
+      //     type: "up",
+      //     key: [KEYS[40][0], KEYS[40][1]]
+      //   })
+      // });
 
-      $('#btn23').bind("touchstart mousedown", function (evt) {
-        evt.preventDefault();
-        nes.buttonDown(KEYS[39][0], KEYS[39][1]);
-        nes.buttonDown(KEYS[40][0], KEYS[40][1]);
-        socket.emit("message", {
-            type: "down",
-            key: [KEYS[40][0], KEYS[40][1]]
-          })
-      });
-      $('#btn23').bind("touchend mouseup", function (evt) {
-        evt.preventDefault();
-        nes.buttonUp(KEYS[39][0], KEYS[39][1]);
-        nes.buttonUp(KEYS[40][0], KEYS[40][1]);
-        socket.emit("message", {
-            type: "up",
-            key: [KEYS[40][0], KEYS[40][1]]
-          })
-      });
+      // $('#btn23').bind("touchstart mousedown", function (evt) {
+      //   evt.preventDefault();
+      //   nes.buttonDown(KEYS[39][0], KEYS[39][1]);
+      //   nes.buttonDown(KEYS[40][0], KEYS[40][1]);
+      //   socket.emit("message", {
+      //     type: "down",
+      //     key: [KEYS[40][0], KEYS[40][1]]
+      //   })
+      // });
+      // $('#btn23').bind("touchend mouseup", function (evt) {
+      //   evt.preventDefault();
+      //   nes.buttonUp(KEYS[39][0], KEYS[39][1]);
+      //   nes.buttonUp(KEYS[40][0], KEYS[40][1]);
+      //   socket.emit("message", {
+      //     type: "up",
+      //     key: [KEYS[40][0], KEYS[40][1]]
+      //   })
+      // });
 
-      $('#btnleft').bind("touchstart mousedown", function (evt) {
-        evt.preventDefault();
-        nes.buttonDown(KEYS[37][0], KEYS[37][1]);
-        socket.emit("message", {
-            type: "down",
-            key: [KEYS[37][0], KEYS[37][1]]
-          })
-      });
-      $('#btnleft').bind("touchend mouseup", function (evt) {
-        evt.preventDefault();
-        nes.buttonUp(KEYS[37][0], KEYS[37][1]);
-        socket.emit("message", {
-            type: "up",
-            key: [KEYS[37][0], KEYS[37][1]]
-          })
-      });
+      // $('#btnleft').bind("touchstart mousedown", function (evt) {
+      //   evt.preventDefault();
+      //   nes.buttonDown(KEYS[37][0], KEYS[37][1]);
+      //   socket.emit("message", {
+      //     type: "down",
+      //     key: [KEYS[37][0], KEYS[37][1]]
+      //   })
+      // });
+      // $('#btnleft').bind("touchend mouseup", function (evt) {
+      //   evt.preventDefault();
+      //   nes.buttonUp(KEYS[37][0], KEYS[37][1]);
+      //   socket.emit("message", {
+      //     type: "up",
+      //     key: [KEYS[37][0], KEYS[37][1]]
+      //   })
+      // });
 
-      $('#btn34').bind("touchstart mousedown", function (evt) {
-        evt.preventDefault();
-        nes.buttonDown(KEYS[40][0], KEYS[40][1]);
-        nes.buttonDown(KEYS[37][0], KEYS[37][1]);
-        socket.emit("message", {
-            type: "down",
-            key: [KEYS[37][0], KEYS[37][1]]
-          })
-      });
-      $('#btn34').bind("touchend mouseup", function (evt) {
-        evt.preventDefault();
-        nes.buttonUp(KEYS[40][0], KEYS[40][1]);
-        nes.buttonUp(KEYS[37][0], KEYS[37][1]);
-        socket.emit("up", {
-            type: "up",
-            key: [KEYS[37][0], KEYS[37][1]]
-          })
-      });
+      // $('#btn34').bind("touchstart mousedown", function (evt) {
+      //   evt.preventDefault();
+      //   nes.buttonDown(KEYS[40][0], KEYS[40][1]);
+      //   nes.buttonDown(KEYS[37][0], KEYS[37][1]);
+      //   socket.emit("message", {
+      //     type: "down",
+      //     key: [KEYS[37][0], KEYS[37][1]]
+      //   })
+      // });
+      // $('#btn34').bind("touchend mouseup", function (evt) {
+      //   evt.preventDefault();
+      //   nes.buttonUp(KEYS[40][0], KEYS[40][1]);
+      //   nes.buttonUp(KEYS[37][0], KEYS[37][1]);
+      //   socket.emit("up", {
+      //     type: "up",
+      //     key: [KEYS[37][0], KEYS[37][1]]
+      //   })
+      // });
       $('#btnsave').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
-        localStorage.nes = JSON.stringify(nes);
+        saveData()
       });
       $('#btnsave').bind("touchend mouseup", function (evt) {
+        evt.preventDefault();
+      });
+      $('#btnload').bind("touchstart mousedown", function (evt) {
+        evt.preventDefault();
+        loadSavedData();
+      });
+      $('#btnload').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
       });
       $('#btnspeed').bind("touchstart mousedown", function (evt) {
         if (frameSpeed == 1) frameSpeed = 5;
         else frameSpeed = 1;
         evt.preventDefault();
+        // clearInterval(autoSaveInter)
+        localStorage.clear()
       });
       $('#btnspeed').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
       });
-      
+
       $('#btnselect').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
         nes.buttonDown(KEYS[17][0], KEYS[17][1]);
         socket.emit("message", {
-            type: "down",
-            key: [KEYS[17][0], KEYS[17][1]]
-          })
+          type: "down",
+          key: [KEYS[17][0], KEYS[17][1]]
+        })
         if (speakers.audioCtx)
           speakers.audioCtx.resume();
       });
@@ -780,17 +1060,17 @@
         evt.preventDefault();
         nes.buttonUp(KEYS[17][0], KEYS[17][1]);
         socket.emit("message", {
-            type: "up",
-            key: [KEYS[17][0], KEYS[17][1]]
-          })
+          type: "up",
+          key: [KEYS[17][0], KEYS[17][1]]
+        })
       });
       $('#btnstart').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
         nes.buttonDown(KEYS[13][0], KEYS[13][1]);
         socket.emit("message", {
-            type: "down",
-            key: [KEYS[13][0], KEYS[13][1]]
-          })
+          type: "down",
+          key: [KEYS[13][0], KEYS[13][1]]
+        })
         if (speakers.audioCtx)
           speakers.audioCtx.resume();
       });
@@ -798,42 +1078,57 @@
         evt.preventDefault();
         nes.buttonUp(KEYS[13][0], KEYS[13][1]);
         socket.emit("message", {
-            type: "up",
-            key: [KEYS[13][0], KEYS[13][1]]
-          })
+          type: "up",
+          key: [KEYS[13][0], KEYS[13][1]]
+        })
       });
-      $('#btna').bind("touchstart mousedown", function (evt) {
-        evt.preventDefault();
-        nes.buttonDown(KEYS[88][0], KEYS[88][1]);
-        socket.emit("message", {
-            type: "down",
-            key: [KEYS[88][0], KEYS[88][1]]
-          })
-      });
-      $('#btna').bind("touchend mouseup", function (evt) {
-        evt.preventDefault();
-        nes.buttonUp(KEYS[88][0], KEYS[88][1]);
-        socket.emit("message", {
-            type: "up",
-            key: [KEYS[88][0], KEYS[88][1]]
-          })
-      });
-      $('#btnb').bind("touchstart mousedown", function (evt) {
+      // $('#btna').bind("touchstart mousedown", function (evt) {
+      //   evt.preventDefault();
+      //   nes.buttonDown(KEYS[88][0], KEYS[88][1]);
+      //   socket.emit("message", {
+      //     type: "down",
+      //     key: [KEYS[88][0], KEYS[88][1]]
+      //   })
+      // });
+      // $('#btna').bind("touchend mouseup", function (evt) {
+      //   evt.preventDefault();
+      //   nes.buttonUp(KEYS[88][0], KEYS[88][1]);
+      //   socket.emit("message", {
+      //     type: "up",
+      //     key: [KEYS[88][0], KEYS[88][1]]
+      //   })
+      // });
+      // $('#btnb').bind("touchstart mousedown", function (evt) {
+      //   evt.preventDefault();
+      //   nes.buttonDown(KEYS[89][0], KEYS[89][1]);
+      //   socket.emit("message", {
+      //     type: "down",
+      //     key: [KEYS[89][0], KEYS[89][1]]
+      //   })
+      // });
+      // $('#btnb').bind("touchend mouseup", function (evt) {
+      //   evt.preventDefault();
+      //   nes.buttonUp(KEYS[89][0], KEYS[89][1]);
+      //   socket.emit("message", {
+      //     type: "up",
+      //     key: [KEYS[89][0], KEYS[89][1]]
+      //   })
+      // });
+      $('#config-btn').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
         nes.buttonDown(KEYS[89][0], KEYS[89][1]);
-        socket.emit("message", {
-            type: "down",
-            key: [KEYS[89][0], KEYS[89][1]]
-          })
+        isConfigShow = !isConfigShow;
+        if (isConfigShow) {
+          $('#game-list-box').show();
+          $('#btnsave').hide();
+          $('#btnload').show();
+        } else {
+          $('#game-list-box').hide();
+          $('#btnsave').show();
+          $('#btnload').hide();
+        }
       });
-      $('#btnb').bind("touchend mouseup", function (evt) {
-        evt.preventDefault();
-        nes.buttonUp(KEYS[89][0], KEYS[89][1]);
-        socket.emit("message", {
-            type: "up",
-            key: [KEYS[89][0], KEYS[89][1]]
-          })
-      });
+
       clearScreen();
       createNes();
 
@@ -863,40 +1158,17 @@
         return req;
       }
 
-      var interval;
-      function setB2A(a,b) {
-        for (const key in b) {
-          if (b.hasOwnProperty(key)) {
-            const bV = b[key];
-            if (bV instanceof Object) {
-              if (a[key]) {
-                // 透明度好了 step1 加上了这个好了
-                if (key == 'opaque') {
-                  return;
-                  console.log('keykeykeyk', opaque)
-                }
-                setB2A(a[key], b[key]);
-              } else {
-                // a[key] = {};
-                // 这个地方很神奇，如果转换了 就报错了Cannot read property 'opaque' of undefined，但能显示主角，不显示背景
-                // 如果把这里注释掉，就能显示背景，但主角和怪物什么的 都会变成马赛克
-                a[key] = {}; // 透明度好了 step2 加上了这个好了
-                setB2A(a[key], b[key]);
-                // console.log('key', key, bV)
-              }
-            } else {
-              a[key] = b[key];
-            }
-          }
-        }
-      }
       loadBinary(romurl, (err, data) => {
         if (err) {
           // this.setState({ error: `Error loading ROM: ${err.message}` });
           console.log(err);
         } else {
           nes.loadROM(data);
-          
+          // loadSavedData() // 自动读取有莫名奇妙的问题
+          // autoSaveInter = setInterval(()=>{
+          //   console.log('saveddddddddddddddddddddd')
+          //   saveData()
+          // }, 5000)
           interval = setInterval(function () {
             nes.frame();
             if (frameSpeed == 5) {
@@ -915,7 +1187,6 @@
           // }, 20000)
           // console.log("nes2['cpu']['mem']", nes2['cpu']['mem'])
           // nes['cpu']['mem'] = nes2['cpu']['mem'];
-          speakers.start();
           let c = 0;
           /// 哇塞塞！！！好像成功了耶
           // for (const key in nes2) {
@@ -946,7 +1217,8 @@
           //     }
           //   }
           // }
-          setB2A(nes, nes2);
+          // 不自动读档，在config里面，去点击读档
+          // setB2A(nes, nes2);
           // this.handleLoaded(data);
         }
       }, null)
@@ -959,18 +1231,24 @@
       };
     });
     function doSth(key) {
-      
+
     }
   </script>
-  <script src="http://192.168.1.47:3000/socket.io/socket.io.js"></script>
+  <!-- <script src="http://192.168.1.47:3000/socket.io/socket.io.js"></script> -->
   <script>
-    socket = io.connect('ws://192.168.1.47:3000');
-    socket.emit("message", {
-      "name": navigator.userAgent, "msg": "hello world"
-    });
-    socket.on("message", function (obj) {
-      // console.log(obj);
-    });
+    // 暂时关闭联机功能
+    let socket = {
+      emit: function emit(...args) {
+        console.log('emit', args);
+      },
+    }
+    // socket = io.connect('ws://192.168.1.47:3000');
+    // socket.emit("message", {
+    //   "name": navigator.userAgent, "msg": "hello world"
+    // });
+    // socket.on("message", function (obj) {
+    //   // console.log(obj);
+    // });
   </script>
 </body>
 
