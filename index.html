@@ -91,8 +91,7 @@
   <!-- <div id="btnall"
     style="opacity:0.5;width:45vw;height:45vw;background-size:45vw 45vw;background-image:url('./img/btn.png');background-repeat:no-repeat;position:fixed;left:5vw;top:5vw;transform: rotate(90deg);">
   </div> -->
-  <div class="btn" id="btnup"
-    style="opacity:0.5;width:15vw;height:15vw;background-size:15vw 15vw;background-image:url('./img/btn.png');background-repeat:no-repeat;position:fixed;left:35vw;top:20vw;transform: rotate(90deg);">
+  <div class="btn" id="btnup">
   </div>
   <div class="btn" id="btnright"
     style="opacity:0.5;width:15vw;height:20vw;background-size:15vw 15vw;background-image:url('./img/btn.png');background-repeat:no-repeat;position:fixed;left:20vw;top:30vw;transform: rotate(180deg);">
@@ -115,19 +114,19 @@
   <div class="btn" id="btn14"
     style="width:15vw;height:15vw;background-size:15vw 15vw;background-image:url('./img/empty.png');background-repeat:no-repeat;position:fixed;left:35vw;top:5vw;transform: rotate(180deg);">
   </div>
-  <div class="btn" id="btnsave"
+  <div class="btn top-btn" id="btnsave"
     style="opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/btnsave.png');background-repeat:no-repeat;position:fixed;right:2vw;top:10vw;transform: rotate(90deg);">
   </div>
-  <div class="btn" id="btnload"
+  <div class="btn top-btn" id="btnload"
     style="display:none;opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/btnload.png');background-repeat:no-repeat;position:fixed;right:2vw;top:10vw;transform: rotate(90deg);">
   </div>
-  <div class="btn" id="btnspeed"
+  <div class="btn top-btn" id="btnspeed"
     style="opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/btnspeed.png');background-repeat:no-repeat;position:fixed;right:2vw;top:35vw;transform: rotate(90deg);">
   </div>
-  <div class="btn" id="btnselect"
+  <div class="btn top-btn" id="btnselect"
     style="opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/btnselect.png');background-repeat:no-repeat;position:fixed;right:2vw;bottom:35vw;transform: rotate(90deg);">
   </div>
-  <div class="btn" id="btnstart"
+  <div class="btn top-btn" id="btnstart"
     style="opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/btnstart.png');background-repeat:no-repeat;position:fixed;right:2vw;bottom:10vw;transform: rotate(90deg);">
   </div>
   <div class="btn" id="btnb"
@@ -176,11 +175,38 @@
     </div>
   </div>
   <style>
-    .btn:active {
-      /* opacity: 0.2 !important; */
+    .top-btn:active {
+      opacity: 0.2 !important;
     }
     .btn.active {
       opacity: 0.2 !important;
+    }
+
+    #btnup {
+      opacity: 0.5;
+      width: 15vw;
+      height: 20vw;
+      background-size: 15vw 15vw;
+      background-image: url(./img/btn.png);
+      background-repeat: no-repeat;
+      position: fixed;
+      left: 40vw;
+      top: 17.5vw;
+      transform: rotate(90deg);
+      background-position: bottom;
+    }
+    #btnbottom {
+      opacity: 0.5;
+      width: 15vw;
+      height: 20vw;
+      background-size: 15vw 15vw;
+      background-image: url(./img/btn.png);
+      background-repeat: no-repeat;
+      position: fixed;
+      left: 2.5vw;
+      top: 17.5vw;
+      transform: rotate(270deg);
+      background-position: bottom;
     }
   </style>
   <!-- <script type="text/javascript" src="https://unpkg.com/jsnes/dist/jsnes.min.js"></script> -->
