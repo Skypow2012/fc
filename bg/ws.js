@@ -16,8 +16,9 @@ io.on('connection', function(socket){
         console.log("a user go out");
     });
 
-    socket.on("message", function(obj) {
-        io.emit("message", obj);
+    socket.on("m", function(obj) {
+        console.log(obj)
+        io.emit("m", obj);
     });
 });
 
