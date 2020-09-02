@@ -36,6 +36,26 @@
       bottom: 0;
       margin: 0 auto;
     }
+    #canvasTips {
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      margin: 0 auto;
+    }
+    #canvasTips>span {
+      display: inline-block;
+      position: fixed;
+      color: white;
+      width: 200px;
+      text-align: center;
+      height: 20px;
+      font-size: 20px;
+      left: calc(50vw - 100px);
+      top: calc(50vh - 10px);
+      transform: rotateZ(90deg);
+    }
 
     #message {
       font-family: sans-serif;
@@ -86,16 +106,31 @@
 
     #fps,
     #f {
-      /* display: none; */
+      display: none;
       opacity: .5;
+    }
+    #time {
+      position: absolute;
+      text-align: right;
+      width: 65px;
+      font-size: 13px;
+      display: inline-block;
+      color: white;
+      transform: rotateZ(90deg);
+      right: 0;
+      bottom: 65px;
     }
   </style>
 </head>
 
 <body>
-  <input id="fps" disabled/>
-  <input id="f" disabled/>
+  <input id="fps" disabled />
+  <input id="f" disabled />
+  <span id="time">55</span>
   <canvas id="canvas" width='256px' height='240px'></canvas>
+  <div id="canvasTips"></div>
+  <img id="checkImg"></img>
+  <canvas id="check" width='12px' height='16px'></canvas>
   <!-- <div id="btnall"
     style="opacity:0.5;width:45vw;height:45vw;background-size:45vw 45vw;background-image:url('./img/btn.png');background-repeat:no-repeat;position:fixed;left:5vw;top:5vw;transform: rotate(90deg);">
   </div> -->
@@ -171,13 +206,21 @@
       </p>
       <p onclick="localStorage.romurl = './rom/CONTRA.NES';window.location.href = window.location.href;">魂斗罗</p>
       <p onclick="localStorage.romurl = './rom/NINJAGA3.NES';window.location.href = window.location.href;">忍者龙剑传3</p>
-      <p onclick="localStorage.romurl = './rom/zhonghuadaxian.nes';window.location.href = window.location.href;">中华大仙</p>
-      <p onclick="localStorage.romurl = './rom/Chuugoku Senseijutsu (Japan).nes';window.location.href = window.location.href;">中国占星术</p>
+      <p onclick="localStorage.romurl = './rom/zhonghuadaxian.nes';window.location.href = window.location.href;">中华大仙
+      </p>
+      <p
+        onclick="localStorage.romurl = './rom/Chuugoku Senseijutsu (Japan).nes';window.location.href = window.location.href;">
+        中国占星术</p>
       <p onclick="localStorage.romurl = './rom/BOMBMAN.NES';window.location.href = window.location.href;">炸弹人</p>
-      <p onclick="localStorage.romurl = './rom/Bomberman 2 (U).nes';window.location.href = window.location.href;">炸弹人2</p>
+      <p onclick="localStorage.romurl = './rom/Bomberman 2 (U).nes';window.location.href = window.location.href;">炸弹人2
+      </p>
       <p onclick="localStorage.romurl = './rom/smbc.nes';window.location.href = window.location.href;">马里奥双人版</p>
       <p onclick="localStorage.romurl = './rom/X-MEN.NES';window.location.href = window.location.href;">X-MEN</p>
-      
+      <p onclick="localStorage.romurl = './rom/kdxfzwb.nes';window.location.href = window.location.href;">快打旋风中文版</p>
+      <p onclick="localStorage.romurl = './rom/ZELDA.NES';window.location.href = window.location.href;">ZELDA</p>
+      <p onclick="localStorage.romurl = './rom/ZELDA2.NES';window.location.href = window.location.href;">ZELDA2</p>
+
+
       <!-- This ROM uses a mapper not supported by JSNES: Namcot 106 chip(19) -->
       <!-- <p onclick="localStorage.romurl = './rom/Sangokushi 2.nes';window.location.href = window.location.href;">三国志2霸王的大陆</p> -->
 
@@ -189,6 +232,7 @@
     .top-btn:active {
       opacity: 0.2 !important;
     }
+
     .btn.active {
       opacity: 0.2 !important;
     }
@@ -206,6 +250,7 @@
       transform: rotate(90deg);
       background-position: bottom;
     }
+
     #btndown {
       opacity: 0.5;
       width: 15vw;
@@ -225,9 +270,10 @@
   <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.0.min.js"></script> -->
   <script type="text/javascript" src="./js/jquery-3.4.0.min.js"></script>
   <script>
-    window.playerId = window.location.href.indexOf('p2') > -1 ? 2: 1;
+    window.playerId = window.location.href.indexOf('p2') > -1 ? 2 : 1;
     let f = document.getElementById('f')
     window.cId = Math.random().toString().substr(2, 5);
+
     function goF(nes) {
       nes.f = nes.f || 0
       nes.f++;
@@ -249,7 +295,8 @@
     if (localStorage.romurl == 'undefined') {
       localStorage.clear()
     }
-    var romurl = localStorage.romurl ? localStorage.romurl : "./rom/Chip To Dale No Daisakusen 2 (J).nes";//"./rom/mario.nes";
+    var romurl = localStorage.romurl ? localStorage.romurl :
+      "./rom/Chip To Dale No Daisakusen 2 (J).nes"; //"./rom/mario.nes";
     localStorage.romurl = romurl;
     let isIn = true;
     let steps = {};
@@ -268,7 +315,8 @@
     let isConfigShow = false;
     var interval;
     let rDic = {}
-    function setB2A(a, b, _k=[]) {
+
+    function setB2A(a, b, _k = []) {
       for (const key in b) {
         if (b.hasOwnProperty(key)) {
           const bV = b[key];
@@ -304,21 +352,25 @@
         }
       }
     }
+
     function loadCpuMem(nes, mem) {
       nes.cpu.mem = mem;
     }
+
     function loadPpuNameTable(nes, nameTable) {
       setB2A(nes.ppu.nameTable, nameTable)
     }
+
     function loadMmap(nes, mmap) {
       setB2A(nes.mmap, mmap)
     }
+
     function loadSavedData() {
-      console.log('load dataaaaaaaaaaaaa in') 
+      console.log('load dataaaaaaaaaaaaa in')
       key = localStorage.romurl;
       if (localStorage[key]) {
         console.log('inininin')
-        console.log('load dataaaaaaaaaaaaa innnnnnnnnnnnnnnn') 
+        console.log('load dataaaaaaaaaaaaa innnnnnnnnnnnnnnn')
         nes2 = JSON.parse(localStorage[key]);
         // localStorage.nes ? (nes2 = JSON.parse(localStorage.nes)) : '';
         setB2A(nes, nes2);
@@ -328,6 +380,7 @@
         // loadMmap(nes, nesSav.mmap)
       }
     }
+
     function saveData() {
       key = localStorage.romurl;
       localStorage.clear()
@@ -343,8 +396,8 @@
       localStorage.romurl = key;
     }
     $(function () {
-      console.log($(document).width());//浏览器时下窗口文档对于象宽度
-      console.log($(document).height());//浏览器时下窗口文档对于象宽度
+      console.log($(document).width()); //浏览器时下窗口文档对于象宽度
+      console.log($(document).height()); //浏览器时下窗口文档对于象宽度
 
       function RingBuffer(capacity, evictedCb) {
         this._elements = new Array(capacity || 50);
@@ -515,6 +568,7 @@
       this.player = 0;
       var frame = 0;
       var prevBuffer = new Array(256 * 240);
+
       function clearScreen() {
         context.fillStyle = "black";
         context.fillRect(0, 0, 256, 240);
@@ -534,6 +588,7 @@
       let sendDic = {};
       function createNes() {
         frame = 0;
+        let sTs = Date.now();
         console.log('nes', nes)
         nes = new jsnes.NES({
           onFrame: function (buffer) {
@@ -585,6 +640,23 @@
             //   }
             // }
             frame += 1;
+            // time.innerText = (Date.now() - sTs) - (frame * 16);
+            let sms = frame * 16;
+            let ms = ('000' + sms % 1000).substr(-3);
+            let ss = Math.floor(sms / 1000);
+            let s = ('00' + ss % 60).substr(-2);
+            let m = Math.floor(ss / 60);
+            // time.innerText = (Date.now() - sTs) - (frame * 16); // 恒定在 63~68 之间，说明时间还算准确
+            time.innerText = `${m}:${s}.${ms}`;
+            let _arr = arr[frame] || [];
+            for (let i = 0; i < _arr.length; i++) {
+              const tar = _arr[i];
+              if (tar[2] == 'u') {
+                nes.buttonUp(tar[0], tar[1], true, {isVedio: true})
+              } else if (tar[2] == 'd') {
+                nes.buttonDown(tar[0], tar[1], true, {isVedio: true})
+              }
+            }
             // if (frame < 2500) {
             //   console.log(frame);
             //   nes.frame()
@@ -611,41 +683,55 @@
         let srcButtonUp = nes.buttonUp;
         let srcButtonDown = nes.buttonDown;
 
-        nes.buttonUp = (k0, k1, isNoEmit)=>{
-          let id = Math.random().toString().substr(2,3);
+        window.arr = window.arr || {};
+        // if (localStorage.arr) {
+        //   window.arr = JSON.parse(localStorage.arr);
+        // }
+        nes.buttonUp = (k0, k1, isNoEmit, config={}) => {
+          if (!config.isVedio) {
+            arr[frame] = arr[frame] || [];
+            arr[frame].push([k0, k1, 'u']);
+            localStorage.arr =JSON.stringify(arr);
+          }
+          let id = Math.random().toString().substr(2, 3);
           let fpsDic = window.fpsDic || {}
           fpsDic[id] = Date.now()
           let m_p = window.playerId;
           let m_f = nes.f;
-          let m_b = 
-          !isNoEmit && socket.emit("m", {
-              key: [k0, k1],
-              type: "up",
-              ts: Date.now(),
-              id,
-              cId: window.cId,
-              f: nes.f,
-              m: ""
+          let m_b = !isNoEmit && socket.emit("m", {
+            key: [k0, k1],
+            type: "up",
+            ts: Date.now(),
+            id,
+            cId: window.cId,
+            f: nes.f,
+            m: ""
           });
-          window.fpsDic= fpsDic;
+          window.fpsDic = fpsDic;
           srcButtonUp(k0, k1);
         }
-        nes.buttonDown = (k0, k1, isNoEmit)=>{
-          let id = Math.random().toString().substr(2,3);
-          let fpsDic =window.fpsDic || {}
-          fpsDic[id] = Date.now()
+        nes.buttonDown = (k0, k1, isNoEmit, config={}) => {
+          if (!config.isVedio) {
+            arr[frame] = arr[frame] || [];
+            arr[frame].push([k0, k1, 'd']);
+            localStorage.arr =JSON.stringify(arr);
+          }
+          let id = Math.random().toString().substr(2, 3);
+          let fpsDic = window.fpsDic || {}
+          fpsDic[id] = Date.now();
           !isNoEmit && socket.emit('m', {
-              key: [k0, k1],
-              type: 'down',
-              ts: Date.now(),
-              cId: window.cId,
-              id,
-              f: nes.f
+            key: [k0, k1],
+            type: 'down',
+            ts: Date.now(),
+            cId: window.cId,
+            id,
+            f: nes.f
           })
-          window.fpsDic= fpsDic;
+          window.fpsDic = fpsDic;
           srcButtonDown(k0, k1)
         }
       }
+
       function loadGames() {
         // $.getJSON('/gamelist', function (data) {
         var data = {
@@ -659,6 +745,7 @@
         $('#current-game').append(html);
         // });
       }
+
       function loadROM(url) {
         $.ajax({
           url: escape(url),
@@ -673,24 +760,29 @@
           }
         });
       }
+
       function triggerKey(type, keyCode) {
         var e = jQuery.Event(type);
         e.which = keyCode;
         e.keyCode = keyCode;
         $(document).trigger(e);
       }
+
       function sendKey(type, keyCode) {
         ws.send(type + " " + keyCode);
       }
+
       function sendScreen(buffer) {
         var image = screen[0].toDataURL();
         ws.send("data " + image);
       }
+
       function drawData(data) {
         var img = new Image();
         img.src = data;
         context.drawImage(img, 0, 0);
       }
+
       function startPlaying(data) {
         window.player = parseInt(data, 10);
         if (window.player == 1) {
@@ -703,6 +795,7 @@
           $("#message").text("You are Player 2");
         }
       }
+
       function newGame() {
         var rom = document.getElementById("current-game").value;
         if (window.player == 1 && rom != "") {
@@ -712,6 +805,7 @@
         }
       }
       window.newGame = newGame;
+
       function stopPlaying() {
         if (nes !== null) {
           nes.stop();
@@ -844,7 +938,7 @@
         // console.log('touchend', touches, e)
         touchBtn(touches, 'touchend');
       })
-      
+
       $(document).on('touchmove', function (e) {
         let touches = e.originalEvent.touches;
         // console.log('touchmove', touches, e)
@@ -863,6 +957,7 @@
         'btna': 0,
         'btnb': 0
       }
+
       function touchBtn(touches, type) {
         console.log(type)
         // ['btnup', 'btnright', 'btn12', 'btn14', 'btndown', 'btnleft', 'btn23', 'btn34', 'btna', 'btnb']
@@ -883,11 +978,13 @@
             console.log(i, touchDic[i])
           }
           if (touchDic.hasOwnProperty(i)) {
-            const tarTouch= touchDic[i];
+            const tarTouch = touchDic[i];
             if (touchDic[i] === 1) {
               touchDic[i] = 0;
               document.getElementById(i).classList.remove('active')
-              processBtn({id:i}, 0) // 抬起
+              processBtn({
+                id: i
+              }, 0) // 抬起
             }
             if (touchDic[i] === 2) {
               touchDic[i] = 1;
@@ -897,13 +994,16 @@
         for (const i in touchDic) {
           if (touchDic[i] === 3) {
             document.getElementById(i).classList.add('active')
-            processBtn({id:i}, 1) // 按下
+            processBtn({
+              id: i
+            }, 1) // 按下
             touchDic[i] = 1; // 已按下
           }
         }
         console.log(touchDic);
       }
       let playerId = window.playerId;
+
       function processBtn(dom, isDown, playerId) {
         playerId = playerId || window.playerId;
         console.log(arguments);
@@ -958,11 +1058,18 @@
           window.playerId = 2;
           $('#changePlayer').css('background-image', "url('./img/player2.png')");
         }
+        if (window.playerId == 2) {
+          document.getElementById('canvas').style.display = 'none';
+          document.getElementById('canvasTips').innerHTML = '<span>请看P1的屏幕</span>';
+        } else {
+          document.getElementById('canvasTips').innerText = ''
+          document.getElementById('canvas').style.display = 'block';
+        }
       });
       $('#changePlayer').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
       });
-      
+
       $('#btnsave').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
         saveData()
@@ -1140,6 +1247,7 @@
         console.log('onunload');
       };
     });
+
     function doSth(key) {
 
     }
@@ -1156,14 +1264,15 @@
     // socket = io.connect('ws://192.168.0.3:3000');
     socket = io.connect('//maxmon.top/');
     socket.emit("m", {
-      "name": navigator.userAgent, "msg": "hello world"
+      "name": navigator.userAgent,
+      "msg": "hello world"
     });
     // setInterval(()=>{
     //   nes2 = JSON.parse(localStorage['ljNes']);
     //   let f = nes.f
     //   nes2.f = JSON.parse(localStorage.f||'0')
     //   console.log('old', nes2.f)
-      
+
     //   setB2A(nes, nes2);
     //   console.log('new', nes.f)
     //   console.log(nes.f, f)
@@ -1177,24 +1286,194 @@
     socket.on("m", function (obj) {
       console.log(obj);
       let key = obj.key;
-      let fpsDic =window.fpsDic || {}
+      let fpsDic = window.fpsDic || {}
       console.log('obj.id', obj.id, fpsDic[obj.id])
-      let lTs = obj.ts//fpsDic[obj.id];
+      let lTs = obj.ts //fpsDic[obj.id];
       let nTs = Date.now();
       console.log(nTs, lTs, nTs - lTs)
       fps.value = (nTs - lTs).toFixed(2) + 'ms';
-      while(nes.f < obj.f) {
+      while (nes.f < obj.f) {
         goF(nes); // 追上队友的frameCount
       }
       if (obj.cId == window.cId) {
         return;
       }
       if (obj.type == 'up') {
-          nes.buttonUp(key[0], key[1], true);
+        nes.buttonUp(key[0], key[1], true);
       } else if (obj.type == 'down') {
-          nes.buttonDown(key[0], key[1], true);
+        nes.buttonDown(key[0], key[1], true);
       }
     });
+  </script>
+  <script>
+    // 简易追踪马里奥算法
+    HTMLElement.prototype.getPixelColor = function (x, y) {
+      var thisContext = this.getContext("2d");
+      var imageData = thisContext.getImageData(x, y, 1, 1);
+      var pixel = imageData.data;
+      var r = pixel[0];
+      var g = pixel[1];
+      var b = pixel[2];
+      var a = pixel[3] / 255
+      a = Math.round(a * 100) / 100;
+      var rHex = r.toString(16);
+      r < 16 && (rHex = "0" + rHex);
+      var gHex = g.toString(16);
+      g < 16 && (gHex = "0" + gHex);
+      var bHex = b.toString(16);
+      b < 16 && (bHex = "0" + bHex);
+      var rgbaColor = "rgba(" + r + "," + g + "," + b + "," + a + ")";
+      var rgbColor = "rgb(" + r + "," + g + "," + b + ")";
+      var hexColor = "#" + rHex + gHex + bHex;
+      return {
+        rgba: rgbaColor,
+        rgb: rgbColor,
+        hex: hexColor,
+        r: r,
+        g: g,
+        b: b,
+        a: a
+      };
+    }
+    let ctx = canvas.getContext('2d');
+    window.ctx = ctx;
+    ctx.fillStyle = "red";
+    ctx.lineWidth = 4;
+    let x = 0;
+    let y = 0;
+    let img;
+    let img3;
+    let tX = 0;
+    let tY = 0;
+    function myFunction(ev) {
+      canvas.removeEventListener('click', myFunction);
+      console.log(ev);
+      // return;
+      let x = ev.offsetX;
+      let y = ev.offsetY;
+      let w = ev.target.offsetWidth;
+      let h = ev.target.offsetHeight;
+      tX = x * 256 / w;
+      tY = y * 240 / h;
+      let sTs = Date.now();
+      console.log('src', tX, tY)
+      let tX2 = 0;
+      let tY2 = 0;
+      if (!img) {
+        console.log('change img')
+        // img = ctx.getImageData(tX, tY, 12, 16);
+        img = JSON.parse(JSON.stringify(ctx.getImageData(tX, tY, 12, 16)));
+        console.log(ctx.getImageData(tX, tY, 12, 16), img);
+        img.width = 12;
+        img.height = 16;
+      }
+      window.catchDic = window.catchDic || {}
+      function goPikachu() {
+        let maxEC = 0;
+        let isFind = false;
+        for (let k = 0; k < w * h; k++) {
+          if ((k % w) > 100) {
+            continue;
+          }
+          if ((k % w) < tX - 20 || (k % w) > tX + 20) {
+            continue;
+          }
+          if ((k / w | 0) < tY - 30 || (k / w | 0) > tY + 30) {
+            continue;
+          }
+          let img2 = ctx.getImageData(k % w, k / w | 0, 12, 16);
+          let eC = 0; // 颜色相同统计
+          for (let j = 0; j < img.height; j++) {
+            for (let i = 0; i < img.width; i++) {
+              let idx = (j * img.width + i) * 4;
+              let r = img.data[idx];
+              let g = img.data[idx + 1];
+              let b = img.data[idx + 2];
+              let a = img.data[idx + 3];
+
+              let r2 = img2.data[idx];
+              let g2 = img2.data[idx + 1];
+              let b2 = img2.data[idx + 2];
+              let a2 = img2.data[idx + 3];
+
+              if (img3) {
+                let r3 = img3.data[idx];
+                let g3 = img3.data[idx + 1];
+                let b3 = img3.data[idx + 2];
+                let a3 = img3.data[idx + 3];
+                if (r3 == r2 && g3 == g2 && b3 == b2) {
+                  eC=eC+0.05;
+                  // console.log(r,g,b);
+                  // window.catchDic[`${r},${g},${b}`]=window.catchDic[`${r},${g},${b}`] || 0;
+                  // window.catchDic[`${r},${g},${b}`]+=1;
+                }
+              }
+              if (r == 0 && g == 171 && b == 0) {
+                continue;
+              }
+              if (r == 129 && g == 121 && b == 255) {
+                continue;
+              }
+              if (r == 117  && g == 227 && b == 0) {
+                continue;
+              }
+              if (r == 188  && g == 25 && b == 0) {
+                continue;
+              }
+              if (r == 177  && g == 84 && b == 0) {
+                continue;
+              }
+              if (r == 0 && g == 0 && b == 0) {
+                continue;
+              }
+              if (r == g && g == b) {
+                continue;
+              }
+              if (r == r2 && g == g2 && b == b2) {
+                eC++;
+                // console.log(r,g,b);
+                window.catchDic[`${r},${g},${b}`]=window.catchDic[`${r},${g},${b}`] || 0;
+                window.catchDic[`${r},${g},${b}`]+=1;
+              }
+            }
+          }
+          eC -= Math.abs(k % w - tX);
+          // eC -= 1*Math.abs(k / w|0 - tY);
+          if (eC > 10 && eC > maxEC) {
+            maxEC = eC;
+            // console.log(eC, k, k % w, k / w | 0, img, img2)
+            tX2 = k % w;
+            tY2 = k / w | 0;
+            // console.log('!!!!!!', k / w | 0, y, tY)
+            isFind = true;
+            img3 = img2;
+          }
+          // if (k % 2000 == 0) {
+          //   console.log(Date.now() - sTs, k);
+          // }
+        }
+        if (tX2 && tY2 && isFind) {
+          // console.log('tar', w * h, tX2, tY2)
+          clearInterval(window.shadowInter);
+          window.shadowInter = setInterval(() => {
+            // ctx.fillRect(tX2, tY2, 12, 16);
+            ctx.strokeRect(tX2, tY2, 12, 16);
+          })
+          tX = tX2;
+          tY = tY2;
+        }
+
+        // console.log(img)
+        // checkImg.src = img;
+        // checkImg.onready = function () {
+        //   console.log(img)
+        //   check.getC
+        //   check.getContext('2d').drawImage(img, 0, 0)
+        // }
+      }
+      setInterval(goPikachu, 50)
+    }
+    // canvas.addEventListener('click', myFunction); // 关闭监听 画框
   </script>
 </body>
 
