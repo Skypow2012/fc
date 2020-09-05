@@ -6,6 +6,10 @@
   <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
   <!-- <script src="https://www.norchant.com/js/vconsole.min.js"></script> -->
   <title>红白机模拟器</title>
+  <!-- <script type="text/javascript" src="https://unpkg.com/jsnes/dist/jsnes.min.js"></script> -->
+  <script type="text/javascript" src="./js/jsnes.min.js"></script>
+  <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.0.min.js"></script> -->
+  <script type="text/javascript" src="./js/jquery-3.4.0.min.js"></script>
   <style>
     body {
       overflow: hidden;
@@ -114,32 +118,213 @@
 
     #time {
       position: absolute;
+      display: none;
       text-align: right;
       width: 65px;
       font-size: 13px;
-      display: inline-block;
       color: white;
       transform: rotateZ(90deg);
-      right: 0;
+      right: calc(4vw - 27px);
       bottom: 65px;
     }
   </style>
+  <script>
+    // 简易追踪马里奥算法
+    HTMLElement.prototype.getPixelColor = function (x, y) {
+      var thisContext = this.getContext("2d");
+      var imageData = thisContext.getImageData(x, y, 1, 1);
+      var pixel = imageData.data;
+      var r = pixel[0];
+      var g = pixel[1];
+      var b = pixel[2];
+      var a = pixel[3] / 255
+      a = Math.round(a * 100) / 100;
+      var rHex = r.toString(16);
+      r < 16 && (rHex = "0" + rHex);
+      var gHex = g.toString(16);
+      g < 16 && (gHex = "0" + gHex);
+      var bHex = b.toString(16);
+      b < 16 && (bHex = "0" + bHex);
+      var rgbaColor = "rgba(" + r + "," + g + "," + b + "," + a + ")";
+      var rgbColor = "rgb(" + r + "," + g + "," + b + ")";
+      var hexColor = "#" + rHex + gHex + bHex;
+      return {
+        rgba: rgbaColor,
+        rgb: rgbColor,
+        hex: hexColor,
+        r: r,
+        g: g,
+        b: b,
+        a: a
+      };
+    }
+    // let ctx = canvas.getContext('2d');
+    // window.ctx = ctx;
+    // ctx.fillStyle = "red";
+    // ctx.lineWidth = 4;
+    let x = 0;
+    let y = 0;
+    let img;
+    let img3;
+    let tX = 0;
+    let tY = 0;
+
+    function myFunction(ev) {
+      console.log('123123')
+      // canvas.removeEventListener('click', myFunction);
+      console.log(ev);
+      // return;
+      window.x = ev.offsetX;
+      window.y = ev.offsetY;
+      window.w = ev.target.offsetWidth;
+      window.h = ev.target.offsetHeight;
+      tX = x * 256 / w;
+      tY = y * 240 / h;
+      window.sTs = Date.now();
+      console.log('src', tX, tY)
+      window.tX2 = 0;
+      window.tY2 = 0;
+      if (!img) {
+        console.log('change img')
+        // img = ctx.getImageData(tX, tY, 12, 16);
+        img = JSON.parse(JSON.stringify(context.getImageData(tX, tY, 12, 16)));
+        console.log(context.getImageData(tX, tY, 12, 16), img);
+        img.width = 12;
+        img.height = 16;
+      }
+      window.catchDic = window.catchDic || {}
+
+
+      // setInterval(goPikachu, 50) // 这里注释了，放到了onframe里面
+    }
+
+    function goPikachu() {
+      if (!window.w) {
+        return;
+      }
+      let maxEC = 0;
+      let isFind = false;
+      for (let k = 0; k < w * h; k++) {
+        if ((k % w) > 100) {
+          continue;
+        }
+        if ((k % w) < tX - 20 || (k % w) > tX + 20) {
+          continue;
+        }
+        if ((k / w | 0) < tY - 30 || (k / w | 0) > tY + 30) {
+          continue;
+        }
+        let img2 = context.getImageData(k % w, k / w | 0, 12, 16);
+        let eC = 0; // 颜色相同统计
+        for (let j = 0; j < img.height; j++) {
+          for (let i = 0; i < img.width; i++) {
+            let idx = (j * img.width + i) * 4;
+            let r = img.data[idx];
+            let g = img.data[idx + 1];
+            let b = img.data[idx + 2];
+            let a = img.data[idx + 3];
+
+            let r2 = img2.data[idx];
+            let g2 = img2.data[idx + 1];
+            let b2 = img2.data[idx + 2];
+            let a2 = img2.data[idx + 3];
+
+            if (img3) {
+              let r3 = img3.data[idx];
+              let g3 = img3.data[idx + 1];
+              let b3 = img3.data[idx + 2];
+              let a3 = img3.data[idx + 3];
+              if (r3 == r2 && g3 == g2 && b3 == b2) {
+                eC = eC + 0.05;
+                // console.log(r,g,b);
+                // window.catchDic[`${r},${g},${b}`]=window.catchDic[`${r},${g},${b}`] || 0;
+                // window.catchDic[`${r},${g},${b}`]+=1;
+              }
+            }
+            if (r == 0 && g == 171 && b == 0) {
+              continue;
+            }
+            if (r == 129 && g == 121 && b == 255) {
+              continue;
+            }
+            if (r == 117 && g == 227 && b == 0) {
+              continue;
+            }
+            if (r == 188 && g == 25 && b == 0) {
+              continue;
+            }
+            if (r == 177 && g == 84 && b == 0) {
+              continue;
+            }
+            if (r == 0 && g == 0 && b == 0) {
+              continue;
+            }
+            if (r == g && g == b) {
+              continue;
+            }
+            if (r == r2 && g == g2 && b == b2) {
+              eC++;
+              // console.log(r,g,b);
+              window.catchDic[`${r},${g},${b}`] = window.catchDic[`${r},${g},${b}`] || 0;
+              window.catchDic[`${r},${g},${b}`] += 1;
+            }
+          }
+        }
+        eC -= Math.abs(k % w - tX);
+        // eC -= 1*Math.abs(k / w|0 - tY);
+        if (eC > 10 && eC > maxEC) {
+          maxEC = eC;
+          // console.log(eC, k, k % w, k / w | 0, img, img2)
+          tX2 = k % w;
+          tY2 = k / w | 0;
+          // console.log('!!!!!!', k / w | 0, y, tY)
+          isFind = true;
+          img3 = img2;
+        }
+        // if (k % 2000 == 0) {
+        //   console.log(Date.now() - sTs, k);
+        // }
+      }
+      console.log(tX2, tY2, isFind)
+      if (tX2 && tY2 && isFind) {
+        // console.log('tar', w * h, tX2, tY2)
+        clearInterval(window.shadowInter);
+        window.shadowInter = setInterval(() => {
+          // ctx.fillRect(tX2, tY2, 12, 16);
+          context.strokeRect(tX2, tY2, 12, 16);
+        })
+        tX = tX2;
+        tY = tY2;
+      }
+
+      // console.log(img)
+      // checkImg.src = img;
+      // checkImg.onready = function () {
+      //   console.log(img)
+      //   check.getC
+      //   check.getContext('2d').drawImage(img, 0, 0)
+      // }
+    }
+  </script>
 </head>
 
 <body>
   <input id="fps" disabled />
   <input id="f" disabled />
-  <span id="time">55</span>
+  <span id="time">Ready</span>
   <canvas id="canvas" width='256px' height='240px'></canvas>
+  <!-- <script>
+    canvas.addEventListener('click', myFunction); // 关闭监听 画框
+  </script> -->
   <div id="canvasTips"></div>
   <img id="checkImg"></img>
   <canvas id="check" width='12px' height='16px'></canvas>
   <!-- <div id="btnall"
     style="opacity:0.5;width:45vw;height:45vw;background-size:45vw 45vw;background-image:url('./img/btn.png');background-repeat:no-repeat;position:fixed;left:5vw;top:5vw;transform: rotate(90deg);">
   </div> -->
-  <div class="btn" id="changePlayer"
+  <!-- <div class="btn" id="changePlayer"
     style="opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/player1.png');background-repeat:no-repeat;position:fixed;right:calc(2vw + 50px);top:10vw;transform: rotate(90deg);">
-  </div>
+  </div> -->
   <div class="btn" id="btnup">
   </div>
   <div class="btn" id="btnright"
@@ -227,10 +412,205 @@
       <!-- This ROM uses a mapper not supported by JSNES: Namcot 106 chip(19) -->
       <!-- <p onclick="localStorage.romurl = './rom/Sangokushi 2.nes';window.location.href = window.location.href;">三国志2霸王的大陆</p> -->
 
-
-
     </div>
+
   </div>
+  <!-- 排名部分代码 -->
+  <style>
+    .rankArea {
+      display: none;
+      font-size: 0;
+      background-color: #111111;
+      position: fixed;
+      width: 200px;
+      height: 80vw;
+      max-height: 336px;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      margin: auto;
+      text-align: center;
+      padding-top: 10px;
+      transform: rotateZ(90deg);
+      border-radius: 3px;
+      box-shadow: 0px 0px 20px #11111188;
+    }
+
+    .rankCloseBtn {
+      position: absolute;
+      width: 31px;
+      height: 31px;
+      bottom: 15px;
+      left: -100px;
+      right: 0;
+      margin: auto;
+      font-size: 30px;
+    }
+
+    .rankChallengeBtn {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      bottom: 15px;
+      left: 0;
+      right: -100px;
+      margin: auto;
+      font-size: 30px;
+    }
+
+    .rankCloseBtn:active,
+    .rankChallengeBtn:active {
+      opacity: .6;
+    }
+
+    .rankBox {
+      height: calc(100% - 30px - 60px);
+      overflow: auto;
+    }
+
+    .rankTitle {
+      font-size: 20px;
+      color: #fffeff;
+      margin-bottom: 5px;
+    }
+
+    .rankP {
+      padding-left: 2px;
+      background-color: #b15400;
+      display: inline-block;
+      width: 90%;
+      height: 25px;
+      box-sizing: border-box;
+      border: 1px solid #e6a886;
+      margin: 1px 0;
+      text-align: left;
+    }
+
+    .rankP:active {
+      opacity: .6;
+    }
+
+    .rankIdx,
+    .rankName,
+    .rankUsetime {
+      display: inline-block;
+      overflow: hidden;
+      color: #ffd1c7;
+      line-height: 20px;
+    }
+
+    .rankIdx {
+      width: 30px;
+      color: #f7b400;
+      font-size: 20px;
+    }
+
+    .rankName {
+      width: 85px;
+      font-size: 16px;
+    }
+
+    .rankUsetime {
+      width: 55px;
+      font-size: 16px;
+    }
+  </style>
+  <div id="rankArea" class="rankArea">
+    <div id="rankTitle" class="rankTitle">TEKII 09.05 RANK</div>
+    <div id="rankBox" class="rankBox">
+      <div class="rankP">
+        <span class="rankIdx">01</span>
+        <span class="rankName">Maxmon</span>
+        <span class="rankUsetime">24.95</span>
+      </div>
+      <div class="rankP">
+        <span class="rankIdx">02</span>
+        <span class="rankName">Yahaha</span>
+        <span class="rankUsetime">27.95</span>
+      </div>
+    </div>
+    <!-- <svg t="1599302195443" onclick="hideRank()" class="rankCloseBtn" viewBox="0 0 1024 1024" version="1.1"
+      xmlns="http://www.w3.org/2000/svg" p-id="1383" width="90" height="90">
+      <path
+        d="M511.968 376.224 796.096 92.096C833.536 54.624 894.4 54.624 931.84 92.096 969.312 129.568 969.312 190.4 931.84 227.872L647.744 512 931.84 796.096C969.312 833.568 969.312 894.4 931.84 931.872 894.4 969.344 833.536 969.344 796.096 931.872L511.968 647.744 227.84 931.872C190.4 969.344 129.536 969.344 92.096 931.872 54.624 894.4 54.624 833.568 92.096 796.096L376.224 512 92.096 227.872C54.624 190.4 54.624 129.568 92.096 92.096 129.536 54.624 190.4 54.624 227.84 92.096L511.968 376.224Z"
+        p-id="1384" fill="#ffffff"></path>
+    </svg> -->
+    <svg t="1599320359254" onclick="hideRank()" class="rankCloseBtn" viewBox="0 0 1024 1024" version="1.1"
+      xmlns="http://www.w3.org/2000/svg" p-id="2480" width="90" height="90">
+      <path
+        d="M512.001 15.678C237.414 15.678 14.82 238.273 14.82 512.86S237.414 1010.04 512 1010.04s497.18-222.593 497.18-497.18S786.589 15.678 512.002 15.678z m213.211 645.937c17.798 17.803 17.798 46.657 0 64.456-17.798 17.797-46.658 17.797-64.456 0L512.001 577.315 363.241 726.07c-17.799 17.797-46.652 17.797-64.45 0-17.804-17.799-17.804-46.653 0-64.456L447.545 512.86 298.79 364.104c-17.803-17.798-17.803-46.657 0-64.455 17.799-17.798 46.652-17.798 64.45 0l148.761 148.755 148.755-148.755c17.798-17.798 46.658-17.798 64.456 0 17.798 17.798 17.798 46.657 0 64.455L576.456 512.86l148.756 148.755z m0 0"
+        fill="#bc1900" p-id="2481"></path>
+    </svg>
+    <svg t="1599318965085" onclick="startChallenge()" class="rankChallengeBtn" viewBox="0 0 1024 1024" version="1.1"
+      xmlns="http://www.w3.org/2000/svg" p-id="16010" width="90" height="90">
+      <path
+        d="M512 1024C229.239467 1024 0 794.760533 0 512S229.239467 0 512 0 1024 229.239467 1024 512 794.760533 1024 512 1024z m326.200889-467.626667c-20.707556-178.084978-57.344-305.743644-173.6704-305.743644-58.936889 0-89.201778 59.892622-141.789867 64.625778-54.158222-4.733156-82.852978-64.625778-141.812622-64.625778-116.303644 0-152.940089 127.658667-172.077511 304.173511-11.150222 94.549333-1.592889 173.351822 57.366755 173.351822 82.830222 0 86.038756-74.069333 144.9984-108.7488 22.300444-11.036444 71.68-15.746844 113.095112-17.339733 41.437867 1.592889 90.840178 6.303289 113.140622 17.339733 58.936889 34.679467 62.122667 108.7488 144.9984 108.7488 57.344 1.592889 65.308444-77.232356 55.751111-171.781689z"
+        p-id="16011" fill="#f7b400"></path>
+      <path
+        d="M382.520889 540.626489c-46.193778 0-82.830222-37.842489-82.830222-81.965511 0-44.123022 36.636444-81.942756 82.830222-81.942756 46.193778 0 82.852978 36.2496 82.852978 81.942756 0 45.715911-38.229333 81.965511-82.830223 81.965511z m-47.786667-81.965511c0 12.606578 4.778667 23.643022 14.336 33.109333 7.964444 7.873422 20.707556 14.176711 33.450667 14.176711 12.743111 0 23.893333-4.733156 33.450667-14.176711 7.964444-7.896178 14.336-20.48 14.336-33.109333 0-12.606578-4.778667-23.643022-14.336-33.086578-7.964444-7.873422-20.707556-14.199467-33.450667-14.199467-12.743111 0-23.893333 4.733156-33.450667 14.199467-9.557333 7.873422-14.336 20.48-14.336 33.086578zM753.755022 474.430578h-65.308444v64.625778h-31.857778v-64.625778h-65.353956v-31.516445h65.3312v-63.032889h31.857778v63.032889h65.3312z"
+        p-id="16012" fill="#f7b400"></path>
+    </svg>
+  </div>
+  <script>
+    function hideRank() {
+      document.getElementById('rankArea').style.display = 'none';
+    }
+
+    function startChallenge() {
+      hideRank();
+      window.isChallenge = true;
+    }
+
+    function getRank() {
+      $.ajax({
+        url: '/market/fc/getWin',
+        complete: function (xhr, status) {
+          let winList = xhr.responseJSON.info;
+          window.winList = winList;
+          let rankBox = document.getElementById('rankBox');
+          console.log(winList)
+          rankBox.innerHTML = '';
+          for (let i = 0; i < winList.length; i++) {
+            let rankP = document.createElement('div');
+            rankP.className = 'rankP';
+            rankP.onclick = function () {
+              showZZDJS(i);
+            }
+            rankP.innerHTML = `<span class="rankIdx">${('00' + (i + 1)).substr(-2)}</span>
+              <span class="rankName">${winList[i].name}</span>
+              <span class="rankUsetime">${Number(Number(winList[i].usetime/1000).toFixed(2))}</span>`
+            rankBox.appendChild(rankP);
+          }
+          document.getElementById('rankArea').style.display = 'block';
+        }
+      });
+    }
+    if (localStorage.romurl == './rom/mario.nes') {
+      getRank()
+    }
+
+    function restartGame() {
+      window.nes.reloadROM();
+      window.frame = 0;
+      window.clearInterval(window.nesInterval);
+      window.nesInterval = setInterval(function () {
+        goF(nes);
+        if (frameSpeed == 5) {
+          goF(nes);
+          goF(nes);
+        }
+      }, 16);
+    }
+
+    function showZZDJS(id) {
+      window.arr = JSON.parse(window.winList[id].step);
+      window.isZZDJS = true;
+      window.isChallenge = true;
+      restartGame();
+      hideRank();
+    }
+  </script>
   <style>
     .top-btn:active {
       opacity: 0.2 !important;
@@ -268,10 +648,6 @@
       background-position: bottom;
     }
   </style>
-  <!-- <script type="text/javascript" src="https://unpkg.com/jsnes/dist/jsnes.min.js"></script> -->
-  <script type="text/javascript" src="./js/jsnes.min.js"></script>
-  <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.0.min.js"></script> -->
-  <script type="text/javascript" src="./js/jquery-3.4.0.min.js"></script>
   <script>
     window.playerId = window.location.href.indexOf('p2') > -1 ? 2 : 1;
     let f = document.getElementById('f')
@@ -312,7 +688,7 @@
     }
     // 是否是存入档案阶段，不是 就自动读档
     let isNesIn = false;
-    var nes = null;
+    window.nes = null;
     var nes2 = null;
     // if (!isNesIn) {
     //   localStorage.nes ? (nes2 = JSON.parse(localStorage.nes)) : '';
@@ -569,15 +945,31 @@
       screen[0].style.top = 0;
       screen[0].style.bottom = 0;
       screen[0].style.margin = "auto auto";
-      var context = screen[0].getContext('2d');
+      window.context = screen[0].getContext('2d');
       var imageData = context.getImageData(0, 0, 256, 240);
       // $("#emulator").append(screen);
       this.player = 0;
-      var frame = 0;
+      window.frame = 0;
       var prevBuffer = new Array(256 * 240);
 
-      
+      window.lastIsChangenge = '';
+
       function setTime() {
+        if (window.lastIsChangenge != window.isChallenge) {
+          window.lastIsChangenge = window.isChallenge;
+          window.timeDom = window.timeDom || document.getElementById('time');
+          if (window.isChallenge) {
+            window.timeDom.style.display = 'inline-block';
+          } else {
+            window.timeDom.style.display = 'none';
+          }
+        }
+        if (!window.isChallenge) {
+          return;
+        } else {
+          window.timeDom = window.timeDom || document.getElementById('time');
+          window.timeDom.style.display = 'inline-block';
+        }
         if (!startFrame) {
           return;
         }
@@ -592,10 +984,12 @@
         time.innerText = usedTime;
         return usedTime;
       }
-      
+
       let isOk = false;
       let isCatch = false;
-      
+      window.isDie = false;
+      window.isInDieCheck = false;
+
       function clearScreen() {
         context.fillStyle = "black";
         context.fillRect(0, 0, 256, 240);
@@ -653,33 +1047,80 @@
                 }
               }
               context.putImageData(imageData, 0, 0);
-              if (!isOk) {
-                if (!isCatch) {
-                  for (let i = 0; i < 10; i++) {
-                    let a = ctx.getImageData(200+i, 72, 1, 1).data;
-                    if (a[0] == 117 && a[1] == 227) {
-                      isCatch = true;
-                      console.log('okok')
-                      console.log('a', a);
-                    }
-                  }
-                }
-                if (isCatch) {
-                  let lastR;
-                  for (let i = 0; i < 200; i++) {
-                    let r = ctx.getImageData(40 + i, 186, 1, 1).data[0];
-                    if (r == 117 && lastR == 255) {
-                      if (!isOk) {
-                        isOk = true;
-                        let time = setTime();
-                        alert('Congratulations, you used time: ' + time);
+              if (window.isChallenge) {
+                if (!isOk) {
+                  if (!isDie) {
+                    if (startFrame && (frame - startFrame) > 4*60) {
+                      let leftTopBlack = context.getImageData(10, 10, 1, 1).data;
+                      let rightTopBlack = context.getImageData(245, 10, 1, 1).data;
+                      if (leftTopBlack[0] == 0 && leftTopBlack[1] == 0 && leftTopBlack[2] == 0
+                          && rightTopBlack[0] == 0 && rightTopBlack[1] == 0 && rightTopBlack[2] == 0) {
+                        let marioHat = context.getImageData(105, 105, 1, 1).data;
+                        if (marioHat[0] == 188 && marioHat[1] == 25 && marioHat[2] == 0) {
+                          isDie = true;
+                          alert('You are die, try again latter.')
+                          window.location.reload();
+                          return;
+                        }
                       }
                     }
-                    lastR = r;
+                  } else {
+                    return;
+                  }
+                  if (!isCatch) {
+                    for (let i = 0; i < 10; i++) {
+                      let a = context.getImageData(200 + i, 72, 1, 1).data;
+                      if (a[0] == 117 && a[1] == 227) {
+                        isCatch = true;
+                        console.log('okok')
+                        console.log('a', a);
+                      }
+                    }
+                  }
+                  if (isCatch) {
+                    let lastR;
+                    for (let i = 0; i < 200; i++) {
+                      let r = context.getImageData(40 + i, 186, 1, 1).data[0];
+                      if (r == 117 && lastR == 255) {
+                        if (!isOk) {
+                          isOk = true;
+                          let time = setTime();
+                          if (window.isZZDJS) {
+                            alert('The vedio is end');
+                            delete window.isZZDJS;
+                            window.arr = {};
+                            isCatch = false;
+                            isOk = false;
+                            window.location.reload();
+                          } else {
+                            alert('Congratulations, you used time: ' + time);
+                            let xhr = new XMLHttpRequest();
+                            xhr.open('POST', '/market/fc/setWin');
+                            xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+                            xhr.onreadystatechange = function (ev) {
+                              if (xhr.readyState == 4) {
+                                console.log(ev.target.response)
+                              }
+                            }
+                            xhr.send(JSON.stringify({
+                              "userid": 1,
+                              "step": localStorage.arr,
+                              "usetime": (Number(time.split(':')[0]) * 60 + Number(time.split(':')[
+                                1])) * 1000
+                            }))
+                            isCatch = false;
+                            isOk = false;
+                            window.location.reload();
+                          }
+                        }
+                      }
+                      lastR = r;
+                    }
                   }
                 }
               }
-              ctx.strokeRect(200, 72, 12, 16);
+              // ctx.strokeRect(200, 72, 12, 16);
+              // goPikachu()
             }
             // 重要！！！按钮回放功能
             // if (steps[frame]) {
@@ -735,11 +1176,15 @@
         let srcButtonUp = nes.buttonUp;
         let srcButtonDown = nes.buttonDown;
 
-        window.arr = window.arr || {};
+        window.arr = {};
         // if (localStorage.arr) {
         //   window.arr = JSON.parse(localStorage.arr);
         // }
         nes.buttonUp = (k0, k1, isNoEmit, config = {}) => {
+          if (window.isZZDJS && !config.isVedio) {
+            // 演示他人视频时，不能操控
+            return;
+          }
           if (!config.isVedio) {
             arr[frame] = arr[frame] || [];
             arr[frame].push([k0, k1, 'u']);
@@ -765,6 +1210,10 @@
         }
         nes.buttonDown = (k0, k1, isNoEmit, config = {}) => {
           console.log(k0, k1)
+          if (window.isZZDJS && !config.isVedio) {
+            // 演示他人视频时，不能操控
+            return;
+          }
           if (!config.isVedio) {
             arr[frame] = arr[frame] || [];
             arr[frame].push([k0, k1, 'd']);
@@ -1049,7 +1498,7 @@
             const tarTouch = touchDic[i];
             if (touchDic[i] === 1) {
               touchDic[i] = 0;
-              document.getElementById(i).classList.remove('active')
+              // document.getElementById(i).classList.remove('active') // 已改到函数里面加状态
               processBtn({
                 id: i
               }, 0) // 抬起
@@ -1061,7 +1510,7 @@
         }
         for (const i in touchDic) {
           if (touchDic[i] === 3) {
-            document.getElementById(i).classList.add('active')
+            // document.getElementById(i).classList.add('active') // 已改到函数里面加状态
             processBtn({
               id: i
             }, 1) // 按下
@@ -1201,7 +1650,6 @@
       });
       $('#config-btn').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
-        nes.buttonDown(KEYS[89][0], KEYS[89][1]);
         isConfigShow = !isConfigShow;
         if (isConfigShow) {
           $('#game-list-box').show();
@@ -1254,7 +1702,7 @@
           //   console.log('saveddddddddddddddddddddd')
           //   saveData()
           // }, 5000)
-          interval = setInterval(function () {
+          window.nesInterval = setInterval(function () {
             goF(nes);
             if (frameSpeed == 5) {
               goF(nes);
@@ -1352,6 +1800,7 @@
     //   localStorage.f = nes.f;
     // }, 300)
     socket.on("m", function (obj) {
+      return;
       console.log(obj);
       let key = obj.key;
       let fpsDic = window.fpsDic || {}
@@ -1372,179 +1821,6 @@
         nes.buttonDown(key[0], key[1], true);
       }
     });
-  </script>
-  <script>
-    // 简易追踪马里奥算法
-    HTMLElement.prototype.getPixelColor = function (x, y) {
-      var thisContext = this.getContext("2d");
-      var imageData = thisContext.getImageData(x, y, 1, 1);
-      var pixel = imageData.data;
-      var r = pixel[0];
-      var g = pixel[1];
-      var b = pixel[2];
-      var a = pixel[3] / 255
-      a = Math.round(a * 100) / 100;
-      var rHex = r.toString(16);
-      r < 16 && (rHex = "0" + rHex);
-      var gHex = g.toString(16);
-      g < 16 && (gHex = "0" + gHex);
-      var bHex = b.toString(16);
-      b < 16 && (bHex = "0" + bHex);
-      var rgbaColor = "rgba(" + r + "," + g + "," + b + "," + a + ")";
-      var rgbColor = "rgb(" + r + "," + g + "," + b + ")";
-      var hexColor = "#" + rHex + gHex + bHex;
-      return {
-        rgba: rgbaColor,
-        rgb: rgbColor,
-        hex: hexColor,
-        r: r,
-        g: g,
-        b: b,
-        a: a
-      };
-    }
-    let ctx = canvas.getContext('2d');
-    window.ctx = ctx;
-    ctx.fillStyle = "red";
-    ctx.lineWidth = 4;
-    let x = 0;
-    let y = 0;
-    let img;
-    let img3;
-    let tX = 0;
-    let tY = 0;
-
-    function myFunction(ev) {
-      canvas.removeEventListener('click', myFunction);
-      console.log(ev);
-      // return;
-      let x = ev.offsetX;
-      let y = ev.offsetY;
-      let w = ev.target.offsetWidth;
-      let h = ev.target.offsetHeight;
-      tX = x * 256 / w;
-      tY = y * 240 / h;
-      let sTs = Date.now();
-      console.log('src', tX, tY)
-      let tX2 = 0;
-      let tY2 = 0;
-      if (!img) {
-        console.log('change img')
-        // img = ctx.getImageData(tX, tY, 12, 16);
-        img = JSON.parse(JSON.stringify(ctx.getImageData(tX, tY, 12, 16)));
-        console.log(ctx.getImageData(tX, tY, 12, 16), img);
-        img.width = 12;
-        img.height = 16;
-      }
-      window.catchDic = window.catchDic || {}
-
-      function goPikachu() {
-        let maxEC = 0;
-        let isFind = false;
-        for (let k = 0; k < w * h; k++) {
-          if ((k % w) > 100) {
-            continue;
-          }
-          if ((k % w) < tX - 20 || (k % w) > tX + 20) {
-            continue;
-          }
-          if ((k / w | 0) < tY - 30 || (k / w | 0) > tY + 30) {
-            continue;
-          }
-          let img2 = ctx.getImageData(k % w, k / w | 0, 12, 16);
-          let eC = 0; // 颜色相同统计
-          for (let j = 0; j < img.height; j++) {
-            for (let i = 0; i < img.width; i++) {
-              let idx = (j * img.width + i) * 4;
-              let r = img.data[idx];
-              let g = img.data[idx + 1];
-              let b = img.data[idx + 2];
-              let a = img.data[idx + 3];
-
-              let r2 = img2.data[idx];
-              let g2 = img2.data[idx + 1];
-              let b2 = img2.data[idx + 2];
-              let a2 = img2.data[idx + 3];
-
-              if (img3) {
-                let r3 = img3.data[idx];
-                let g3 = img3.data[idx + 1];
-                let b3 = img3.data[idx + 2];
-                let a3 = img3.data[idx + 3];
-                if (r3 == r2 && g3 == g2 && b3 == b2) {
-                  eC = eC + 0.05;
-                  // console.log(r,g,b);
-                  // window.catchDic[`${r},${g},${b}`]=window.catchDic[`${r},${g},${b}`] || 0;
-                  // window.catchDic[`${r},${g},${b}`]+=1;
-                }
-              }
-              if (r == 0 && g == 171 && b == 0) {
-                continue;
-              }
-              if (r == 129 && g == 121 && b == 255) {
-                continue;
-              }
-              if (r == 117 && g == 227 && b == 0) {
-                continue;
-              }
-              if (r == 188 && g == 25 && b == 0) {
-                continue;
-              }
-              if (r == 177 && g == 84 && b == 0) {
-                continue;
-              }
-              if (r == 0 && g == 0 && b == 0) {
-                continue;
-              }
-              if (r == g && g == b) {
-                continue;
-              }
-              if (r == r2 && g == g2 && b == b2) {
-                eC++;
-                // console.log(r,g,b);
-                window.catchDic[`${r},${g},${b}`] = window.catchDic[`${r},${g},${b}`] || 0;
-                window.catchDic[`${r},${g},${b}`] += 1;
-              }
-            }
-          }
-          eC -= Math.abs(k % w - tX);
-          // eC -= 1*Math.abs(k / w|0 - tY);
-          if (eC > 10 && eC > maxEC) {
-            maxEC = eC;
-            // console.log(eC, k, k % w, k / w | 0, img, img2)
-            tX2 = k % w;
-            tY2 = k / w | 0;
-            // console.log('!!!!!!', k / w | 0, y, tY)
-            isFind = true;
-            img3 = img2;
-          }
-          // if (k % 2000 == 0) {
-          //   console.log(Date.now() - sTs, k);
-          // }
-        }
-        if (tX2 && tY2 && isFind) {
-          // console.log('tar', w * h, tX2, tY2)
-          clearInterval(window.shadowInter);
-          window.shadowInter = setInterval(() => {
-            // ctx.fillRect(tX2, tY2, 12, 16);
-            ctx.strokeRect(tX2, tY2, 12, 16);
-          })
-          tX = tX2;
-          tY = tY2;
-        }
-
-        // console.log(img)
-        // checkImg.src = img;
-        // checkImg.onready = function () {
-        //   console.log(img)
-        //   check.getC
-        //   check.getContext('2d').drawImage(img, 0, 0)
-        // }
-      }
-      setInterval(goPikachu, 50)
-    }
-
-    // canvas.addEventListener('click', myFunction); // 关闭监听 画框
   </script>
 </body>
 
