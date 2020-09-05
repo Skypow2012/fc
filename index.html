@@ -36,6 +36,7 @@
       bottom: 0;
       margin: 0 auto;
     }
+
     #canvasTips {
       position: fixed;
       left: 0;
@@ -44,6 +45,7 @@
       bottom: 0;
       margin: 0 auto;
     }
+
     #canvasTips>span {
       display: inline-block;
       position: fixed;
@@ -109,6 +111,7 @@
       display: none;
       opacity: .5;
     }
+
     #time {
       position: absolute;
       text-align: right;
@@ -273,8 +276,12 @@
     window.playerId = window.location.href.indexOf('p2') > -1 ? 2 : 1;
     let f = document.getElementById('f')
     window.cId = Math.random().toString().substr(2, 5);
+    let startFrame = 0;
 
     function goF(nes) {
+      if (window.pause) {
+        return;
+      }
       nes.f = nes.f || 0
       nes.f++;
       f.value = nes.f;
@@ -569,6 +576,26 @@
       var frame = 0;
       var prevBuffer = new Array(256 * 240);
 
+      
+      function setTime() {
+        if (!startFrame) {
+          return;
+        }
+        // time.innerText = (Date.now() - sTs) - (frame * 16);
+        let sms = (frame - startFrame) * 16;
+        let ms = ('000' + sms % 1000).substr(-3);
+        let ss = Math.floor(sms / 1000);
+        let s = ('00' + ss % 60).substr(-2);
+        let m = Math.floor(ss / 60);
+        // time.innerText = (Date.now() - sTs) - (frame * 16); // 恒定在 63~68 之间，说明时间还算准确
+        let usedTime = `${m}:${s}.${ms}`
+        time.innerText = usedTime;
+        return usedTime;
+      }
+      
+      let isOk = false;
+      let isCatch = false;
+      
       function clearScreen() {
         context.fillStyle = "black";
         context.fillRect(0, 0, 256, 240);
@@ -586,6 +613,7 @@
       speakers.start()
       let lastTs = new Date().getTime();
       let sendDic = {};
+
       function createNes() {
         frame = 0;
         let sTs = Date.now();
@@ -625,6 +653,33 @@
                 }
               }
               context.putImageData(imageData, 0, 0);
+              if (!isOk) {
+                if (!isCatch) {
+                  for (let i = 0; i < 10; i++) {
+                    let a = ctx.getImageData(200+i, 72, 1, 1).data;
+                    if (a[0] == 117 && a[1] == 227) {
+                      isCatch = true;
+                      console.log('okok')
+                      console.log('a', a);
+                    }
+                  }
+                }
+                if (isCatch) {
+                  let lastR;
+                  for (let i = 0; i < 200; i++) {
+                    let r = ctx.getImageData(40 + i, 186, 1, 1).data[0];
+                    if (r == 117 && lastR == 255) {
+                      if (!isOk) {
+                        isOk = true;
+                        let time = setTime();
+                        alert('Congratulations, you used time: ' + time);
+                      }
+                    }
+                    lastR = r;
+                  }
+                }
+              }
+              ctx.strokeRect(200, 72, 12, 16);
             }
             // 重要！！！按钮回放功能
             // if (steps[frame]) {
@@ -640,21 +695,18 @@
             //   }
             // }
             frame += 1;
-            // time.innerText = (Date.now() - sTs) - (frame * 16);
-            let sms = frame * 16;
-            let ms = ('000' + sms % 1000).substr(-3);
-            let ss = Math.floor(sms / 1000);
-            let s = ('00' + ss % 60).substr(-2);
-            let m = Math.floor(ss / 60);
-            // time.innerText = (Date.now() - sTs) - (frame * 16); // 恒定在 63~68 之间，说明时间还算准确
-            time.innerText = `${m}:${s}.${ms}`;
+            setTime();
             let _arr = arr[frame] || [];
             for (let i = 0; i < _arr.length; i++) {
               const tar = _arr[i];
               if (tar[2] == 'u') {
-                nes.buttonUp(tar[0], tar[1], true, {isVedio: true})
+                nes.buttonUp(tar[0], tar[1], true, {
+                  isVedio: true
+                })
               } else if (tar[2] == 'd') {
-                nes.buttonDown(tar[0], tar[1], true, {isVedio: true})
+                nes.buttonDown(tar[0], tar[1], true, {
+                  isVedio: true
+                })
               }
             }
             // if (frame < 2500) {
@@ -687,12 +739,13 @@
         // if (localStorage.arr) {
         //   window.arr = JSON.parse(localStorage.arr);
         // }
-        nes.buttonUp = (k0, k1, isNoEmit, config={}) => {
+        nes.buttonUp = (k0, k1, isNoEmit, config = {}) => {
           if (!config.isVedio) {
             arr[frame] = arr[frame] || [];
             arr[frame].push([k0, k1, 'u']);
-            localStorage.arr =JSON.stringify(arr);
+            localStorage.arr = JSON.stringify(arr);
           }
+          document.getElementById(keyDomDic[k1]).classList.remove('active')
           let id = Math.random().toString().substr(2, 3);
           let fpsDic = window.fpsDic || {}
           fpsDic[id] = Date.now()
@@ -710,12 +763,17 @@
           window.fpsDic = fpsDic;
           srcButtonUp(k0, k1);
         }
-        nes.buttonDown = (k0, k1, isNoEmit, config={}) => {
+        nes.buttonDown = (k0, k1, isNoEmit, config = {}) => {
+          console.log(k0, k1)
           if (!config.isVedio) {
             arr[frame] = arr[frame] || [];
             arr[frame].push([k0, k1, 'd']);
-            localStorage.arr =JSON.stringify(arr);
+            localStorage.arr = JSON.stringify(arr);
           }
+          if (!startFrame && keyDomDic[k1] == 'btnstart') {
+            startFrame = frame;
+          }
+          document.getElementById(keyDomDic[k1]).classList.add('active')
           let id = Math.random().toString().substr(2, 3);
           let fpsDic = window.fpsDic || {}
           fpsDic[id] = Date.now();
@@ -867,6 +925,16 @@
         100: [2, jsnes.Controller.BUTTON_LEFT, "Num-4"], // Num-4
         102: [2, jsnes.Controller.BUTTON_RIGHT, "Num-6"] // Num-6
       };
+      const keyDomDic = {
+        0: 'btna',
+        1: 'btnb',
+        2: 'btnselect',
+        3: 'btnstart',
+        4: 'btnup',
+        5: 'btndown',
+        6: 'btnleft',
+        7: 'btnright'
+      }
       $(document).bind("contextmenu", function (evt) {
         evt.preventDefault();
       })
@@ -1345,6 +1413,7 @@
     let img3;
     let tX = 0;
     let tY = 0;
+
     function myFunction(ev) {
       canvas.removeEventListener('click', myFunction);
       console.log(ev);
@@ -1368,6 +1437,7 @@
         img.height = 16;
       }
       window.catchDic = window.catchDic || {}
+
       function goPikachu() {
         let maxEC = 0;
         let isFind = false;
@@ -1402,7 +1472,7 @@
                 let b3 = img3.data[idx + 2];
                 let a3 = img3.data[idx + 3];
                 if (r3 == r2 && g3 == g2 && b3 == b2) {
-                  eC=eC+0.05;
+                  eC = eC + 0.05;
                   // console.log(r,g,b);
                   // window.catchDic[`${r},${g},${b}`]=window.catchDic[`${r},${g},${b}`] || 0;
                   // window.catchDic[`${r},${g},${b}`]+=1;
@@ -1414,13 +1484,13 @@
               if (r == 129 && g == 121 && b == 255) {
                 continue;
               }
-              if (r == 117  && g == 227 && b == 0) {
+              if (r == 117 && g == 227 && b == 0) {
                 continue;
               }
-              if (r == 188  && g == 25 && b == 0) {
+              if (r == 188 && g == 25 && b == 0) {
                 continue;
               }
-              if (r == 177  && g == 84 && b == 0) {
+              if (r == 177 && g == 84 && b == 0) {
                 continue;
               }
               if (r == 0 && g == 0 && b == 0) {
@@ -1432,8 +1502,8 @@
               if (r == r2 && g == g2 && b == b2) {
                 eC++;
                 // console.log(r,g,b);
-                window.catchDic[`${r},${g},${b}`]=window.catchDic[`${r},${g},${b}`] || 0;
-                window.catchDic[`${r},${g},${b}`]+=1;
+                window.catchDic[`${r},${g},${b}`] = window.catchDic[`${r},${g},${b}`] || 0;
+                window.catchDic[`${r},${g},${b}`] += 1;
               }
             }
           }
@@ -1473,6 +1543,7 @@
       }
       setInterval(goPikachu, 50)
     }
+
     // canvas.addEventListener('click', myFunction); // 关闭监听 画框
   </script>
 </body>
