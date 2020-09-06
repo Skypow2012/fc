@@ -19,6 +19,9 @@ io.on('connection', function(socket){
     });
     socket.on("disconnect", function() {
         activeUserCount--;
+        io.emit("u", {
+            auc: activeUserCount
+        });
         console.log("a user go out");
     });
 
