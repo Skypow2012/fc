@@ -8,11 +8,17 @@ app.get('/', function(req, res){
 
 let sockets = [];
 
+let activeUserCount = 0;
+
 io.on('connection', function(socket){
     console.log('a user connected');
     sockets.push(socket);
-
+    activeUserCount++;
+    io.emit("u", {
+        auc: activeUserCount
+    });
     socket.on("disconnect", function() {
+        activeUserCount--;
         console.log("a user go out");
     });
 
