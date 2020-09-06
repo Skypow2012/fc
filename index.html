@@ -322,9 +322,9 @@
   <!-- <div id="btnall"
     style="opacity:0.5;width:45vw;height:45vw;background-size:45vw 45vw;background-image:url('./img/btn.png');background-repeat:no-repeat;position:fixed;left:5vw;top:5vw;transform: rotate(90deg);">
   </div> -->
-  <!-- <div class="btn" id="changePlayer"
+  <div class="btn" id="changePlayer"
     style="opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/player1.png');background-repeat:no-repeat;position:fixed;right:calc(2vw + 50px);top:10vw;transform: rotate(90deg);">
-  </div> -->
+  </div>
   <div class="btn" id="btnup">
   </div>
   <div class="btn" id="btnright"
@@ -1093,7 +1093,6 @@
                             isOk = false;
                             window.location.reload();
                           } else {
-                            alert('Congratulations, you used time: ' + time);
                             let xhr = new XMLHttpRequest();
                             xhr.open('POST', '/market/fc/setWin');
                             xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
@@ -1110,6 +1109,7 @@
                             }))
                             isCatch = false;
                             isOk = false;
+                            alert('Congratulations, you used time: ' + time);
                             window.location.reload();
                           }
                         }
@@ -1768,7 +1768,7 @@
 
     }
   </script>
-  <script src="//maxmon.top/socket.io/socket.io.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
   <script>
     // 暂时关闭联机功能
     let socket = {
@@ -1778,7 +1778,7 @@
     }
     // socket = io.connect('ws://192.168.1.47:3000');
     // socket = io.connect('ws://192.168.0.3:3000');
-    socket = io.connect('//maxmon.top/');
+    socket = io.connect('//tekii.cn/');
     socket.emit("m", {
       "name": navigator.userAgent,
       "msg": "hello world"
@@ -1800,7 +1800,7 @@
     //   localStorage.f = nes.f;
     // }, 300)
     socket.on("m", function (obj) {
-      return;
+      // return;
       console.log(obj);
       let key = obj.key;
       let fpsDic = window.fpsDic || {}
@@ -1821,6 +1821,9 @@
         nes.buttonDown(key[0], key[1], true);
       }
     });
+    socket.on("u", function (obj) {
+      console.log('u', obj);
+    })
   </script>
 </body>
 
