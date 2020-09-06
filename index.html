@@ -553,20 +553,50 @@
     </svg>
   </div>
   <script>
+    
+    function generateUserkey() {
+      let charStr = '23456789ABCDEFGHIJKLMNPQSTUVWXYZ';
+      let userkey = '';
+      for (let i = 0; i < 4; i++) {
+        userkey += charStr[charStr.length * Math.random() | 0];
+      }
+      return userkey;
+    }
+    localStorage.userkey = localStorage.userkey || generateUserkey();
+    window.userkey = localStorage.userkey;
+    $.ajax({
+      url: '/market/fc/login?userkey=' + window.userkey,
+      complete: function (xhr, status) {
+        let result = xhr.responseJSON
+        if (result.info) {
+          window.userid = result.info.id;
+          window.name = result.info.name;
+        }
+      }
+    });
+    let month = ('00' + (new Date().getMonth() + 1)).substr(-2);
+    let date = ('00' + new Date().getDate()).substr(-2);
+    document.getElementById('rankTitle').innerText = `TEKII ${month}.${date} RANK`
+  </script>
+  <script>
     function hideRank() {
       document.getElementById('rankArea').style.display = 'none';
     }
 
     function startChallenge() {
-      hideRank();
-      window.isChallenge = true;
+      if (!window.userid) {
+        alert('查询用户id出了些问题，请联系开发者小马的微信18868196263');
+      } else {
+        hideRank();
+        window.isChallenge = true;
+      }
     }
 
     function getRank() {
       $.ajax({
         url: '/market/fc/getWin',
         complete: function (xhr, status) {
-          let winList = xhr.responseJSON.info;
+          let winList = xhr.responseJSON.info || [];
           window.winList = winList;
           let rankBox = document.getElementById('rankBox');
           console.log(winList)
@@ -679,7 +709,7 @@
       localStorage.clear()
     }
     var romurl = localStorage.romurl ? localStorage.romurl :
-      "./rom/Chip To Dale No Daisakusen 2 (J).nes"; //"./rom/mario.nes";
+      "./rom/mario.nes"; //"./rom/Chip To Dale No Daisakusen 2 (J).nes"; 
     localStorage.romurl = romurl;
     let isIn = true;
     let steps = {};
@@ -1102,7 +1132,7 @@
                               }
                             }
                             xhr.send(JSON.stringify({
-                              "userid": 1,
+                              "userid": window.userid,
                               "step": localStorage.arr,
                               "usetime": (Number(time.split(':')[0]) * 60 + Number(time.split(':')[
                                 1])) * 1000
