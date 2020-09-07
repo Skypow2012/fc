@@ -711,7 +711,7 @@
       } else {
         if (coins<=0) {
           addCoin()
-          socket.emit('m', {msg:'122showad'});
+          socket.emit('m', {msg:window.tid+'showad'});
         } else {
           subCoin()
           localStorage.coins = coins;
@@ -723,6 +723,12 @@
               nes.buttonUp(1, jsnes.Controller.BUTTON_START);
             },200)
           }, 200)
+          setTimeout(()=>{
+            nes.buttonDown(1, jsnes.Controller.BUTTON_START);
+            setTimeout(()=>{
+              nes.buttonUp(1, jsnes.Controller.BUTTON_START);
+            },200)
+          }, 1500)
           if (speakers.audioCtx)
             speakers.audioCtx.resume();
           // setTimeout(()=>{
@@ -1293,6 +1299,7 @@
                               "step": localStorage.arr,
                               "usetime": usetimeS * 1000
                             }))
+                            window.pause = 1;
                             isCatch = false;
                             isOk = false;
                             localStorage.isShowRedPack = localStorage.isShowRedPack || '';
