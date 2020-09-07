@@ -30,8 +30,8 @@ io.on('connection', function(socket){
         io.emit("m", obj);
     });
     socket.on("w", function(obj) {
-	console.log('w', obj); // 微信
-	io.emit("w", obj);
+        console.log('w', obj); // 微信
+        io.emit("w", obj);
     });
 });
 
