@@ -26,8 +26,12 @@ io.on('connection', function(socket){
     });
 
     socket.on("m", function(obj) {
-        console.log(obj)
+        console.log(obj); // 动作
         io.emit("m", obj);
+    });
+    socket.on("w", function(obj) {
+	console.log('w', obj); // 微信
+	io.emit("w", obj);
     });
 });
 
