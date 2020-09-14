@@ -10,6 +10,37 @@
   <script type="text/javascript" src="./js/jsnes.min.js"></script>
   <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.0.min.js"></script> -->
   <script type="text/javascript" src="./js/jquery-3.4.0.min.js"></script>
+  <script>
+    window.onload = function () {
+      canvasTips.addEventListener('dragover', function (e) {
+        console.log(e)
+        e.preventDefault(); // 必须阻止默认事件
+      }, false);
+      canvasTips.addEventListener('drop', function (e) {
+        e.preventDefault(); // 阻止默认事件
+        var files = e.dataTransfer.files; //获取文件
+        // appendFile(files, '.list-drag')
+        console.log(e)
+        console.log(files);
+        window.files = files;
+        // code
+        blobToDataURL(files[0], (base64) => {
+          nes.loadROM(atob(base64.replace('data:application/octet-stream;base64,', '')));
+          nes.stop();
+          nes.reloadROM();
+        })
+      }, false);
+
+      function blobToDataURL(blob, cb) {
+        let reader = new FileReader();
+        reader.onload = function (evt) {
+          var base64 = evt.target.result
+          cb(base64)
+        };
+        reader.readAsDataURL(blob);
+      }
+    }
+  </script>
   <style>
     body {
       overflow: hidden;
@@ -129,7 +160,7 @@
     }
 
     @media screen and (min-width: 800px) {
-      body {
+      /* body {
         transform: rotateZ(-90deg);
         max-width: 512px;
       }
@@ -143,7 +174,7 @@
       }
       .rankArea {
         margin-left: 0px !important;
-      }
+      } */
     }
   </style>
   <script>
@@ -211,9 +242,6 @@
         img.height = 16;
       }
       window.catchDic = window.catchDic || {}
-
-
-      // setInterval(goPikachu, 50) // 这里注释了，放到了onframe里面
     }
 
     function goPikachu() {
@@ -314,14 +342,6 @@
         tX = tX2;
         tY = tY2;
       }
-
-      // console.log(img)
-      // checkImg.src = img;
-      // checkImg.onready = function () {
-      //   console.log(img)
-      //   check.getC
-      //   check.getContext('2d').drawImage(img, 0, 0)
-      // }
     }
   </script>
 </head>
@@ -425,7 +445,47 @@
       <p onclick="localStorage.romurl = './rom/kdxfzwb.nes';window.location.href = window.location.href;">快打旋风中文版</p>
       <p onclick="localStorage.romurl = './rom/ZELDA.NES';window.location.href = window.location.href;">ZELDA</p>
       <p onclick="localStorage.romurl = './rom/ZELDA2.NES';window.location.href = window.location.href;">ZELDA2</p>
+      <p onclick="localStorage.romurl = './rom/Zelda Outlands.nes';window.location.href = window.location.href;">
+        塞尔达Outlands</p>
+      <p onclick="localStorage.romurl = './rom/KIRBYADV.NES';window.location.href = window.location.href;">卡比历险记</p>
+      <p
+        onclick="localStorage.romurl = './rom/Hoshi No Kirby - Yume No Izumi No Monogatari (J).nes';window.location.href = window.location.href;">
+        卡比历险记-日</p>
+      <p
+        onclick="localStorage.romurl = './rom/Meitantei Holmes - Kiri No London Satsujin Jiken (J).nes';window.location.href = window.location.href;">
+        侦探-日</p>
+      <p onclick="localStorage.romurl = './rom/Startropics.NES';window.location.href = window.location.href;">
+        Startropics</p>
+      <p
+        onclick="localStorage.romurl = './rom/Adventures of Lolo (J).nes';window.location.href = window.location.href;">
+        Lolo</p>
+      <p onclick="localStorage.romurl = './rom/LOLO2.NES';window.location.href = window.location.href;">Lolo2</p>
+      <p onclick="localStorage.romurl = './rom/LOLO3.NES';window.location.href = window.location.href;">Lolo3</p>
+      <p onclick="localStorage.romurl = './rom/rexuequgunqiu.nes';window.location.href = window.location.href;">热血曲棍球
+      </p>
+      <p onclick="localStorage.romurl = './rom/热血物语中文版.nes';window.location.href = window.location.href;">热血物语</p>
+      <p
+        onclick="localStorage.romurl = './rom/re_xue_gao_xiao_duo_bi_qiu.nes';window.location.href = window.location.href;">
+        热血高校</p>
+      <p onclick="localStorage.romurl = './rom/rxgd.nes';window.location.href = window.location.href;">热血格斗</p>
+      <p
+        onclick="localStorage.romurl = './rom/Kunio_Kun_no_Nekketsu_Soccer_League_(J)(T+C)(AirTeam)build_070217.nes';window.location.href = window.location.href;">
+        热血足球3</p>
+      <!-- <p onclick="localStorage.romurl = './rom/rxsdj.nes';window.location.href = window.location.href;">热血时代剧</p> -->
 
+      <p onclick="localStorage.romurl = './rom/三国志英杰传(吞食天地1).NES';window.location.href = window.location.href;">吞食天地1
+      </p>
+      <p onclick="localStorage.romurl = './rom/吞食天地2.NES';window.location.href = window.location.href;">吞食天地2</p>
+      <!-- <p onclick="localStorage.romurl = './rom/爆笑三国(上古神剑).nes';window.location.href = window.location.href;">爆笑三国</p> -->
+      <!-- <p onclick="localStorage.romurl = './rom/三国志Ⅱ--霸王的大陆_外星汉化版.nes';window.location.href = window.location.href;">三国志Ⅱ</p> -->
+      <!-- <p onclick="localStorage.romurl = './rom/三国志超级版.nes';window.location.href = window.location.href;">三国志超级版</p> -->
+      <!-- <p onclick="localStorage.romurl = './rom/重装机兵plus6.0大车版.nes';window.location.href = window.location.href;">重装机兵大车版</p> -->
+      <!-- <p onclick="localStorage.romurl = './rom/第2次超级机器人大战.NES';window.location.href = window.location.href;">机器人大战2</p> -->
+      <!-- <p onclick="localStorage.romurl = './rom/第4次机器人大战.NES';window.location.href = window.location.href;">机器人大战4</p> -->
+      <!-- 74 -->
+
+
+      <p onclick="window.location.href = '/gba'">gba</p>
 
       <!-- This ROM uses a mapper not supported by JSNES: Namcot 106 chip(19) -->
       <!-- <p onclick="localStorage.romurl = './rom/Sangokushi 2.nes';window.location.href = window.location.href;">三国志2霸王的大陆</p> -->
@@ -465,6 +525,7 @@
       margin: auto;
       font-size: 30px;
     }
+
     .rankChallengeBtn {
       position: absolute;
       width: 30px;
@@ -475,6 +536,7 @@
       margin: auto;
       font-size: 30px;
     }
+
     .coin {
       position: absolute;
       width: 30px;
@@ -488,6 +550,7 @@
       color: #f7b400;
       line-height: 30px;
     }
+
     .rankCloseBtn:active,
     .rankChallengeBtn:active {
       opacity: .6;
@@ -514,6 +577,10 @@
       border: 1px solid #e6a886;
       margin: 1px 0;
       text-align: left;
+    }
+
+    .rankP.me {
+      border: 1px solid #3dabff;
     }
 
     .rankP:active {
@@ -568,24 +635,29 @@
       text-indent: 2em;
       font-weight: 200;
     }
+
     .tipsArea>p {
       padding: 4px 9px;
       margin: 2px 0;
     }
+
     .rankChallengeIcon {
       width: 12px;
       height: 12px;
     }
+
     .tipsArea .tipsPs {
       position: absolute;
       bottom: 10px;
       text-indent: 0;
       font-size: 8px;
     }
+
     .goldText {
       color: #f7b400;
       font-weight: 600;
     }
+
     .tipsArea input {
       color: #f7b400;
       border: none;
@@ -594,7 +666,7 @@
       border: 1px solid transparent;
       outline: none;
       -webkit-appearance: none;
-      background-color: rgba(0,0,0,0);
+      background-color: rgba(0, 0, 0, 0);
       text-align: center;
       width: 100%;
     }
@@ -639,17 +711,17 @@
   <div id="tipsArea" class="tipsArea">
     <p>第一关通关耗时小于30秒，会获得一个<span class="goldText">3~10元</span>的支付宝口令红包，加油哦ヾ(≧▽≦*)o</p>
     <p>第一关通关耗时小于18.5秒，会获得一个<span class="goldText">50元</span>的微信红包，给大神倒茶~(　o=^•ェ•)o　┏━┓</p>
-    <p>点击<svg t="1599318965085" onclick="startChallenge()" class="rankChallengeIcon" viewBox="0 0 1024 1024" version="1.1"
-      xmlns="http://www.w3.org/2000/svg" p-id="16010" width="90" height="90">
-      <path
-        d="M512 1024C229.239467 1024 0 794.760533 0 512S229.239467 0 512 0 1024 229.239467 1024 512 794.760533 1024 512 1024z m326.200889-467.626667c-20.707556-178.084978-57.344-305.743644-173.6704-305.743644-58.936889 0-89.201778 59.892622-141.789867 64.625778-54.158222-4.733156-82.852978-64.625778-141.812622-64.625778-116.303644 0-152.940089 127.658667-172.077511 304.173511-11.150222 94.549333-1.592889 173.351822 57.366755 173.351822 82.830222 0 86.038756-74.069333 144.9984-108.7488 22.300444-11.036444 71.68-15.746844 113.095112-17.339733 41.437867 1.592889 90.840178 6.303289 113.140622 17.339733 58.936889 34.679467 62.122667 108.7488 144.9984 108.7488 57.344 1.592889 65.308444-77.232356 55.751111-171.781689z"
-        p-id="16011" fill="#f7b400"></path>
-      <path
-        d="M382.520889 540.626489c-46.193778 0-82.830222-37.842489-82.830222-81.965511 0-44.123022 36.636444-81.942756 82.830222-81.942756 46.193778 0 82.852978 36.2496 82.852978 81.942756 0 45.715911-38.229333 81.965511-82.830223 81.965511z m-47.786667-81.965511c0 12.606578 4.778667 23.643022 14.336 33.109333 7.964444 7.873422 20.707556 14.176711 33.450667 14.176711 12.743111 0 23.893333-4.733156 33.450667-14.176711 7.964444-7.896178 14.336-20.48 14.336-33.109333 0-12.606578-4.778667-23.643022-14.336-33.086578-7.964444-7.873422-20.707556-14.199467-33.450667-14.199467-12.743111 0-23.893333 4.733156-33.450667 14.199467-9.557333 7.873422-14.336 20.48-14.336 33.086578zM753.755022 474.430578h-65.308444v64.625778h-31.857778v-64.625778h-65.353956v-31.516445h65.3312v-63.032889h31.857778v63.032889h65.3312z"
-        p-id="16012" fill="#f7b400"></path>
-    </svg>进入挑战~</p>
-    <input type="button" id="isShowRedPack"/>
-    <p class="tipsPs">(首次登陆赠送3次挑战机会，之后每天1次，看广告可以增加1次多，广告收入会累加到奖金中~)</p>
+    <p>点击<svg t="1599318965085" onclick="startChallenge()" class="rankChallengeIcon" viewBox="0 0 1024 1024"
+        version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16010" width="90" height="90">
+        <path
+          d="M512 1024C229.239467 1024 0 794.760533 0 512S229.239467 0 512 0 1024 229.239467 1024 512 794.760533 1024 512 1024z m326.200889-467.626667c-20.707556-178.084978-57.344-305.743644-173.6704-305.743644-58.936889 0-89.201778 59.892622-141.789867 64.625778-54.158222-4.733156-82.852978-64.625778-141.812622-64.625778-116.303644 0-152.940089 127.658667-172.077511 304.173511-11.150222 94.549333-1.592889 173.351822 57.366755 173.351822 82.830222 0 86.038756-74.069333 144.9984-108.7488 22.300444-11.036444 71.68-15.746844 113.095112-17.339733 41.437867 1.592889 90.840178 6.303289 113.140622 17.339733 58.936889 34.679467 62.122667 108.7488 144.9984 108.7488 57.344 1.592889 65.308444-77.232356 55.751111-171.781689z"
+          p-id="16011" fill="#f7b400"></path>
+        <path
+          d="M382.520889 540.626489c-46.193778 0-82.830222-37.842489-82.830222-81.965511 0-44.123022 36.636444-81.942756 82.830222-81.942756 46.193778 0 82.852978 36.2496 82.852978 81.942756 0 45.715911-38.229333 81.965511-82.830223 81.965511z m-47.786667-81.965511c0 12.606578 4.778667 23.643022 14.336 33.109333 7.964444 7.873422 20.707556 14.176711 33.450667 14.176711 12.743111 0 23.893333-4.733156 33.450667-14.176711 7.964444-7.896178 14.336-20.48 14.336-33.109333 0-12.606578-4.778667-23.643022-14.336-33.086578-7.964444-7.873422-20.707556-14.199467-33.450667-14.199467-12.743111 0-23.893333 4.733156-33.450667 14.199467-9.557333 7.873422-14.336 20.48-14.336 33.086578zM753.755022 474.430578h-65.308444v64.625778h-31.857778v-64.625778h-65.353956v-31.516445h65.3312v-63.032889h31.857778v63.032889h65.3312z"
+          p-id="16012" fill="#f7b400"></path>
+      </svg>进入挑战~</p>
+    <input type="button" id="isShowRedPack" />
+    <p class="tipsPs">(首次登陆赠送3次挑战机会，之后每天1次，看广告可以增加1次多，新玩家进入在线用户均可加1金币，金币上限3枚，广告收入会累加到奖金中~)</p>
   </div>
   <textarea id="copyTextDom" style="zIndex:-1;position: fixed;top: -100px;width: 1px;height: 1px;"></textarea>
   <script>
@@ -678,17 +750,17 @@
     let date = ('00' + new Date().getDate()).substr(-2);
     document.getElementById('rankTitle').innerText = `TEKII ${month}.${date} RANK`;
 
-    function copy(tarText) { 
-      var copyTextDom=document.getElementById("copyTextDom");
+    function copy(tarText) {
+      var copyTextDom = document.getElementById("copyTextDom");
       copyTextDom.innerText = tarText;
       copyTextDom.select(); // 选择对象
       document.execCommand("Copy"); // 执行浏览器复制命令
     }
     if (localStorage.isShowRedPack) {
       document.getElementById('isShowRedPack').value = localStorage.isShowRedPack
-      document.getElementById('isShowRedPack').onclick = function() {
+      document.getElementById('isShowRedPack').onclick = function () {
         copy(localStorage.isShowRedPack);
-        alert('已复制到剪贴板')
+        alert('支付宝红包口令已复制到剪贴板。如已被领完，可联系微信maqijun123456补发')
       }
     }
   </script>
@@ -700,34 +772,41 @@
       addCoin();
       localStorage.coinDate = coinDate;
     }
+
     function hideRank() {
+      $.ajax({
+        url: '/market/fc/log?type=hideRank&remark=' + window.userid
+      });
       document.getElementById('rankArea').style.display = 'none';
       document.getElementById('tipsArea').style.display = 'none';
     }
 
     function startChallenge() {
+      $.ajax({
+        url: '/market/fc/log?type=startChallenge&remark=' + window.userid
+      });
       if (!window.userid) {
         alert('查询用户id出了些问题，请联系开发者小马的微信18868196263');
       } else {
-        if (coins<=0) {
+        if (coins <= 0) {
           addCoin()
-          socket.emit('m', {msg:window.tid+'showad'});
+          // socket.emit('m', {msg:window.tid+'showad'});
         } else {
           subCoin()
           localStorage.coins = coins;
           hideRank();
           window.isChallenge = true;
-          setTimeout(()=>{
+          setTimeout(() => {
             nes.buttonDown(1, jsnes.Controller.BUTTON_START);
-            setTimeout(()=>{
+            setTimeout(() => {
               nes.buttonUp(1, jsnes.Controller.BUTTON_START);
-            },200)
+            }, 200)
           }, 200)
-          setTimeout(()=>{
+          setTimeout(() => {
             nes.buttonDown(1, jsnes.Controller.BUTTON_START);
-            setTimeout(()=>{
+            setTimeout(() => {
               nes.buttonUp(1, jsnes.Controller.BUTTON_START);
-            },200)
+            }, 200)
           }, 1500)
           if (speakers.audioCtx)
             speakers.audioCtx.resume();
@@ -738,14 +817,26 @@
         }
       }
     }
+
     function addCoin() {
+      $.ajax({
+        url: '/market/fc/log?type=addCoin&remark=' + window.userid
+      });
       coins++;
+      if (coins > 5) {
+        coins = 3;
+      }
       slashCoin()
     }
+
     function subCoin() {
+      $.ajax({
+        url: '/market/fc/log?type=subCoin&remark=' + window.userid
+      });
       coins--;
       slashCoin()
     }
+
     function slashCoin() {
       localStorage.coins = coins;
       document.getElementById('coin').innerText = coins;
@@ -764,6 +855,9 @@
           for (let i = 0; i < winList.length; i++) {
             let rankP = document.createElement('div');
             rankP.className = 'rankP';
+            if (window.userid == winList[i].userid) {
+              rankP.className = 'rankP me'
+            }
             rankP.onclick = function () {
               showZZDJS(i);
             }
@@ -952,8 +1046,16 @@
 
     function saveData() {
       key = localStorage.romurl;
-      localStorage.clear()
+      // localStorage.clear()
       // localStorage.nes = JSON.stringify(nes);
+      let lKeys = Object.keys(localStorage);
+      // 删除其他存档，防止空间不足无法存储，限制为4M左右，1个存档就有2M了，所以同一时间只有1个游戏的存档，除非之后开发出新的小存储办法，虽然我试过了，小的办法都会漏东西，大的都会在细小的地方有差别 2020-09-09 23:46
+      for (let i = 0; i < lKeys.length; i++) {
+        const key = lKeys[i];
+        if (key.indexOf('./rom') > -1) {
+          delete localStorage[key];
+        }
+      }
       localStorage[key] = JSON.stringify(nes);
       // localStorage[`${key}-mem`] = JSON.stringify(nes.cpu.mem);
       // localStorage[`${key}-bgbuffer`] = JSON.stringify(nes.ppu.bgbuffer);
@@ -963,6 +1065,21 @@
       //   mmap: nes.mmap
       // })
       localStorage.romurl = key;
+      $.post({
+        url: '/market/fc/save/',
+        data: JSON.stringify({
+          userid: window.userid,
+          save: localStorage[key],
+          romurl: key,
+        }),
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        },
+        dataType: 'json',
+        success: (...args) => {
+          console.log(args);
+        }
+      })
     }
     $(function () {
       console.log($(document).width()); //浏览器时下窗口文档对于象宽度
@@ -1121,12 +1238,12 @@
       // var screen = $("<canvas width='256' height='240'>");
       var screen = $("#canvas");
       // screen[0].style.height ="500px";
-      if (window.innerWidth > 512) {
-        
-      } else {
-        screen[0].style.height = window.innerWidth + "px";
-      }
-      
+      // if (window.innerWidth > 512) {
+
+      // } else {
+      screen[0].style.height = window.innerWidth + "px";
+      // }
+
       var m = (window.innerWidth / 240 * 256 - window.innerWidth) / 2;
       var n = (window.innerHeight / 240 * 256 - window.innerHeight) / 2;
       // screen[0].style.transform="translate(-50%, -50%)";
@@ -1241,17 +1358,41 @@
               if (window.isChallenge) {
                 if (!isOk) {
                   if (!isDie) {
-                    if (startFrame && (frame - startFrame) > 4*60) {
-                      let leftTopBlack = context.getImageData(10, 10, 1, 1).data;
-                      let rightTopBlack = context.getImageData(245, 10, 1, 1).data;
-                      if (leftTopBlack[0] == 0 && leftTopBlack[1] == 0 && leftTopBlack[2] == 0
-                          && rightTopBlack[0] == 0 && rightTopBlack[1] == 0 && rightTopBlack[2] == 0) {
-                        let marioHat = context.getImageData(105, 105, 1, 1).data;
-                        if (marioHat[0] == 188 && marioHat[1] == 25 && marioHat[2] == 0) {
-                          isDie = true;
-                          alert('You are die, try again latter.')
+                    if (startFrame && (frame - startFrame) > 4 * 60) {
+                      let leftTopBlack = context.getImageData(10, 36, 1, 1).data;
+                      let leftBottomBlack = context.getImageData(240, 220, 1, 1).data;
+                      let rightBottomBlack = context.getImageData(10, 220, 1, 1).data;
+                      if (leftTopBlack[0] == 0 && leftTopBlack[1] == 0 && leftTopBlack[2] == 0 &&
+                        leftBottomBlack[0] == 0 && leftBottomBlack[1] == 0 && leftBottomBlack[2] == 0 &&
+                        rightBottomBlack[0] == 0 && rightBottomBlack[1] == 0 && rightBottomBlack[2] == 0) {
+                        if (window.isZZDJS) {
+                          alert('The vedio is end');
+                          delete window.isZZDJS;
+                          window.arr = {};
+                          isCatch = false;
+                          isOk = false;
                           window.location.reload();
-                          return;
+                        } else {
+                          let marioHat = context.getImageData(105, 105, 1, 1).data;
+                          if (marioHat[0] == 188 && marioHat[1] == 25 && marioHat[2] == 0) {
+                            isDie = true;
+                            let xhr = new XMLHttpRequest();
+                            xhr.open('POST', '/market/fc/setWin');
+                            xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+                            xhr.onreadystatechange = function (ev) {
+                              if (xhr.readyState == 4) {
+                                console.log(ev.target.response)
+                              }
+                            }
+                            xhr.send(JSON.stringify({
+                              "userid": window.userid,
+                              "step": localStorage.arr,
+                              "usetime": 999 * 1000
+                            }))
+                            alert('You are die, try again latter.')
+                            window.location.reload();
+                            return;
+                          }
                         }
                       }
                     }
@@ -1293,7 +1434,7 @@
                               }
                             }
                             let usetimeS = (Number(time.split(':')[0]) * 60 + Number(time.split(':')[
-                                1]))
+                              1]))
                             xhr.send(JSON.stringify({
                               "userid": window.userid,
                               "step": localStorage.arr,
@@ -1303,14 +1444,15 @@
                             isCatch = false;
                             isOk = false;
                             localStorage.isShowRedPack = localStorage.isShowRedPack || '';
-                            let redPacks = ['Tekii模拟器马里奥30秒过关达成', 'Tekii模拟器马里奥30秒通关达成']
+                            let redPacks = ['Tekii模拟器马里奥30秒通过达成']
                             if (usetimeS < 30 && !localStorage.isShowRedPack) {
-                              localStorage.isShowRedPack = redPacks[Math.random()*redPacks.length|0];
-                              alert('Congratulations, you used time: ' + time + '\n支付宝口令红包为：【' + localStorage.isShowRedPack + '】');
+                              localStorage.isShowRedPack = redPacks[Math.random() * redPacks.length | 0];
+                              alert('Congratulations, you used time: ' + time + '\n支付宝口令红包为：【' + localStorage
+                                .isShowRedPack + '】');
                             } else {
                               alert('Congratulations, you used time: ' + time);
                             }
-                            
+
                             window.location.reload();
                           }
                         }
@@ -1378,7 +1520,9 @@
             arr[frame].push([k0, k1, 'u']);
             localStorage.arr = JSON.stringify(arr);
           }
-          document.getElementById(keyDomDic[k1]).classList.remove('active')
+          if (k0 == 1) {
+            document.getElementById(keyDomDic[k1]).classList.remove('active')
+          }
           let id = Math.random().toString().substr(2, 3);
           let fpsDic = window.fpsDic || {}
           fpsDic[id] = Date.now()
@@ -1410,7 +1554,9 @@
           if (!startFrame && keyDomDic[k1] == 'btnstart') {
             startFrame = frame;
           }
-          document.getElementById(keyDomDic[k1]).classList.add('active')
+          if (k0 == 1) {
+            document.getElementById(keyDomDic[k1]).classList.add('active')
+          }
           let id = Math.random().toString().substr(2, 3);
           let fpsDic = window.fpsDic || {}
           fpsDic[id] = Date.now();
@@ -1773,7 +1919,7 @@
         else frameSpeed = 1;
         evt.preventDefault();
         // clearInterval(autoSaveInter)
-        localStorage.clear()
+        // localStorage.clear()
       });
       $('#btnspeed').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
@@ -1842,7 +1988,6 @@
               // Got HTML back, so it is probably falling back to index.html due to 404
               return callback(new Error("Page not found"));
             }
-
             callback(null, this.responseText);
           } else if (this.status === 0) {
             // Aborted, so ignore error
@@ -1865,15 +2010,20 @@
         } else {
           nes.loadROM(data);
           // loadSavedData() // 自动读取有莫名奇妙的问题
-          // autoSaveInter = setInterval(()=>{
-          //   console.log('saveddddddddddddddddddddd')
-          //   saveData()
-          // }, 5000)
           window.nesInterval = setInterval(function () {
             goF(nes);
             if (frameSpeed == 5) {
               goF(nes);
               goF(nes);
+            }
+            if (!window.isChallenge && (frame % 100 == 0)) {
+              let ms = Date.now() - window.ts;
+              let f = frame - window.lastF;
+              time.style.display = 'inline-block';
+              console.log(ms, frame, ms / frame);
+              ms / f ? (time.innerText = (f * 1000 / (ms)).toFixed(2)) : '';
+              window.ts = Date.now();
+              window.lastF = frame;
             }
           }, 16);
           // 重要！！！ 这里可以证明 只要把整个 nes存下来 就可以 做到存档
@@ -1950,22 +2100,6 @@
       "name": navigator.userAgent,
       "msg": "hello world"
     });
-    // setInterval(()=>{
-    //   nes2 = JSON.parse(localStorage['ljNes']);
-    //   let f = nes.f
-    //   nes2.f = JSON.parse(localStorage.f||'0')
-    //   console.log('old', nes2.f)
-
-    //   setB2A(nes, nes2);
-    //   console.log('new', nes.f)
-    //   console.log(nes.f, f)
-    //   while(nes.f < f) {
-    //     goF(nes)
-    //     console.log('addd', nes.f)
-    //   }
-    //   localStorage['ljNes'] = JSON.stringify(nes);
-    //   localStorage.f = nes.f;
-    // }, 300)
     socket.on("m", function (obj) {
       // return;
       console.log(obj);
@@ -1976,20 +2110,29 @@
       let nTs = Date.now();
       console.log(nTs, lTs, nTs - lTs)
       fps.value = (nTs - lTs).toFixed(2) + 'ms';
-      while (nes.f < obj.f) {
-        goF(nes); // 追上队友的frameCount
-      }
+      // while (nes.f < obj.f) {
+      //   goF(nes); // 追上队友的frameCount
+      // }
       if (obj.cId == window.cId) {
         return;
       }
-      if (obj.type == 'up') {
-        nes.buttonUp(key[0], key[1], true);
-      } else if (obj.type == 'down') {
-        nes.buttonDown(key[0], key[1], true);
+      if (key && key[0] == 2) { // 只有p2的指令才会传进游戏
+        if (obj.type == 'up') {
+          nes.buttonUp(key[0], key[1], true);
+        } else if (obj.type == 'down') {
+          nes.buttonDown(key[0], key[1], true);
+        }
       }
     });
     socket.on("u", function (obj) {
       console.log('u', obj);
+      window.auc = window.auc || obj.auc;
+      if (obj.auc > window.auc) {
+        addCoin();
+        window.auc = obj.auc;
+      } else {
+        // 人数变少了，不加币也不赋值
+      }
     })
     socket.on("w", function (obj) {
       if (window.tid == obj.tid) {
@@ -2000,7 +2143,7 @@
           case 'addCoin':
             addCoin();
             break;
-        }   
+        }
       }
     })
   </script>
