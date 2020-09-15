@@ -461,6 +461,8 @@
         Lolo</p>
       <p onclick="localStorage.romurl = './rom/LOLO2.NES';window.location.href = window.location.href;">Lolo2</p>
       <p onclick="localStorage.romurl = './rom/LOLO3.NES';window.location.href = window.location.href;">Lolo3</p>
+      <p onclick="localStorage.romurl = './rom/Moon Ranger (U).nes';window.location.href = window.location.href;">Moon
+        Ranger</p>
       <p onclick="localStorage.romurl = './rom/rexuequgunqiu.nes';window.location.href = window.location.href;">热血曲棍球
       </p>
       <p onclick="localStorage.romurl = './rom/热血物语中文版.nes';window.location.href = window.location.href;">热血物语</p>
@@ -1034,9 +1036,44 @@
       if (localStorage[key]) {
         console.log('inininin')
         console.log('load dataaaaaaaaaaaaa innnnnnnnnnnnnnnn')
+        
+        // $.get('https://tekii.cn/fc/save/3.1599757114647.mario.nes.sav', function(data) {
+        //   nes2 = JSON.parse(data.responseText);
+        //   window.nes2 = nes2;
+        //   console.log(nes2)
+        //   setB2A(nes, nes2);
+        // })
+        
+        // let xhr = new XMLHttpRequest();
+        // xhr.open('GET', `/market/fc/load/?userid=${userid}&romurl=${encodeURIComponent(key)}`);
+        // xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+        // xhr.onreadystatechange = function (ev) {
+        //   if (xhr.readyState == 4) {
+        //     let result = JSON.parse(ev.target.responseText);
+        //     if (result && result.info && result.info[0]) {
+        //       result.info[0].saveurl
+        //       let xhr = new XMLHttpRequest();
+        //       xhr.open('GET', result.info[0].saveurl)//'/fc/save/88.1600130967879.三国志英杰传(吞食天地1).NES.sav');
+        //       xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+        //       xhr.onreadystatechange = function (ev) {
+        //         if (xhr.readyState == 4) {
+        //           nes2 = JSON.parse(ev.target.responseText);
+        //           window.nes2 = nes2;
+        //           console.log(nes2)
+        //           setB2A(nes, nes2);
+        //         }
+        //       }
+        //       xhr.send()
+        //     }
+        //   }
+        // }
+        // xhr.send()
+
+        // 本地存储
         nes2 = JSON.parse(localStorage[key]);
         // localStorage.nes ? (nes2 = JSON.parse(localStorage.nes)) : '';
         setB2A(nes, nes2);
+
         // nesSav = JSON.parse(localStorage[`${key}`]);
         // loadCpuMem(nes, nesSav.mem)
         // loadPpuNameTable(nes, nesSav.nameTable)
@@ -1049,6 +1086,7 @@
       // localStorage.clear()
       // localStorage.nes = JSON.stringify(nes);
       let lKeys = Object.keys(localStorage);
+      console.log(lKeys);
       // 删除其他存档，防止空间不足无法存储，限制为4M左右，1个存档就有2M了，所以同一时间只有1个游戏的存档，除非之后开发出新的小存储办法，虽然我试过了，小的办法都会漏东西，大的都会在细小的地方有差别 2020-09-09 23:46
       for (let i = 0; i < lKeys.length; i++) {
         const key = lKeys[i];
@@ -1056,7 +1094,7 @@
           delete localStorage[key];
         }
       }
-      localStorage[key] = JSON.stringify(nes);
+
       // localStorage[`${key}-mem`] = JSON.stringify(nes.cpu.mem);
       // localStorage[`${key}-bgbuffer`] = JSON.stringify(nes.ppu.bgbuffer);
       // localStorage[key] = JSON.stringify({
@@ -1069,7 +1107,7 @@
         url: '/market/fc/save/',
         data: JSON.stringify({
           userid: window.userid,
-          save: localStorage[key],
+          save: JSON.stringify(nes),
           romurl: key,
         }),
         headers: {
@@ -1080,6 +1118,8 @@
           console.log(args);
         }
       })
+      localStorage[key] = JSON.stringify(nes);
+
     }
     $(function () {
       console.log($(document).width()); //浏览器时下窗口文档对于象宽度
