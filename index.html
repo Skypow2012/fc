@@ -11,6 +11,181 @@
   <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.0.min.js"></script> -->
   <script type="text/javascript" src="./js/jquery-3.4.0.min.js"></script>
   <script>
+    window.addEventListener("gamepadconnected", function (e) {
+      window.gp = navigator.getGamepads()[e.gamepad.index];
+      console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
+        gp.index, gp.id,
+        gp.buttons.length, gp.axes.length);
+    });
+
+    function processGp() {
+
+      if (window.gp) {
+        let gpKeyDic = {
+          0: 'A',
+          1: 'B',
+          3: 'X',
+          4: 'Y',
+          6: 'L', // LB Left Bumper 按钮
+          7: 'R', // RB Right Bumper
+          8: 'ZL', // LT L2 Left Trigger 扳机
+          9: 'ZR', // RT R2 Left Trigger
+          10: 'Select',
+          11: 'Start',
+          13: 'LS', // 左摇杆按压 Left Sitck 操纵杆
+          14: 'RS', // 右摇杆按压 Right Sitck
+
+          21: '↑',
+          22: '→',
+          23: '↓',
+          24: '←',
+        }
+        let gpKey2KeysDic = {
+          0: 88,
+          1: 89,
+          3: 88,
+          4: 89,
+          6: 88,
+          7: 88,
+          8: 89,
+          9: 89,
+          10: 17,
+          11: 13,
+
+          21: 38,
+          22: 39,
+          23: 40,
+          24: 37,
+        }
+        window.gp = navigator.getGamepads()[0];
+        // 按钮部分
+        window.gpBtnDownDic = window.gpBtnDownDic || {};
+        let buttons = window.gp.buttons;
+        for (let i = 0; i < buttons.length; i++) {
+          const btn = buttons[i];
+          let gpKey = i;
+          if (btn.value == 1) {
+            if (!window.gpBtnDownDic[i]) {
+              window.gpBtnDownDic[i] = 1;
+              let key = KEYS[gpKey2KeysDic[gpKey]];
+              console.log(gpKey, 'is down');
+              nes.buttonDown(key[0], key[1]);
+            } else {
+              // 按着就按着吧，不触发
+            }
+          } else {
+            if (window.gpBtnDownDic[i]) {
+              window.gpBtnDownDic[i] = 0;
+              let key = KEYS[gpKey2KeysDic[gpKey]];
+              console.log(gpKey, 'is up');
+              nes.buttonUp(key[0], key[1]);
+            } else {
+              // 什么事都没有
+            }
+          }
+        }
+        // 摇杆部分
+        // idx0 左摇杆 左 -1
+        // idx0 左摇杆 右 1
+        // idx1 右摇杆 上 -1
+        // idx1 右摇杆 下 1
+
+        // idx2 右摇杆 左 -1
+        // idx2 右摇杆 右 1
+        // idx5 右摇杆 上 -1
+        // idx5 右摇杆 下 1
+        window.gpAxesDownDic = window.gpAxesDownDic || {};
+        let axes = window.gp.axes;
+        for (let i = 0; i <= 1; i++) {
+          const axe = axes[i];
+          let gpKey;
+          if (i == 0) {
+            gpKey = 24;
+            if (axe < -.5) {
+              if (!window.gpAxesDownDic[gpKey]) {
+                window.gpAxesDownDic[gpKey] = 1;
+                let key = KEYS[gpKey2KeysDic[gpKey]];
+                console.log(gpKey, 'is down');
+                nes.buttonDown(key[0], key[1]);
+              } else {
+                // 按着就按着吧，不触发
+              }
+            } else {
+              if (window.gpAxesDownDic[gpKey]) {
+                window.gpAxesDownDic[gpKey] = 0;
+                let key = KEYS[gpKey2KeysDic[gpKey]];
+                console.log(gpKey, 'is up');
+                nes.buttonUp(key[0], key[1]);
+              } else {
+                // 什么事都没有
+              }
+            }
+            gpKey = 22;
+            if (axe > .5) {
+              if (!window.gpAxesDownDic[gpKey]) {
+                window.gpAxesDownDic[gpKey] = 1;
+                let key = KEYS[gpKey2KeysDic[gpKey]];
+                console.log(gpKey, 'is down');
+                nes.buttonDown(key[0], key[1]);
+              } else {
+                // 按着就按着吧，不触发
+              }
+            } else {
+              if (window.gpAxesDownDic[gpKey]) {
+                window.gpAxesDownDic[gpKey] = 0;
+                let key = KEYS[gpKey2KeysDic[gpKey]];
+                console.log(gpKey, 'is up');
+                nes.buttonUp(key[0], key[1]);
+              } else {
+                // 什么事都没有
+              }
+            }
+          }
+          if (i == 1) {
+            gpKey = 21;
+            if (axe < -.5) {
+              if (!window.gpAxesDownDic[gpKey]) {
+                window.gpAxesDownDic[gpKey] = 1;
+                let key = KEYS[gpKey2KeysDic[gpKey]];
+                console.log(gpKey, 'is down');
+                nes.buttonDown(key[0], key[1]);
+              } else {
+                // 按着就按着吧，不触发
+              }
+            } else {
+              if (window.gpAxesDownDic[gpKey]) {
+                window.gpAxesDownDic[gpKey] = 0;
+                let key = KEYS[gpKey2KeysDic[gpKey]];
+                console.log(gpKey, 'is up');
+                nes.buttonUp(key[0], key[1]);
+              } else {
+                // 什么事都没有
+              }
+            }
+            gpKey = 23;
+            if (axe > .5) {
+              if (!window.gpAxesDownDic[gpKey]) {
+                window.gpAxesDownDic[gpKey] = 1;
+                let key = KEYS[gpKey2KeysDic[gpKey]];
+                console.log(gpKey, 'is down');
+                nes.buttonDown(key[0], key[1]);
+              } else {
+                // 按着就按着吧，不触发
+              }
+            } else {
+              if (window.gpAxesDownDic[gpKey]) {
+                window.gpAxesDownDic[gpKey] = 0;
+                let key = KEYS[gpKey2KeysDic[gpKey]];
+                console.log(gpKey, 'is up');
+                nes.buttonUp(key[0], key[1]);
+              } else {
+                // 什么事都没有
+              }
+            }
+          }
+        }
+      }
+    }
     window.onload = function () {
       canvasTips.addEventListener('dragover', function (e) {
         console.log(e)
@@ -477,7 +652,9 @@
 
       <p onclick="localStorage.romurl = './rom/三国志英杰传(吞食天地1).NES';window.location.href = window.location.href;">吞食天地1
       </p>
-      <p onclick="localStorage.romurl = './rom/吞食天地2.NES';window.location.href = window.location.href;">吞食天地2</p>
+      <p onclick="localStorage.romurl = './rom/吞食天地2 (不花屏版) [先锋卡通汉化].nes';window.location.href = window.location.href;">
+        吞食天地2</p>
+
       <!-- <p onclick="localStorage.romurl = './rom/爆笑三国(上古神剑).nes';window.location.href = window.location.href;">爆笑三国</p> -->
       <!-- <p onclick="localStorage.romurl = './rom/三国志Ⅱ--霸王的大陆_外星汉化版.nes';window.location.href = window.location.href;">三国志Ⅱ</p> -->
       <!-- <p onclick="localStorage.romurl = './rom/三国志超级版.nes';window.location.href = window.location.href;">三国志超级版</p> -->
@@ -945,8 +1122,22 @@
       nes.f = nes.f || 0
       nes.f++;
       f.value = nes.f;
+      processGp();
       nes.frame();
     }
+
+    function loadStepSave(stepSave) {
+      window.arr = stepSave;
+      let sTs = Date.now();
+      for (const i in stepSave) {
+        while (nes.f < i) {
+          goF(nes);
+        }
+      }
+      let eTs = Date.now();
+      console.log(eTs - sTs, window.frame, window.frame * 1000 / (eTs - sTs));
+    }
+    window.loadStepSave = loadStepSave;
     /**
      * TODO::
      *   音频无法播放 The AudioContext was not allowed to start（手机端加载存档后 直接也没声音）
@@ -1036,14 +1227,14 @@
       if (localStorage[key]) {
         console.log('inininin')
         console.log('load dataaaaaaaaaaaaa innnnnnnnnnnnnnnn')
-        
+
         // $.get('https://tekii.cn/fc/save/3.1599757114647.mario.nes.sav', function(data) {
         //   nes2 = JSON.parse(data.responseText);
         //   window.nes2 = nes2;
         //   console.log(nes2)
         //   setB2A(nes, nes2);
         // })
-        
+
         // let xhr = new XMLHttpRequest();
         // xhr.open('GET', `/market/fc/load/?userid=${userid}&romurl=${encodeURIComponent(key)}`);
         // xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
@@ -1748,6 +1939,7 @@
         100: [2, jsnes.Controller.BUTTON_LEFT, "Num-4"], // Num-4
         102: [2, jsnes.Controller.BUTTON_RIGHT, "Num-6"] // Num-6
       };
+      window.KEYS = KEYS;
       const keyDomDic = {
         0: 'btna',
         1: 'btnb',
@@ -2060,7 +2252,7 @@
               let ms = Date.now() - window.ts;
               let f = frame - window.lastF;
               time.style.display = 'inline-block';
-              console.log(ms, frame, ms / frame);
+              // console.log(ms, frame, ms / frame);
               ms / f ? (time.innerText = (f * 1000 / (ms)).toFixed(2)) : '';
               window.ts = Date.now();
               window.lastF = frame;
