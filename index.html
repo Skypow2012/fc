@@ -11,6 +11,11 @@
   <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.0.min.js"></script> -->
   <script type="text/javascript" src="./js/jquery-3.4.0.min.js"></script>
   <script>
+    if (window.location.href.indexOf('http:') > -1) {
+      window.location.href = window.location.href.replace('http:', 'https:')
+    }
+  </script>
+  <script>
     window.addEventListener("gamepadconnected", function (e) {
       window.gp = navigator.getGamepads()[e.gamepad.index];
       console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
@@ -198,12 +203,21 @@
         console.log(e)
         console.log(files);
         window.files = files;
-        // code
-        blobToDataURL(files[0], (base64) => {
-          nes.loadROM(atob(base64.replace('data:application/octet-stream;base64,', '')));
-          nes.stop();
-          nes.reloadROM();
-        })
+        if (files[0].name.indexOf('.sav') > -1) {
+          // code
+          blobToDataURL(files[0], (base64) => {
+            console.log(base64)
+            localStorage[localStorage.romurl] = (atob(base64.replace('data:application/octet-stream;base64,', '')));
+            loadSavedData()
+          })
+        } else {
+          // code
+          blobToDataURL(files[0], (base64) => {
+            nes.loadROM(atob(base64.replace('data:application/octet-stream;base64,', '')));
+            nes.stop();
+            nes.reloadROM();
+          })
+        }
       }, false);
 
       function blobToDataURL(blob, cb) {
@@ -288,12 +302,13 @@
     #game-list-box {
       display: none;
       position: absolute;
-      top: 0;
-      right: 0;
+      top: calc(50vh - 25vw);
+      /* right: 0; */
+      right: calc(50vw - 40vw);
       bottom: 0;
-      left: -140px;
+      /* left: -140px; */
       width: 50vw;
-      height: 100vh;
+      height: 50vw;
       overflow-y: auto;
       overflow-x: hidden;
       opacity: .8;
@@ -536,7 +551,7 @@
     style="opacity:0.5;width:45vw;height:45vw;background-size:45vw 45vw;background-image:url('./img/btn.png');background-repeat:no-repeat;position:fixed;left:5vw;top:5vw;transform: rotate(90deg);">
   </div> -->
   <div class="btn" id="changePlayer"
-    style="opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/player1.png');background-repeat:no-repeat;position:fixed;right:calc(2vw + 50px);top:10vw;transform: rotate(90deg);">
+    style="opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/player1.png');background-repeat:no-repeat;position:fixed;right:10vw;top:10vw;transform: rotate(90deg);">
   </div>
   <div class="btn" id="btnup">
   </div>
@@ -584,6 +599,9 @@
   <div class="config-btn top-btn btn" id="config-btn"
     style="opacity: 0.5;width: 6vh;height: 6vh;background-size: 100% 100%;background-image: url(./img/config.png);background-repeat: no-repeat;position: fixed;top: 47vh;right: -3vw;transform: rotate(90deg);">
   </div>
+  <div class="toast-tips" id="toast-tips"
+    style="display:none;">
+  </div>
   <div class="game-list-box" id="game-list-box">
     <div class="game-list" id="game-list">
       <p
@@ -599,7 +617,7 @@
       <p onclick="localStorage.romurl = './rom/iceclimb.nes';window.location.href = window.location.href;">雪人兄弟</p>
       <p
         onclick="localStorage.romurl = './rom/Dragonlance - Dragons of Flame (J).nes';window.location.href = window.location.href;">
-        龙之矛-龙的火焰</p>
+        龙的火焰</p>
       <p onclick="localStorage.romurl = './rom/vs dr mario.nes';window.location.href = window.location.href;">马里奥医生</p>
       <p onclick="localStorage.romurl = './rom/马戏团.nes';window.location.href = window.location.href;">马戏团(中文)</p>
       <p onclick="localStorage.romurl = './rom/Makaimura (J).nes';window.location.href = window.location.href;">魔界村</p>
@@ -621,7 +639,7 @@
       <p onclick="localStorage.romurl = './rom/ZELDA.NES';window.location.href = window.location.href;">ZELDA</p>
       <p onclick="localStorage.romurl = './rom/ZELDA2.NES';window.location.href = window.location.href;">ZELDA2</p>
       <p onclick="localStorage.romurl = './rom/Zelda Outlands.nes';window.location.href = window.location.href;">
-        塞尔达Outlands</p>
+        塞尔达1</p>
       <p onclick="localStorage.romurl = './rom/KIRBYADV.NES';window.location.href = window.location.href;">卡比历险记</p>
       <p
         onclick="localStorage.romurl = './rom/Hoshi No Kirby - Yume No Izumi No Monogatari (J).nes';window.location.href = window.location.href;">
@@ -654,6 +672,9 @@
       </p>
       <p onclick="localStorage.romurl = './rom/吞食天地2 (不花屏版) [先锋卡通汉化].nes';window.location.href = window.location.href;">
         吞食天地2</p>
+      <p onclick="localStorage.romurl = './rom/呑食天地Ⅰ曹魏英豪传（吞2音乐）.nes';window.location.href = window.location.href;">
+        吞1曹魏</p>
+        
 
       <!-- <p onclick="localStorage.romurl = './rom/爆笑三国(上古神剑).nes';window.location.href = window.location.href;">爆笑三国</p> -->
       <!-- <p onclick="localStorage.romurl = './rom/三国志Ⅱ--霸王的大陆_外星汉化版.nes';window.location.href = window.location.href;">三国志Ⅱ</p> -->
@@ -849,6 +870,25 @@
       text-align: center;
       width: 100%;
     }
+
+    .toast-tips {
+      position: fixed;
+      top: 40vh;
+      right: -3vw;
+      padding: 8px;
+      width: 30vh;
+      height: 18vh;
+      transform: rotate(90deg);
+      background-color:black;
+      font-size: 16px;
+      color: white;
+      font-weight: 400;
+      text-align: center;
+      border: 2px solid white;
+      border-radius: 16px;
+      opacity: .8;
+    }
+    
   </style>
   <div id="rankArea" class="rankArea">
     <div id="rankTitle" class="rankTitle">TEKII 09.05 RANK</div>
@@ -944,6 +984,15 @@
     }
   </script>
   <script>
+    function toast(msg, config={}) {
+      let toastTips = document.getElementById('toast-tips')
+      toastTips.style.display = 'inline-block';
+      toastTips.innerHTML = msg;
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(()=>{
+        toastTips.style.display = 'none';
+      }, config.t || 1500)
+    }
     var coins = localStorage.coins ? Number(localStorage.coins) : 3;
     let coinDate = new Date().getDate();
     localStorage.coinDate = localStorage.coinDate || coinDate;
@@ -1124,6 +1173,10 @@
       f.value = nes.f;
       processGp();
       nes.frame();
+      if (frame % 600 == 0) {
+        // 每个10秒自动保存
+        saveData({isAuto: true})
+      } 
     }
 
     function loadStepSave(stepSave) {
@@ -1221,9 +1274,12 @@
       setB2A(nes.mmap, mmap)
     }
 
-    function loadSavedData() {
+    function loadSavedData(config={}) {
       console.log('load dataaaaaaaaaaaaa in')
       key = localStorage.romurl;
+      if (config.isAuto) {
+        key = 'autoSave'
+      }
       if (localStorage[key]) {
         console.log('inininin')
         console.log('load dataaaaaaaaaaaaa innnnnnnnnnnnnnnn')
@@ -1261,10 +1317,15 @@
         // xhr.send()
 
         // 本地存储
-        nes2 = JSON.parse(localStorage[key]);
+        if (localStorage[key]) {
+          nes2 = JSON.parse(localStorage[key]);
+        } else {
+          nes2 = window[key];
+        }
         // localStorage.nes ? (nes2 = JSON.parse(localStorage.nes)) : '';
         setB2A(nes, nes2);
-
+        // nes.ppu.nameTable = nes2.nameTable;
+        // nes.ppu.bgbuffer = nes.bgbuffer;
         // nesSav = JSON.parse(localStorage[`${key}`]);
         // loadCpuMem(nes, nesSav.mem)
         // loadPpuNameTable(nes, nesSav.nameTable)
@@ -1272,19 +1333,22 @@
       }
     }
 
-    function saveData() {
+    function saveData(config={}) {
+      if (window.isSaving) return;
       key = localStorage.romurl;
+      let isAuto = config.isAuto;
       // localStorage.clear()
       // localStorage.nes = JSON.stringify(nes);
       let lKeys = Object.keys(localStorage);
       console.log(lKeys);
       // 删除其他存档，防止空间不足无法存储，限制为4M左右，1个存档就有2M了，所以同一时间只有1个游戏的存档，除非之后开发出新的小存储办法，虽然我试过了，小的办法都会漏东西，大的都会在细小的地方有差别 2020-09-09 23:46
-      for (let i = 0; i < lKeys.length; i++) {
-        const key = lKeys[i];
-        if (key.indexOf('./rom') > -1) {
-          delete localStorage[key];
-        }
-      }
+      // 现在只要200k了，所以没事了
+      // for (let i = 0; i < lKeys.length; i++) {
+      //   const key = lKeys[i];
+      //   if (key.indexOf('./rom') > -1) {
+      //     delete localStorage[key];
+      //   }
+      // }
 
       // localStorage[`${key}-mem`] = JSON.stringify(nes.cpu.mem);
       // localStorage[`${key}-bgbuffer`] = JSON.stringify(nes.ppu.bgbuffer);
@@ -1293,12 +1357,36 @@
       //   nameTable: nes.ppu.nameTable,
       //   mmap: nes.mmap
       // })
+      let tar = {
+        cpu: nes.cpu,
+        nameTable: nes.ppu.nameTable,
+        bgbuffer: nes.ppu.bgbuffer,
+        mmap: nes.mmap
+      };
+      if (isAuto) {
+        localStorage['autoSave'] = JSON.stringify(tar)
+        return;
+      } else {
+        window.isSaving = true;
+        document.getElementById('btnsave').style.opacity = .2;
+        try {
+          if (key.indexOf('吞') > -1) {
+            localStorage[key] = JSON.stringify(tar);
+          } else {
+            tar = nes;
+            localStorage[key] = JSON.stringify(nes)
+          }
+        } catch (err) {
+          console.log(err);
+          toast('存档失败了T^T，请联系开发者微信【maqijun123456】', {t:3000})
+        }
+      }
       localStorage.romurl = key;
       $.post({
         url: '/market/fc/save/',
         data: JSON.stringify({
           userid: window.userid,
-          save: JSON.stringify(nes),
+          save: JSON.stringify(tar),
           romurl: key,
         }),
         headers: {
@@ -1307,10 +1395,16 @@
         dataType: 'json',
         success: (...args) => {
           console.log(args);
+          if (!window.isNoNeedLoadTeach) toast('存档成功:P <br>点击上方灰色带横条的方块后，存档按钮会变为读档', {t: 3000})
+          else toast('存档成功:P', {t: 1000})
+        },
+        complete: ()=>{
+          window.isSaving = false;
+          document.getElementById('btnsave').style.opacity = .5;
         }
       })
-      localStorage[key] = JSON.stringify(nes);
-
+      window[key] = nes;
+      // localStorage[key] = JSON.stringify(nes);
     }
     $(function () {
       console.log($(document).width()); //浏览器时下窗口文档对于象宽度
@@ -2142,6 +2236,7 @@
       $('#btnload').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
         loadSavedData();
+        window.isNoNeedLoadTeach = true;
       });
       $('#btnload').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
@@ -2211,6 +2306,9 @@
       createNes();
 
       function loadBinary(path, callback, handleProgress) {
+        $.ajax({
+          url: '/market/fc/log?type=loadBinary&remark=' + window.userid + ' ' + path
+        });
         var req = new XMLHttpRequest();
         req.open("GET", path);
         req.overrideMimeType("text/plain; charset=x-user-defined");
@@ -2241,7 +2339,7 @@
           console.log(err);
         } else {
           nes.loadROM(data);
-          // loadSavedData() // 自动读取有莫名奇妙的问题
+          // loadSavedData({isAuto: true}) // 自动读取有莫名奇妙的问题
           window.nesInterval = setInterval(function () {
             goF(nes);
             if (frameSpeed == 5) {
