@@ -10,6 +10,10 @@ let sockets = [];
 
 let activeUserCount = 0;
 
+setInterval(()=>{
+    activeUserCount = 0
+}, 24*3600*1000)
+
 io.on('connection', function(socket){
     console.log('a user connected');
     sockets.push(socket);
@@ -19,6 +23,7 @@ io.on('connection', function(socket){
     });
     socket.on("disconnect", function() {
         activeUserCount--;
+        if (activeUserCount < 0) activeUserCount = 0;
         io.emit("u", {
             auc: activeUserCount
         });
