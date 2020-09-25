@@ -317,7 +317,7 @@
 
     #game-list {
       margin-top: 0;
-      height: 60vw;
+      height: 100%;
       overflow: auto;
       background-color: black;
     }
@@ -599,8 +599,7 @@
   <div class="config-btn top-btn btn" id="config-btn"
     style="opacity: 0.5;width: 6vh;height: 6vh;background-size: 100% 100%;background-image: url(./img/config.png);background-repeat: no-repeat;position: fixed;top: 47vh;right: -3vw;transform: rotate(90deg);">
   </div>
-  <div class="toast-tips" id="toast-tips"
-    style="display:none;">
+  <div class="toast-tips" id="toast-tips" style="display:none;">
   </div>
   <div class="game-list-box" id="game-list-box">
     <div class="game-list" id="game-list">
@@ -668,13 +667,14 @@
         热血足球3</p>
       <!-- <p onclick="localStorage.romurl = './rom/rxsdj.nes';window.location.href = window.location.href;">热血时代剧</p> -->
 
-      <p onclick="localStorage.romurl = './rom/三国志英杰传(吞食天地1).NES';window.location.href = window.location.href;">吞食天地1
-      </p>
-      <p onclick="localStorage.romurl = './rom/吞食天地2 (不花屏版) [先锋卡通汉化].nes';window.location.href = window.location.href;">
-        吞食天地2</p>
-      <p onclick="localStorage.romurl = './rom/呑食天地Ⅰ曹魏英豪传（吞2音乐）.nes';window.location.href = window.location.href;">
-        吞1曹魏</p>
-        
+      <p onclick="localStorage.romurl = './rom/三国志英杰传(吞食天地1).NES';window.location.href = window.location.href;">吞食天地1</p>
+      <p onclick="localStorage.romurl = './rom/吞食天地2 (不花屏版) [先锋卡通汉化].nes';window.location.href = window.location.href;">吞食天地2</p>
+      <p onclick="localStorage.romurl = './rom/呑食天地Ⅰ曹魏英豪传（吞2音乐）.nes';window.location.href = window.location.href;">吞1曹魏</p>
+      <p onclick="localStorage.romurl = './rom/冒险岛1.nes';window.location.href = window.location.href;">冒险岛1</p>
+      <p onclick="localStorage.romurl = './rom/冒险岛2.nes';window.location.href = window.location.href;">冒险岛2</p>
+      <p onclick="localStorage.romurl = './rom/冒险岛3.nes';window.location.href = window.location.href;">冒险岛3</p>
+      <p onclick="localStorage.romurl = './rom/冒险岛4.nes';window.location.href = window.location.href;">冒险岛4</p>
+
 
       <!-- <p onclick="localStorage.romurl = './rom/爆笑三国(上古神剑).nes';window.location.href = window.location.href;">爆笑三国</p> -->
       <!-- <p onclick="localStorage.romurl = './rom/三国志Ⅱ--霸王的大陆_外星汉化版.nes';window.location.href = window.location.href;">三国志Ⅱ</p> -->
@@ -879,7 +879,7 @@
       width: 30vh;
       height: 18vh;
       transform: rotate(90deg);
-      background-color:black;
+      background-color: black;
       font-size: 16px;
       color: white;
       font-weight: 400;
@@ -888,7 +888,6 @@
       border-radius: 16px;
       opacity: .8;
     }
-    
   </style>
   <div id="rankArea" class="rankArea">
     <div id="rankTitle" class="rankTitle">TEKII 09.05 RANK</div>
@@ -959,7 +958,7 @@
       complete: function (xhr, status) {
         let result = xhr.responseJSON
         if (result.info) {
-          window.userid = result.info.id;
+          localStorage.userid = result.info.id;
           window.name = result.info.name;
           window.tid = result.info.tid;
         }
@@ -984,12 +983,12 @@
     }
   </script>
   <script>
-    function toast(msg, config={}) {
+    function toast(msg, config = {}) {
       let toastTips = document.getElementById('toast-tips')
       toastTips.style.display = 'inline-block';
       toastTips.innerHTML = msg;
       clearTimeout(window.toastTimer);
-      window.toastTimer = setTimeout(()=>{
+      window.toastTimer = setTimeout(() => {
         toastTips.style.display = 'none';
       }, config.t || 1500)
     }
@@ -1003,7 +1002,7 @@
 
     function hideRank() {
       $.ajax({
-        url: '/market/fc/log?type=hideRank&remark=' + window.userid
+        url: '/market/fc/log?type=hideRank&remark=' + localStorage.userid
       });
       document.getElementById('rankArea').style.display = 'none';
       document.getElementById('tipsArea').style.display = 'none';
@@ -1011,9 +1010,9 @@
 
     function startChallenge() {
       $.ajax({
-        url: '/market/fc/log?type=startChallenge&remark=' + window.userid
+        url: '/market/fc/log?type=startChallenge&remark=' + localStorage.userid
       });
-      if (!window.userid) {
+      if (!localStorage.userid) {
         alert('查询用户id出了些问题，请联系开发者小马的微信18868196263');
       } else {
         if (coins <= 0) {
@@ -1048,7 +1047,7 @@
 
     function addCoin() {
       $.ajax({
-        url: '/market/fc/log?type=addCoin&remark=' + window.userid
+        url: '/market/fc/log?type=addCoin&remark=' + localStorage.userid
       });
       coins++;
       if (coins > 5) {
@@ -1059,7 +1058,7 @@
 
     function subCoin() {
       $.ajax({
-        url: '/market/fc/log?type=subCoin&remark=' + window.userid
+        url: '/market/fc/log?type=subCoin&remark=' + localStorage.userid
       });
       coins--;
       slashCoin()
@@ -1083,7 +1082,8 @@
           for (let i = 0; i < winList.length; i++) {
             let rankP = document.createElement('div');
             rankP.className = 'rankP';
-            if (window.userid == winList[i].userid) {
+            console.log(localStorage.userid, winList[i].userid)
+            if (localStorage.userid == winList[i].userid) {
               rankP.className = 'rankP me'
             }
             rankP.onclick = function () {
@@ -1091,7 +1091,7 @@
             }
             rankP.innerHTML = `<span class="rankIdx">${('00' + (i + 1)).substr(-2)}</span>
               <span class="rankName">${winList[i].name}</span>
-              <span class="rankUsetime">${Number(Number(winList[i].usetime/1000).toFixed(2))}</span>`
+              <span class="rankUsetime">${Number(Number(winList[i].usetime / 1000).toFixed(2))}</span>`
             rankBox.appendChild(rankP);
           }
           document.getElementById('rankArea').style.display = 'block';
@@ -1175,8 +1175,8 @@
       nes.frame();
       if (frame % 600 == 0) {
         // 每个10秒自动保存
-        saveData({isAuto: true})
-      } 
+        saveData({ isAuto: true })
+      }
     }
 
     function loadStepSave(stepSave) {
@@ -1274,7 +1274,7 @@
       setB2A(nes.mmap, mmap)
     }
 
-    function loadSavedData(config={}) {
+    function loadSavedData(config = {}) {
       console.log('load dataaaaaaaaaaaaa in')
       key = localStorage.romurl;
       if (config.isAuto) {
@@ -1290,32 +1290,6 @@
         //   console.log(nes2)
         //   setB2A(nes, nes2);
         // })
-
-        // let xhr = new XMLHttpRequest();
-        // xhr.open('GET', `/market/fc/load/?userid=${userid}&romurl=${encodeURIComponent(key)}`);
-        // xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-        // xhr.onreadystatechange = function (ev) {
-        //   if (xhr.readyState == 4) {
-        //     let result = JSON.parse(ev.target.responseText);
-        //     if (result && result.info && result.info[0]) {
-        //       result.info[0].saveurl
-        //       let xhr = new XMLHttpRequest();
-        //       xhr.open('GET', result.info[0].saveurl)//'/fc/save/88.1600130967879.三国志英杰传(吞食天地1).NES.sav');
-        //       xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-        //       xhr.onreadystatechange = function (ev) {
-        //         if (xhr.readyState == 4) {
-        //           nes2 = JSON.parse(ev.target.responseText);
-        //           window.nes2 = nes2;
-        //           console.log(nes2)
-        //           setB2A(nes, nes2);
-        //         }
-        //       }
-        //       xhr.send()
-        //     }
-        //   }
-        // }
-        // xhr.send()
-
         // 本地存储
         if (localStorage[key]) {
           nes2 = JSON.parse(localStorage[key]);
@@ -1330,25 +1304,55 @@
         // loadCpuMem(nes, nesSav.mem)
         // loadPpuNameTable(nes, nesSav.nameTable)
         // loadMmap(nes, nesSav.mmap)
+      } else {
+        let userid = localStorage.userid;
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', `/market/fc/load/?userid=${userid}&romurl=${encodeURIComponent(key)}`);
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+        xhr.onreadystatechange = function (ev) {
+          if (xhr.readyState == 4) {
+            let result = JSON.parse(ev.target.responseText);
+            if (result && result.info && result.info[0]) {
+              result.info[0].saveurl
+              let xhr = new XMLHttpRequest();
+              xhr.open('GET', result.info[0].saveurl)//'/fc/save/88.1600130967879.三国志英杰传(吞食天地1).NES.sav');
+              xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+              xhr.onreadystatechange = function (ev) {
+                if (xhr.readyState == 4) {
+                  nes2 = JSON.parse(ev.target.responseText);
+                  localStorage[key] = ev.target.responseText;
+                  window.nes2 = nes2;
+                  // console.log(nes2)
+                  setB2A(nes, nes2);
+                }
+              }
+              xhr.send()
+            }
+          }
+        }
+        xhr.send()
       }
     }
 
-    function saveData(config={}) {
+    function saveData(config = {}) {
       if (window.isSaving) return;
       key = localStorage.romurl;
       let isAuto = config.isAuto;
+      if (isAuto) return;
       // localStorage.clear()
       // localStorage.nes = JSON.stringify(nes);
       let lKeys = Object.keys(localStorage);
       console.log(lKeys);
       // 删除其他存档，防止空间不足无法存储，限制为4M左右，1个存档就有2M了，所以同一时间只有1个游戏的存档，除非之后开发出新的小存储办法，虽然我试过了，小的办法都会漏东西，大的都会在细小的地方有差别 2020-09-09 23:46
       // 现在只要200k了，所以没事了
-      // for (let i = 0; i < lKeys.length; i++) {
-      //   const key = lKeys[i];
-      //   if (key.indexOf('./rom') > -1) {
-      //     delete localStorage[key];
-      //   }
-      // }
+      // 现在还是改成 没改游戏就读本地，改了 就从服务器读
+      for (let i = 0; i < lKeys.length; i++) {
+        const key = lKeys[i];
+        if (key.indexOf('./rom') > -1) {
+          delete localStorage[key];
+        }
+      }
+      delete localStorage['autoSave']
 
       // localStorage[`${key}-mem`] = JSON.stringify(nes.cpu.mem);
       // localStorage[`${key}-bgbuffer`] = JSON.stringify(nes.ppu.bgbuffer);
@@ -1378,14 +1382,14 @@
           }
         } catch (err) {
           console.log(err);
-          toast('存档失败了T^T，请联系开发者微信【maqijun123456】', {t:3000})
+          toast('存档失败了T^T，请联系开发者微信【maqijun123456】', { t: 3000 })
         }
       }
       localStorage.romurl = key;
       $.post({
         url: '/market/fc/save/',
         data: JSON.stringify({
-          userid: window.userid,
+          userid: localStorage.userid,
           save: JSON.stringify(tar),
           romurl: key,
         }),
@@ -1395,10 +1399,10 @@
         dataType: 'json',
         success: (...args) => {
           console.log(args);
-          if (!window.isNoNeedLoadTeach) toast('存档成功:P <br>点击上方灰色带横条的方块后，存档按钮会变为读档', {t: 3000})
-          else toast('存档成功:P', {t: 1000})
+          if (!window.isNoNeedLoadTeach) toast('存档成功:P <br>点击上方灰色带横条的方块后，存档按钮会变为读档', { t: 3000 })
+          else toast('存档成功:P', { t: 1000 })
         },
-        complete: ()=>{
+        complete: () => {
           window.isSaving = false;
           document.getElementById('btnsave').style.opacity = .5;
         }
@@ -1690,17 +1694,17 @@
                       if (leftTopBlack[0] == 0 && leftTopBlack[1] == 0 && leftTopBlack[2] == 0 &&
                         leftBottomBlack[0] == 0 && leftBottomBlack[1] == 0 && leftBottomBlack[2] == 0 &&
                         rightBottomBlack[0] == 0 && rightBottomBlack[1] == 0 && rightBottomBlack[2] == 0) {
-                        if (window.isZZDJS) {
-                          alert('The vedio is end');
-                          delete window.isZZDJS;
-                          window.arr = {};
-                          isCatch = false;
-                          isOk = false;
-                          window.location.reload();
-                        } else {
-                          let marioHat = context.getImageData(105, 105, 1, 1).data;
-                          if (marioHat[0] == 188 && marioHat[1] == 25 && marioHat[2] == 0) {
-                            isDie = true;
+                        let marioHat = context.getImageData(105, 105, 1, 1).data;
+                        if (marioHat[0] == 188 && marioHat[1] == 25 && marioHat[2] == 0) {
+                          isDie = true;
+                          if (window.isZZDJS) {
+                            alert('The vedio is end with dead');
+                            delete window.isZZDJS;
+                            window.arr = {};
+                            isCatch = false;
+                            isOk = false;
+                            window.location.reload();
+                          } else {
                             let xhr = new XMLHttpRequest();
                             xhr.open('POST', '/market/fc/setWin');
                             xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
@@ -1710,7 +1714,7 @@
                               }
                             }
                             xhr.send(JSON.stringify({
-                              "userid": window.userid,
+                              "userid": localStorage.userid,
                               "step": localStorage.arr,
                               "usetime": 999 * 1000
                             }))
@@ -1743,7 +1747,7 @@
                           isOk = true;
                           let time = setTime();
                           if (window.isZZDJS) {
-                            alert('The vedio is end');
+                            alert('The vedio is end with win');
                             delete window.isZZDJS;
                             window.arr = {};
                             isCatch = false;
@@ -1761,7 +1765,7 @@
                             let usetimeS = (Number(time.split(':')[0]) * 60 + Number(time.split(':')[
                               1]))
                             xhr.send(JSON.stringify({
-                              "userid": window.userid,
+                              "userid": localStorage.userid,
                               "step": localStorage.arr,
                               "usetime": usetimeS * 1000
                             }))
@@ -1859,6 +1863,8 @@
             ts: Date.now(),
             id,
             cId: window.cId,
+            uId: localStorage.userid,
+            rom: window.romurl,
             f: nes.f,
             m: ""
           });
@@ -1890,6 +1896,8 @@
             type: 'down',
             ts: Date.now(),
             cId: window.cId,
+            uId: localStorage.userid,
+            rom: window.romurl,
             id,
             f: nes.f
           })
@@ -2307,7 +2315,7 @@
 
       function loadBinary(path, callback, handleProgress) {
         $.ajax({
-          url: '/market/fc/log?type=loadBinary&remark=' + window.userid + ' ' + path
+          url: '/market/fc/log?type=loadBinary&remark=' + localStorage.userid + ' ' + path
         });
         var req = new XMLHttpRequest();
         req.open("GET", path);
