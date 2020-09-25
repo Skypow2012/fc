@@ -675,6 +675,10 @@
       <p onclick="localStorage.romurl = './rom/冒险岛3.nes';window.location.href = window.location.href;">冒险岛3</p>
       <p onclick="localStorage.romurl = './rom/冒险岛4.nes';window.location.href = window.location.href;">冒险岛4</p>
 
+      <p onclick="localStorage.romurl = './rom/冒险岛1(无敌).nes';window.location.href = window.location.href;">冒险1无敌</p>
+      <p onclick="localStorage.romurl = './rom/冒险岛3(无限人、血).nes';window.location.href = window.location.href;">冒险3无敌</p>
+      <p onclick="localStorage.romurl = './rom/冒险岛4(无敌).nes';window.location.href = window.location.href;">冒险4无敌</p>
+
 
       <!-- <p onclick="localStorage.romurl = './rom/爆笑三国(上古神剑).nes';window.location.href = window.location.href;">爆笑三国</p> -->
       <!-- <p onclick="localStorage.romurl = './rom/三国志Ⅱ--霸王的大陆_外星汉化版.nes';window.location.href = window.location.href;">三国志Ⅱ</p> -->
@@ -1169,14 +1173,17 @@
         return;
       }
       nes.f = nes.f || 0
+      if (window.maxF && nes.f > window.maxF - 2) {
+        return;
+      }
       nes.f++;
       f.value = nes.f;
       processGp();
       nes.frame();
-      if (frame % 600 == 0) {
-        // 每个10秒自动保存
-        saveData({ isAuto: true })
-      }
+      // if (frame % 600 == 0) {
+      //   // 每个10秒自动保存
+      //   saveData({ isAuto: true })
+      // }
     }
 
     function loadStepSave(stepSave) {
@@ -1798,6 +1805,7 @@
             setTime();
             let _arr = arr[frame] || [];
             for (let i = 0; i < _arr.length; i++) {
+              if (_arr.length) {console.log(_arr)}
               const tar = _arr[i];
               if (tar[2] == 'u') {
                 nes.buttonUp(tar[0], tar[1], true, {
@@ -1840,6 +1848,7 @@
         //   window.arr = JSON.parse(localStorage.arr);
         // }
         nes.buttonUp = (k0, k1, isNoEmit, config = {}) => {
+          console.log('buttonUp', k0, k1, isNoEmit, config)
           if (window.isZZDJS && !config.isVedio) {
             // 演示他人视频时，不能操控
             return;
@@ -1865,10 +1874,15 @@
             cId: window.cId,
             uId: localStorage.userid,
             rom: window.romurl,
+            p: window.playerId,
             f: nes.f,
             m: ""
           });
           window.fpsDic = fpsDic;
+          if (window.playerId == 2 && !config.isVedio) {
+            // 自己控制P2，行为需要等P1处理后返回，相当于放vedio
+            return;
+          }
           srcButtonUp(k0, k1);
         }
         nes.buttonDown = (k0, k1, isNoEmit, config = {}) => {
@@ -1899,9 +1913,14 @@
             uId: localStorage.userid,
             rom: window.romurl,
             id,
+            p: window.playerId,
             f: nes.f
           })
           window.fpsDic = fpsDic;
+          if (window.playerId == 2 && !config.isVedio) {
+            // 自己控制P2，行为需要等P1处理后返回，相当于放vedio
+            return;
+          }
           srcButtonDown(k0, k1)
         }
       }
@@ -2221,14 +2240,21 @@
         } else {
           window.playerId = 2;
           $('#changePlayer').css('background-image', "url('./img/player2.png')");
+          socket.emit("m", {
+            hb: 2, // 标记为心跳包heart beat
+            p2: 1,
+            uId: localStorage.userid,
+            rom: window.romurl,
+            f: nes.f,
+          });
         }
-        if (window.playerId == 2) {
-          document.getElementById('canvas').style.display = 'none';
-          document.getElementById('canvasTips').innerHTML = '<span>请看P1的屏幕</span>';
-        } else {
-          document.getElementById('canvasTips').innerText = ''
-          document.getElementById('canvas').style.display = 'block';
-        }
+        // if (window.playerId == 2) {
+        //   document.getElementById('canvas').style.display = 'none';
+        //   document.getElementById('canvasTips').innerHTML = '<span>请看P1的屏幕</span>';
+        // } else {
+        //   document.getElementById('canvasTips').innerText = ''
+        //   document.getElementById('canvas').style.display = 'block';
+        // }
       });
       $('#changePlayer').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
@@ -2438,8 +2464,21 @@
       "name": navigator.userAgent,
       "msg": "hello world"
     });
+    setInterval(()=>{
+      if (window.playerId == 1 && nes && nes.f && window.hasP2) {
+        socket.emit("m", {
+          hb: 1, // 标记为心跳包heart beat
+          uId: localStorage.userid,
+          rom: window.romurl,
+          f: nes.f,
+        });
+      }
+    }, 16)
     socket.on("m", function (obj) {
       // return;
+      if (obj.uId == '184') {
+        return;
+      }
       console.log(obj);
       let key = obj.key;
       let fpsDic = window.fpsDic || {}
@@ -2454,11 +2493,32 @@
       if (obj.cId == window.cId) {
         return;
       }
-      if (key && key[0] == 2) { // 只有p2的指令才会传进游戏
-        if (obj.type == 'up') {
-          nes.buttonUp(key[0], key[1], true);
-        } else if (obj.type == 'down') {
-          nes.buttonDown(key[0], key[1], true);
+      if (obj.hb) {
+        if (obj.p2 && obj.rom == localStorage.romurl) {
+          window.hasP2 = true;
+          return;
+        }
+        if (window.playerId == 2) {
+          window.maxF = obj.f;
+        }
+        return;
+      }
+      if (window.playerId == 1) {
+        if (key && key[0] == 2 && obj.p == 2 && obj.rom == localStorage.romurl) { // 只有p2的指令才会传进游戏
+          if (obj.type == 'up') {
+            nes.buttonUp(key[0], key[1]);
+          } else if (obj.type == 'down') {
+            nes.buttonDown(key[0], key[1]);
+          }
+        }
+      } else {
+        if (obj.p == 1 && obj.rom == localStorage.romurl) {
+          window.arr[obj.f] = window.arr[obj.f] || [];
+          window.arr[obj.f].push([key[0], key[1], obj.type == 'up' ? 'u' : 'd']);
+          window.maxF = obj.f;
+          while (nes.f < obj.f - 2) {
+            goF(nes); // 追上队友的frameCount
+          }
         }
       }
     });
