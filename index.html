@@ -599,7 +599,8 @@
   <div class="config-btn top-btn btn" id="config-btn"
     style="opacity: 0.5;width: 6vh;height: 6vh;background-size: 100% 100%;background-image: url(./img/config.png);background-repeat: no-repeat;position: fixed;top: 47vh;right: -3vw;transform: rotate(90deg);">
   </div>
-  <div class="toast-tips" id="toast-tips" style="display:none;">
+  <div class="toast-tips" id="toast-tips" style="display: none;">
+    <div class="toast-confirm" id="toast-confirm">确定</div>
   </div>
   <div class="game-list-box" id="game-list-box">
     <div class="game-list" id="game-list">
@@ -667,15 +668,19 @@
         热血足球3</p>
       <!-- <p onclick="localStorage.romurl = './rom/rxsdj.nes';window.location.href = window.location.href;">热血时代剧</p> -->
 
-      <p onclick="localStorage.romurl = './rom/三国志英杰传(吞食天地1).NES';window.location.href = window.location.href;">吞食天地1</p>
-      <p onclick="localStorage.romurl = './rom/吞食天地2 (不花屏版) [先锋卡通汉化].nes';window.location.href = window.location.href;">吞食天地2</p>
-      <p onclick="localStorage.romurl = './rom/呑食天地Ⅰ曹魏英豪传（吞2音乐）.nes';window.location.href = window.location.href;">吞1曹魏</p>
+      <p onclick="localStorage.romurl = './rom/三国志英杰传(吞食天地1).NES';window.location.href = window.location.href;">吞食天地1
+      </p>
+      <p onclick="localStorage.romurl = './rom/吞食天地2 (不花屏版) [先锋卡通汉化].nes';window.location.href = window.location.href;">
+        吞食天地2</p>
+      <p onclick="localStorage.romurl = './rom/呑食天地Ⅰ曹魏英豪传（吞2音乐）.nes';window.location.href = window.location.href;">吞1曹魏
+      </p>
       <p onclick="localStorage.romurl = './rom/冒险岛1.nes';window.location.href = window.location.href;">冒险岛1</p>
       <p onclick="localStorage.romurl = './rom/冒险岛2.nes';window.location.href = window.location.href;">冒险岛2</p>
       <p onclick="localStorage.romurl = './rom/冒险岛3.nes';window.location.href = window.location.href;">冒险岛3</p>
       <p onclick="localStorage.romurl = './rom/冒险岛4.nes';window.location.href = window.location.href;">冒险岛4</p>
 
       <p onclick="localStorage.romurl = './rom/冒险岛1(无敌).nes';window.location.href = window.location.href;">冒险1无敌</p>
+      <p onclick="localStorage.romurl = './rom/冒险岛2无限.nes';window.location.href = window.location.href;">冒险2无敌</p>
       <p onclick="localStorage.romurl = './rom/冒险岛3(无限人、血).nes';window.location.href = window.location.href;">冒险3无敌</p>
       <p onclick="localStorage.romurl = './rom/冒险岛4(无敌).nes';window.location.href = window.location.href;">冒险4无敌</p>
 
@@ -687,6 +692,15 @@
       <!-- <p onclick="localStorage.romurl = './rom/第2次超级机器人大战.NES';window.location.href = window.location.href;">机器人大战2</p> -->
       <!-- <p onclick="localStorage.romurl = './rom/第4次机器人大战.NES';window.location.href = window.location.href;">机器人大战4</p> -->
       <!-- 74 -->
+      <p onclick="localStorage.romurl = './rom/影子传说.nes';window.location.href = window.location.href;">影子传说</p>
+      <p onclick="localStorage.romurl = './rom/影子传说 [中伟汉化 MS修正].nes';window.location.href = window.location.href;">
+        影子传说(中)</p>
+
+      <p onclick="localStorage.romurl = './rom/Duck Tales  (E).nes';window.location.href = window.location.href;">唐老鸭大陆1
+      </p>
+      <p onclick="localStorage.romurl = './rom/Duck Tales 2  (U).nes';window.location.href = window.location.href;">
+        唐老鸭大陆2</p>
+      <!-- <p onclick="localStorage.romurl = './rom/100IN1.NES';window.location.href = window.location.href;">100IN1</p> -->
 
 
       <p onclick="window.location.href = '/gba'">gba</p>
@@ -695,7 +709,63 @@
       <!-- <p onclick="localStorage.romurl = './rom/Sangokushi 2.nes';window.location.href = window.location.href;">三国志2霸王的大陆</p> -->
 
     </div>
-
+  </div>
+  <style>
+    .adBox {
+      position: absolute;
+      bottom: 5vw;
+      right: calc(50vw - 10vw);
+      width: 20vw;
+      height: 20vw;
+      background: white;
+      transform: rotate(90deg);
+      box-sizing: border-box;
+      font-size: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      background-color: rgba(0,0,0,0);
+      opacity: .6;
+    }
+    .adBox>a {
+      margin: 0;
+      margin-left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .adBox>a:first-child {
+      animation: adAround 20s infinite;
+      /* margin-left: -200px; */
+    }
+    .adBox>a {
+      display: inline-block;
+    }
+    .adBox img{
+      width: 100%;
+      height: 100%;
+    }
+    @keyframes adAround
+    {
+    0% {margin-left: 0;}
+    10% {margin-left: 0;}
+    20% {margin-left: -100%;}
+    30% {margin-left: -100%;}
+    40% {margin-left: -200%;}
+    50% {margin-left: -200%;}
+    60% {margin-left: -100%;}
+    70% {margin-left: -100%;}
+    80% {margin-left: -0%;}
+    }
+  </style>
+  <div class="adBox">
+    <a href="http://h5.akwan.cn/games/play/16?rel=6920_579">
+      <img src="http://cdn.akwan.cn/storage/images/tPqRMisKGU1hZaftDUywnj4lMZX6BQijfseR8OT0.gif">
+    </a>
+    <a href="http://h5.akwan.cn/games/play/4?rel=6920_576">
+      <img src="http://cdn.akwan.cn/storage/images/R1UNBbGmJ6UcqP1gIA5cN0c8IpLkGSmnnKdyPDUO.png">
+    </a>
+    <a href="http://h5.akwan.cn/games/play/9?rel=6920_577">
+      <img src="http://cdn.akwan.cn/storage/images/AhaEyY2Pdkdx9nTKjT3pFPbEPNlViHsaeWkrMZdI.png">
+    </a>
   </div>
   <!-- 排名部分代码 -->
   <style>
@@ -891,6 +961,22 @@
       border: 2px solid white;
       border-radius: 16px;
       opacity: .8;
+      z-index: 999;
+    }
+
+    .toast-confirm {
+      bottom: 0;
+      width: 100%;
+      position: absolute;
+      height: 25px;
+      left: 0;
+      border-top: 2px solid;
+      cursor: pointer;
+      z-index: 999;
+    }
+
+    .toast-confirm:active {
+      opacity: .6;
     }
   </style>
   <div id="rankArea" class="rankArea">
@@ -982,19 +1068,37 @@
       document.getElementById('isShowRedPack').value = localStorage.isShowRedPack
       document.getElementById('isShowRedPack').onclick = function () {
         copy(localStorage.isShowRedPack);
-        alert('支付宝红包口令已复制到剪贴板。如已被领完，可联系微信maqijun123456补发')
+        toast('支付宝红包口令已复制到剪贴板。如已被领完，可联系微信maqijun123456补发', {t:3000})
       }
     }
   </script>
   <script>
     function toast(msg, config = {}) {
-      let toastTips = document.getElementById('toast-tips')
-      toastTips.style.display = 'inline-block';
-      toastTips.innerHTML = msg;
+      let toastTips = document.getElementById('toast-tips');
+      window.toastTips = toastTips;
+      if (config.do) config.do();
+      toastTips.innerHTML = `${msg}<div class="toast-confirm" id="toast-confirm">确定</div>`;
+      let toastConfirmBtn = document.getElementById('toast-confirm');
       clearTimeout(window.toastTimer);
+      window.toastCb = config.cb;
+      if (config.isShowConfirmBtn) {
+        toastConfirmBtn.style.display = 'inline-block';
+        toastConfirmBtn.onclick = toastConfirm
+      } else {
+        toastConfirmBtn.style.display = 'none';
+      }
+      toastTips.style.display = 'inline-block';
       window.toastTimer = setTimeout(() => {
         toastTips.style.display = 'none';
+        if (config.cb) {
+          window.toastCb()
+        }
       }, config.t || 1500)
+    }
+    function toastConfirm() {
+      clearTimeout(window.toastTimer);
+      window.toastTips.style.display = 'none';
+      window.toastCb && window.toastCb();
     }
     var coins = localStorage.coins ? Number(localStorage.coins) : 3;
     let coinDate = new Date().getDate();
@@ -1017,11 +1121,16 @@
         url: '/market/fc/log?type=startChallenge&remark=' + localStorage.userid
       });
       if (!localStorage.userid) {
-        alert('查询用户id出了些问题，请联系开发者小马的微信18868196263');
+        toast('查询用户id出了些问题，请联系开发者小马的微信18868196263');
       } else {
         if (coins <= 0) {
           addCoin()
           // socket.emit('m', {msg:window.tid+'showad'});
+          if (Math.random() > .5) {
+            socket.emit('m', {msg:window.tid+'tomin',appId:"wxfe397c095eba31ed", path:"pages/index/index?ad_code=2620", tips:"玩九州仙侠传60秒来获取币"});
+          } else {
+            socket.emit('m', {msg:window.tid+'tomin',appId:"wx9b8b8f915730c746", path:"pages/index/index?ad_code=2619", tips:"玩封神策60秒来获取游戏币"});
+          }
         } else {
           subCoin()
           localStorage.coins = coins;
@@ -1705,12 +1814,18 @@
                         if (marioHat[0] == 188 && marioHat[1] == 25 && marioHat[2] == 0) {
                           isDie = true;
                           if (window.isZZDJS) {
-                            alert('The vedio is end with dead');
-                            delete window.isZZDJS;
-                            window.arr = {};
-                            isCatch = false;
-                            isOk = false;
-                            window.location.reload();
+                            toast('录像闯关失败，结束', {
+                              t: 10000,
+                              isShowConfirmBtn: true,
+                              do: () => window.pause = 1,
+                              cb: () => {
+                                delete window.isZZDJS;
+                                window.arr = {};
+                                isCatch = false;
+                                isOk = false;
+                                window.location.reload();
+                              }
+                            });
                           } else {
                             let xhr = new XMLHttpRequest();
                             xhr.open('POST', '/market/fc/setWin');
@@ -1725,8 +1840,14 @@
                               "step": localStorage.arr,
                               "usetime": 999 * 1000
                             }))
-                            alert('You are die, try again latter.')
-                            window.location.reload();
+                            toast('已阵亡，少侠请重新来过', {
+                              t: 10000,
+                              isShowConfirmBtn: true,
+                              do: () => window.pause = 1,
+                              cb: () => {
+                                window.location.reload();
+                              }
+                            });
                             return;
                           }
                         }
@@ -1754,12 +1875,18 @@
                           isOk = true;
                           let time = setTime();
                           if (window.isZZDJS) {
-                            alert('The vedio is end with win');
-                            delete window.isZZDJS;
-                            window.arr = {};
-                            isCatch = false;
-                            isOk = false;
-                            window.location.reload();
+                            toast('录像闯关成功', {
+                              t: 10000,
+                              isShowConfirmBtn: true,
+                              do: () => window.pause = 1,
+                              cb: () => {
+                                delete window.isZZDJS;
+                                window.arr = {};
+                                isCatch = false;
+                                isOk = false;
+                                window.location.reload();
+                              }
+                            });
                           } else {
                             let xhr = new XMLHttpRequest();
                             xhr.open('POST', '/market/fc/setWin');
@@ -1783,13 +1910,25 @@
                             let redPacks = ['Tekii模拟器马里奥30秒通过达成']
                             if (usetimeS < 30 && !localStorage.isShowRedPack) {
                               localStorage.isShowRedPack = redPacks[Math.random() * redPacks.length | 0];
-                              alert('Congratulations, you used time: ' + time + '\n支付宝口令红包为：【' + localStorage
-                                .isShowRedPack + '】');
+                              toast('恭喜，你用时：' + time + '\n支付宝口令红包为：【' + localStorage
+                                .isShowRedPack + '】', {
+                                t: 10000,
+                                isShowConfirmBtn: true,
+                              do: () => window.pause = 1,
+                                cb: () => {
+                                  window.location.reload();
+                                }
+                              });
                             } else {
-                              alert('Congratulations, you used time: ' + time);
+                              toast('恭喜，你用时：' + time, {
+                                t: 10000,
+                                isShowConfirmBtn: true,
+                                do: () => window.pause = 1,
+                                cb: () => {
+                                  window.location.reload();
+                                }
+                              });
                             }
-
-                            window.location.reload();
                           }
                         }
                       }
@@ -1805,7 +1944,7 @@
             setTime();
             let _arr = arr[frame] || [];
             for (let i = 0; i < _arr.length; i++) {
-              if (_arr.length) {console.log(_arr)}
+              if (_arr.length) { console.log(_arr) }
               const tar = _arr[i];
               if (tar[2] == 'u') {
                 nes.buttonUp(tar[0], tar[1], true, {
@@ -2464,7 +2603,7 @@
       "name": navigator.userAgent,
       "msg": "hello world"
     });
-    setInterval(()=>{
+    setInterval(() => {
       if (window.playerId == 1 && nes && nes.f && window.hasP2) {
         socket.emit("m", {
           hb: 1, // 标记为心跳包heart beat
