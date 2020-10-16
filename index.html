@@ -711,7 +711,7 @@
     </div>
   </div>
   <style>
-    .adBox {
+    .aTransBox {
       position: absolute;
       bottom: 5vw;
       right: calc(50vw - 10vw);
@@ -726,20 +726,20 @@
       background-color: rgba(0,0,0,0);
       opacity: .6;
     }
-    .adBox>a {
+    .aTransBox>a {
       margin: 0;
       margin-left: 0;
       width: 100%;
       height: 100%;
     }
-    .adBox>a:first-child {
+    .aTransBox>a:first-child {
       animation: adAround 20s infinite;
       /* margin-left: -200px; */
     }
-    .adBox>a {
+    .aTransBox>a {
       display: inline-block;
     }
-    .adBox img{
+    .aTransBox img{
       width: 100%;
       height: 100%;
     }
@@ -756,8 +756,8 @@
     80% {margin-left: -0%;}
     }
   </style>
-  <div class="adBox">
-    <a href="http://h5.akwan.cn/games/play/16?rel=6920_579">
+  <div class="aTransBox">
+    <!-- <a href="http://h5.akwan.cn/games/play/16?rel=6920_579">
       <img src="http://cdn.akwan.cn/storage/images/tPqRMisKGU1hZaftDUywnj4lMZX6BQijfseR8OT0.gif">
     </a>
     <a href="http://h5.akwan.cn/games/play/4?rel=6920_576">
@@ -765,8 +765,20 @@
     </a>
     <a href="http://h5.akwan.cn/games/play/9?rel=6920_577">
       <img src="http://cdn.akwan.cn/storage/images/AhaEyY2Pdkdx9nTKjT3pFPbEPNlViHsaeWkrMZdI.png">
+    </a> -->
+    <a onClick="toad('wxfe397c095eba31ed', 'pages/index/index?ad_code=2620', '点击此按钮进入九州仙侠传')">
+      <img src="http://cdn.akwan.cn/storage/images/tPqRMisKGU1hZaftDUywnj4lMZX6BQijfseR8OT0.gif">
+    </a>
+    <a onClick="toad('wx9b8b8f915730c746', 'pages/index/index?ad_code=2619', '点击此按钮进入封神策')">
+      <img src="http://cdn.akwan.cn/storage/images/0Y3szFxC3WDASXyaOJTYwlIrut8wRWgV6Yy0mPuB.png">
     </a>
   </div>
+  <script>
+    function toad(appId, path, tips) {
+      console.log('toad');
+      socket.emit('m', {msg:window.tid+'tomin',appId: appId, path: path, tips: tips});
+    }
+  </script>
   <!-- 排名部分代码 -->
   <style>
     .rankArea {
@@ -1124,7 +1136,7 @@
         toast('查询用户id出了些问题，请联系开发者小马的微信18868196263');
       } else {
         if (coins <= 0) {
-          addCoin()
+          // addCoin()
           // socket.emit('m', {msg:window.tid+'showad'});
           if (Math.random() > .5) {
             socket.emit('m', {msg:window.tid+'tomin',appId:"wxfe397c095eba31ed", path:"pages/index/index?ad_code=2620", tips:"玩九州仙侠传60秒来获取币"});
