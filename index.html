@@ -6,10 +6,10 @@
   <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
   <!-- <script src="https://www.norchant.com/js/vconsole.min.js"></script> -->
   <title>红白机模拟器</title>
-  <!-- <script type="text/javascript" src="https://unpkg.com/jsnes/dist/jsnes.min.js"></script> -->
-  <script type="text/javascript" src="./js/jsnes.min.js"></script>
   <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.0.min.js"></script> -->
   <script type="text/javascript" src="./js/jquery-3.4.0.min.js"></script>
+  <!-- <script type="text/javascript" src="https://unpkg.com/jsnes/dist/jsnes.min.js"></script> -->
+  <script type="text/javascript" src="./js/jsnes.min.js"></script>
   <script>
     if (window.location.href.indexOf('http:') > -1) {
       window.location.href = window.location.href.replace('http:', 'https:')
@@ -232,8 +232,24 @@
   </script>
   <style>
     body {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
       overflow: hidden;
       background-color: black;
+      max-width: 70vh;
+      width: 100%;
+      height: 100%;
+    }
+    .btn {
+      max-width: 14vh;
+    }
+    #btnspeed.open {
+      /* opacity: 1 !important;
+      right: -18vw !important; */
+      filter: drop-shadow(#ff0000 2px 2px) !important;
     }
 
     * {
@@ -309,8 +325,7 @@
       /* left: -140px; */
       width: 50vw;
       height: 50vw;
-      overflow-y: auto;
-      overflow-x: hidden;
+      overflow: hidden;
       opacity: .8;
       transform: rotateZ(90deg);
     }
@@ -548,56 +563,56 @@
   <img id="checkImg"></img>
   <canvas id="check" width='12px' height='16px'></canvas>
   <!-- <div id="btnall"
-    style="opacity:0.5;width:45vw;height:45vw;background-size:45vw 45vw;background-image:url('./img/btn.png');background-repeat:no-repeat;position:fixed;left:5vw;top:5vw;transform: rotate(90deg);">
+    style="opacity:0.5;width:45vw;height:45vw;background-size: 100% auto;background-image:url('./img/btn.png');background-repeat:no-repeat;position:fixed;left:5vw;top:5vw;transform: rotate(90deg);">
   </div> -->
   <div class="btn" id="changePlayer"
-    style="opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/player1.png');background-repeat:no-repeat;position:fixed;right:10vw;top:10vw;transform: rotate(90deg);">
+    style="opacity:0.5;width:20vw;height:8.88vw;background-size: 100% auto;background-image:url('./img/player1.png');background-repeat:no-repeat;position:fixed;right:10vw;top:10vw;transform: rotate(90deg);">
   </div>
   <div class="btn" id="btnup">
   </div>
   <div class="btn" id="btnright"
-    style="opacity:0.5;width:15vw;height:20vw;background-size:15vw 15vw;background-image:url('./img/btn.png');background-repeat:no-repeat;position:fixed;left:20vw;top:30vw;transform: rotate(180deg);">
+    style="opacity:0.5;width:15vw;height:21vw;background-size: 100% auto;background-image:url('./img/btn.png');background-repeat:no-repeat;position:fixed;left:20vw;top:29vw;transform: rotate(180deg);">
   </div>
   <div class="btn" id="btn12"
-    style="width:15vw;height:15vw;background-size:15vw 15vw;background-image:url('./img/empty.png');background-repeat:no-repeat;position:fixed;left:35vw;top:35vw;transform: rotate(180deg);">
+    style="width:15vw;height:15vw;background-size: 100% auto;background-image:url('./img/empty.png');background-repeat:no-repeat;position:fixed;left:35vw;top:35vw;transform: rotate(180deg);">
   </div>
   <div class="btn" id="btndown">
   </div>
   <div class="btn" id="btn23"
-    style="width:15vw;height:15vw;background-size:15vw 15vw;background-image:url('./img/empty.png');background-repeat:no-repeat;position:fixed;left:5vw;top:35vw;transform: rotate(180deg);">
+    style="width:15vw;height:15vw;background-size: 100% auto;background-image:url('./img/empty.png');background-repeat:no-repeat;position:fixed;left:5vw;top:35vw;transform: rotate(180deg);">
   </div>
   <div class="btn" id="btnleft"
-    style="opacity:0.5;width:15vw;height:20vw;background-size:15vw 15vw;background-image:url('./img/btn.png');background-repeat:no-repeat;position:fixed;left:20vw;top:5vw;">
+    style="opacity:0.5;width:15vw;height:21vw;background-size: 100% auto;background-image:url('./img/btn.png');background-repeat:no-repeat;position:fixed;left:20vw;top:5vw;">
   </div>
   <div class="btn" id="btn34"
-    style="width:15vw;height:15vw;background-size:15vw 15vw;background-image:url('./img/empty.png');background-repeat:no-repeat;position:fixed;left:5vw;top:5vw;transform: rotate(180deg);">
+    style="width:15vw;height:15vw;background-size: 100% auto;background-image:url('./img/empty.png');background-repeat:no-repeat;position:fixed;left:5vw;top:5vw;transform: rotate(180deg);">
   </div>
   <div class="btn" id="btn14"
-    style="width:15vw;height:15vw;background-size:15vw 15vw;background-image:url('./img/empty.png');background-repeat:no-repeat;position:fixed;left:35vw;top:5vw;transform: rotate(180deg);">
+    style="width:15vw;height:15vw;background-size: 100% auto;background-image:url('./img/empty.png');background-repeat:no-repeat;position:fixed;left:35vw;top:5vw;transform: rotate(180deg);">
   </div>
   <div class="btn top-btn" id="btnsave"
-    style="opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/btnsave.png');background-repeat:no-repeat;position:fixed;right:2vw;top:10vw;transform: rotate(90deg);">
+    style="opacity:0.5;width:20vw;height:8.88vw;background-size: 100% auto;background-image:url('./img/btnsave.png');background-repeat:no-repeat;position:fixed;right:2vw;top:10vw;transform: rotate(90deg);">
   </div>
   <div class="btn top-btn" id="btnload"
-    style="display:none;opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/btnload.png');background-repeat:no-repeat;position:fixed;right:2vw;top:10vw;transform: rotate(90deg);">
+    style="display:none;opacity:0.5;width:20vw;height:8.88vw;background-size: 100% auto;background-image:url('./img/btnload.png');background-repeat:no-repeat;position:fixed;right:2vw;top:10vw;transform: rotate(90deg);">
   </div>
   <div class="btn top-btn" id="btnspeed"
-    style="opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/btnspeed.png');background-repeat:no-repeat;position:fixed;right:2vw;top:35vw;transform: rotate(90deg);">
+    style="opacity:0.5;width:20vw;height:8.88vw;background-size: 100% auto;background-image:url('./img/btnspeed.png');background-repeat:no-repeat;position:fixed;right:2vw;top:35vw;transform: rotate(90deg);">
   </div>
   <div class="btn top-btn" id="btnselect"
-    style="opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/btnselect.png');background-repeat:no-repeat;position:fixed;right:2vw;bottom:35vw;transform: rotate(90deg);">
+    style="opacity:0.5;width:20vw;height:8.88vw;background-size: 100% auto;background-image:url('./img/btnselect.png');background-repeat:no-repeat;position:fixed;right:2vw;bottom:35vw;transform: rotate(90deg);">
   </div>
   <div class="btn top-btn" id="btnstart"
-    style="opacity:0.5;width:20vw;height:8.88vw;background-size:20vw 8.88vw;background-image:url('./img/btnstart.png');background-repeat:no-repeat;position:fixed;right:2vw;bottom:10vw;transform: rotate(90deg);">
+    style="opacity:0.5;width:20vw;height:8.88vw;background-size: 100% auto;background-image:url('./img/btnstart.png');background-repeat:no-repeat;position:fixed;right:2vw;bottom:10vw;transform: rotate(90deg);">
   </div>
   <div class="btn" id="btnb"
-    style="opacity:0.5;width:22vw;height:22vw;background-size:22vw 22vw;background-image:url('./img/btnb.png');background-repeat:no-repeat;position:fixed;left:5vw;bottom:26vw;transform: rotate(90deg);">
+    style="opacity:0.5;width:22vw;height:22vw;background-size: 100% auto;background-image:url('./img/btnb.png');background-repeat:no-repeat;position:fixed;left:5vw;bottom:26vw;transform: rotate(90deg);">
   </div>
   <div class="btn" id="btna"
-    style="opacity:0.5;width:22vw;height:22vw;background-size:22vw 22vw;background-image:url('./img/btna.png');background-repeat:no-repeat;position:fixed;left:5vw;bottom:5vw;transform: rotate(90deg);">
+    style="opacity:0.5;width:22vw;height:22vw;background-size: 100% auto;background-image:url('./img/btna.png');background-repeat:no-repeat;position:fixed;left:5vw;bottom:5vw;transform: rotate(90deg);">
   </div>
   <div class="config-btn top-btn btn" id="config-btn"
-    style="opacity: 0.5;width: 6vh;height: 6vh;background-size: 100% 100%;background-image: url(./img/config.png);background-repeat: no-repeat;position: fixed;top: 47vh;right: -3vw;transform: rotate(90deg);">
+    style="opacity: 0.5;width: 6vh;height: 6vh;background-size: 100% auto;background-image: url(./img/config.png);background-repeat: no-repeat;position: fixed;top: 47vh;right: -3vw;transform: rotate(90deg);">
   </div>
   <div class="toast-tips" id="toast-tips" style="display: none;">
     <div class="toast-confirm" id="toast-confirm">确定</div>
@@ -714,15 +729,16 @@
     .aTransBox {
       position: absolute;
       bottom: 5vw;
-      right: calc(50vw - 10vw);
+      /* right: calc(50vw - 10vw); */
+      right: calc(50vw - 20vw);
       width: 20vw;
       height: 20vw;
       background: white;
       transform: rotate(90deg);
       box-sizing: border-box;
       font-size: 0;
-      white-space: nowrap;
-      overflow: hidden;
+      /* white-space: nowrap; */
+      /* overflow: hidden; */
       background-color: rgba(0,0,0,0);
       opacity: .6;
     }
@@ -733,7 +749,7 @@
       height: 100%;
     }
     .aTransBox>a:first-child {
-      animation: adAround 20s infinite;
+      /* animation: adAround 20s infinite; */
       /* margin-left: -200px; */
     }
     .aTransBox>a {
@@ -766,17 +782,17 @@
     <a href="http://h5.akwan.cn/games/play/9?rel=6920_577">
       <img src="http://cdn.akwan.cn/storage/images/AhaEyY2Pdkdx9nTKjT3pFPbEPNlViHsaeWkrMZdI.png">
     </a> -->
-    <a onClick="toad('wxfe397c095eba31ed', 'pages/index/index?ad_code=2620', '点击此按钮进入九州仙侠传')">
+    <a onClick="toad('wxfe397c095eba31ed', 'pages/index/index?ad_code=2620', '点击此按钮进入九州仙侠传', 6)">
       <img src="http://cdn.akwan.cn/storage/images/tPqRMisKGU1hZaftDUywnj4lMZX6BQijfseR8OT0.gif">
     </a>
-    <a onClick="toad('wx9b8b8f915730c746', 'pages/index/index?ad_code=2619', '点击此按钮进入封神策')">
+    <a onClick="toad('wx9b8b8f915730c746', 'pages/index/index?ad_code=2619', '点击此按钮进入封神策', 6)">
       <img src="http://cdn.akwan.cn/storage/images/0Y3szFxC3WDASXyaOJTYwlIrut8wRWgV6Yy0mPuB.png">
     </a>
   </div>
   <script>
-    function toad(appId, path, tips) {
+    function toad(appId, path, tips, leftTime) {
       console.log('toad');
-      socket.emit('m', {msg:window.tid+'tomin',appId: appId, path: path, tips: tips});
+      socket.emit('m', {msg:window.tid+'tomin',appId: appId, path: path, tips: tips, leftTime: leftTime|| 9});
     }
   </script>
   <!-- 排名部分代码 -->
@@ -1085,6 +1101,15 @@
     }
   </script>
   <script>
+    setTimeout(()=>{
+      toast('小霸王玩累了的话，可以体验一下右边的游戏，还不错的(●\'◡\'●)', {t: 3000})
+    }, 100000)
+    setTimeout(()=>{
+      toast('游戏可以存档哦，点击左上角存档按钮存档(●\'◡\'●)\n喜欢仙侠游戏的话，可以玩玩右边的游戏~', {t: 4000})
+    }, 300000)
+    setTimeout(()=>{
+      toast('注意休息哦(●\'◡\'●)\n保护眼睛很重要', {t: 3000})
+    }, 600000)
     function toast(msg, config = {}) {
       let toastTips = document.getElementById('toast-tips');
       window.toastTips = toastTips;
@@ -1136,12 +1161,12 @@
         toast('查询用户id出了些问题，请联系开发者小马的微信18868196263');
       } else {
         if (coins <= 0) {
-          // addCoin()
+          addCoin();
           // socket.emit('m', {msg:window.tid+'showad'});
           if (Math.random() > .5) {
-            socket.emit('m', {msg:window.tid+'tomin',appId:"wxfe397c095eba31ed", path:"pages/index/index?ad_code=2620", tips:"玩九州仙侠传60秒来获取币"});
+            socket.emit('m', {msg:window.tid+'tomin',appId:"wxfe397c095eba31ed", path:"pages/index/index?ad_code=2620", tips:"玩九州仙侠传60秒来获取币", leftTime: 5});
           } else {
-            socket.emit('m', {msg:window.tid+'tomin',appId:"wx9b8b8f915730c746", path:"pages/index/index?ad_code=2619", tips:"玩封神策60秒来获取游戏币"});
+            socket.emit('m', {msg:window.tid+'tomin',appId:"wx9b8b8f915730c746", path:"pages/index/index?ad_code=2619", tips:"玩封神策60秒来获取游戏币", leftTime: 5});
           }
         } else {
           subCoin()
@@ -1219,10 +1244,19 @@
               <span class="rankUsetime">${Number(Number(winList[i].usetime / 1000).toFixed(2))}</span>`
             rankBox.appendChild(rankP);
           }
-          document.getElementById('rankArea').style.display = 'block';
-          document.getElementById('tipsArea').style.display = 'block';
+          // 隐藏活动先
+          // document.getElementById('rankArea').style.display = 'block';
+          // document.getElementById('tipsArea').style.display = 'block';
         }
       });
+    }
+    if (localStorage.isNoNeedLoadTeach != '1') {
+      setTimeout(()=>{
+        toast('点击右上角的开始，可以开始游戏')
+      }, 2000)
+      setTimeout(()=>{
+        toast('点击屏幕上方的方块，切换游戏')
+      }, 5000)
     }
 
     function restartGame() {
@@ -1259,7 +1293,7 @@
       opacity: 0.5;
       width: 15vw;
       height: 20vw;
-      background-size: 15vw 15vw;
+      background-size: 100% auto;
       background-image: url(./img/btn.png);
       background-repeat: no-repeat;
       position: fixed;
@@ -1273,7 +1307,7 @@
       opacity: 0.5;
       width: 15vw;
       height: 20vw;
-      background-size: 15vw 15vw;
+      background-size: 100% auto;
       background-image: url(./img/btn.png);
       background-repeat: no-repeat;
       position: fixed;
@@ -1404,6 +1438,7 @@
 
     function loadSavedData(config = {}) {
       console.log('load dataaaaaaaaaaaaa in')
+      $('#game-list-box').hide();
       key = localStorage.romurl;
       if (config.isAuto) {
         key = 'autoSave'
@@ -1521,16 +1556,22 @@
           save: JSON.stringify(tar),
           romurl: key,
         }),
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8',
-        },
+        contentType: "application/json; charset=utf-8",
         dataType: 'json',
         success: (...args) => {
           console.log(args);
-          if (!window.isNoNeedLoadTeach) toast('存档成功:P <br>点击上方灰色带横条的方块后，存档按钮会变为读档', { t: 3000 })
-          else toast('存档成功:P', { t: 1000 })
+          if (localStorage.isNoNeedLoadTeach != '1') {
+            toast('存档成功:P <br>点击屏幕上方方块菜单后，存档按钮会变为读档', { t: 5000 });
+          } else {
+            toast('存档成功:P', { t: 1000 });
+          }
         },
-        complete: () => {
+        error: (...args)=>{
+          console.log('error', args);
+          toast('存档失败' + args[0].toString(), { t: 1000 });
+        },
+        complete: (...args) => {
+          console.log('complete', args);
           window.isSaving = false;
           document.getElementById('btnsave').style.opacity = .5;
         }
@@ -1698,7 +1739,8 @@
       // if (window.innerWidth > 512) {
 
       // } else {
-      screen[0].style.height = window.innerWidth + "px";
+      let height = window.innerWidth < window.innerHeight*.7 ? window.innerWidth:window.innerHeight*.7
+      screen[0].style.height = height + "px";
       // }
 
       var m = (window.innerWidth / 240 * 256 - window.innerWidth) / 2;
@@ -2262,22 +2304,6 @@
       //   // nes.buttonDown(KEYS[38][0], KEYS[38][1]);
 
       // });
-      // 直接添加监听事件
-      $(document).on('touchstart', function (e) {
-        let touches = e.originalEvent.touches;
-        touchBtn(touches);
-      })
-      $(document).on('touchend', function (e) {
-        let touches = e.originalEvent.touches;
-        // console.log('touchend', touches, e)
-        touchBtn(touches, 'touchend');
-      })
-
-      $(document).on('touchmove', function (e) {
-        let touches = e.originalEvent.touches;
-        // console.log('touchmove', touches, e)
-        touchBtn(touches);
-      })
 
       var touchDic = {
         'btnup': 0,
@@ -2291,12 +2317,36 @@
         'btna': 0,
         'btnb': 0
       }
+      // 直接添加监听事件
+      $(document).on('touchstart', function (e) {
+        let touches = e.originalEvent.touches;
+        touchBtn(touches);
+        // e.stopPropagation();
+        // return false;
+      })
+      $(document).on('touchend', function (e) {
+        let touches = e.originalEvent.touches;
+        // console.log('touchend', touches, e)
+        touchBtn(touches, 'touchend');
+        // e.stopPropagation();
+        // return false;
+      })
+
+      $(document).on('touchmove', function (e) {
+        let touches = e.originalEvent.touches;
+        touchBtn(touches);
+        // console.log('touchmove', touches, e)
+        // e.stopPropagation();
+        // return false;
+      })
 
       function touchBtn(touches, type) {
+        console.log(touches)
         console.log(type)
         // ['btnup', 'btnright', 'btn12', 'btn14', 'btndown', 'btnleft', 'btn23', 'btn34', 'btna', 'btnb']
         for (let i = 0; i < touches.length; i++) {
           const tarTouch = touches[i];
+          // toast(`${tarTouch.pageX} ${tarTouch.pageY}|${tarTouch.screenX} ${tarTouch.screenY}|`)
           let x = tarTouch.clientX;
           let y = tarTouch.clientY;
           let dom = document.elementFromPoint(x, y);
@@ -2335,6 +2385,7 @@
           }
         }
         console.log(touchDic);
+        return false;
       }
       let playerId = window.playerId;
 
@@ -2421,14 +2472,19 @@
       $('#btnload').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
         loadSavedData();
-        window.isNoNeedLoadTeach = true;
+        localStorage.isNoNeedLoadTeach = '1';
       });
       $('#btnload').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
       });
       $('#btnspeed').bind("touchstart mousedown", function (evt) {
-        if (frameSpeed == 1) frameSpeed = 5;
-        else frameSpeed = 1;
+        if (frameSpeed == 1) {
+          frameSpeed = 5;
+          $('#btnspeed').addClass('open');
+        } else {
+          frameSpeed = 1;
+          $('#btnspeed').removeClass('open');
+        }
         evt.preventDefault();
         // clearInterval(autoSaveInter)
         // localStorage.clear()
