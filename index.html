@@ -251,6 +251,9 @@
       right: -18vw !important; */
       filter: drop-shadow(#ff0000 2px 2px) !important;
     }
+    #changePlayer {
+      display: none;
+    }
 
     * {
       -webkit-touch-callout: none;
@@ -650,7 +653,7 @@
       </p>
       <p onclick="localStorage.romurl = './rom/smbc.nes';window.location.href = window.location.href;">马里奥双人版</p>
       <p onclick="localStorage.romurl = './rom/X-MEN.NES';window.location.href = window.location.href;">X-MEN</p>
-      <p onclick="localStorage.romurl = './rom/kdxfzwb.nes';window.location.href = window.location.href;">快打旋风中文版</p>
+      <p onclick="localStorage.romurl = './rom/kdxfzwb.nes';window.location.href = window.location.href;">快打旋风中文</p>
       <p onclick="localStorage.romurl = './rom/ZELDA.NES';window.location.href = window.location.href;">ZELDA</p>
       <p onclick="localStorage.romurl = './rom/ZELDA2.NES';window.location.href = window.location.href;">ZELDA2</p>
       <p onclick="localStorage.romurl = './rom/Zelda Outlands.nes';window.location.href = window.location.href;">
@@ -695,8 +698,8 @@
       <p onclick="localStorage.romurl = './rom/冒险岛4.nes';window.location.href = window.location.href;">冒险岛4</p>
 
       <p onclick="localStorage.romurl = './rom/冒险岛1(无敌).nes';window.location.href = window.location.href;">冒险1无敌</p>
-      <p onclick="localStorage.romurl = './rom/冒险岛2无限.nes';window.location.href = window.location.href;">冒险2无敌</p>
-      <p onclick="localStorage.romurl = './rom/冒险岛3(无限人、血).nes';window.location.href = window.location.href;">冒险3无敌</p>
+      <p onclick="localStorage.romurl = './rom/冒险岛2无限.nes';window.location.href = window.location.href;">冒险2无限</p>
+      <p onclick="localStorage.romurl = './rom/冒险岛3(无限人、血).nes';window.location.href = window.location.href;">冒险3无限</p>
       <p onclick="localStorage.romurl = './rom/冒险岛4(无敌).nes';window.location.href = window.location.href;">冒险4无敌</p>
 
 
@@ -1742,7 +1745,6 @@
       let height = window.innerWidth < window.innerHeight*.7 ? window.innerWidth:window.innerHeight*.7
       screen[0].style.height = height + "px";
       // }
-
       var m = (window.innerWidth / 240 * 256 - window.innerWidth) / 2;
       var n = (window.innerHeight / 240 * 256 - window.innerHeight) / 2;
       // screen[0].style.transform="translate(-50%, -50%)";
@@ -1753,6 +1755,21 @@
       screen[0].style.bottom = 0;
       screen[0].style.margin = "auto auto";
       window.context = screen[0].getContext('2d');
+      setTimeout(()=>{
+        var screen = $("#canvas");
+        let height = window.innerWidth < window.innerHeight*.7 ? window.innerWidth:window.innerHeight*.7
+        screen[0].style.height = height + "px";
+        var m = (window.innerWidth / 240 * 256 - window.innerWidth) / 2;
+        var n = (window.innerHeight / 240 * 256 - window.innerHeight) / 2;
+        // screen[0].style.transform="translate(-50%, -50%)";
+        screen[0].style.transform = "rotate(90deg) translate(0px," + m + "px)";
+        screen[0].style.left = 0;
+        screen[0].style.right = 0;
+        screen[0].style.top = 0;
+        screen[0].style.bottom = 0;
+        screen[0].style.margin = "auto auto";
+        window.context = screen[0].getContext('2d');
+      }, 3000)
       var imageData = context.getImageData(0, 0, 256, 240);
       // $("#emulator").append(screen);
       this.player = 0;
@@ -2433,6 +2450,20 @@
         if (dom.id == 'btnb') {
           tarFunc(playerId, KEYS[89][1]);
         }
+      }
+      let twoPlayerRomList = [
+        './rom/Chip To Dale No Daisakusen 2 (J).nes',
+        './rom/Double Dragon (U).nes',
+        './rom/iceclimb.nes',
+        './rom/Battle City (J).nes',
+        './rom/CONTRA.NES',
+        './rom/Kunio_Kun_no_Nekketsu_Soccer_League_(J)(T+C)(AirTeam)build_070217.nes',
+        './rom/BOMBMAN.NES',
+        './rom/Bomberman 2 (U).nes',
+        './rom/smbc.nes',
+      ]
+      if (twoPlayerRomList.indexOf(localStorage.romurl) > -1) {
+        $('#changePlayer').css('display', 'inline-block')
       }
       $('#changePlayer').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
