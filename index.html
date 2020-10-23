@@ -7,9 +7,11 @@
   <!-- <script src="https://www.norchant.com/js/vconsole.min.js"></script> -->
   <title>红白机模拟器</title>
   <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.0.min.js"></script> -->
-  <script type="text/javascript" src="./js/jquery-3.4.0.min.js"></script>
+  <!-- <script type="text/javascript" src="./js/jquery-3.4.0.min.js"></script> -->
+  <script type="text/javascript" src="https://maxmon.oss-cn-shanghai.aliyuncs.com/js/jquery-3.4.0.min.js"></script>
   <!-- <script type="text/javascript" src="https://unpkg.com/jsnes/dist/jsnes.min.js"></script> -->
-  <script type="text/javascript" src="./js/jsnes.min.js"></script>
+  <!-- <script type="text/javascript" src="./js/jsnes.min.js"></script> -->
+  <script type="text/javascript" src="https://maxmon.oss-cn-shanghai.aliyuncs.com/js/jsnes.min.js"></script>
   <script>
     if (window.location.href.indexOf('http:') > -1) {
       window.location.href = window.location.href.replace('http:', 'https:')
@@ -192,6 +194,19 @@
       }
     }
     window.onload = function () {
+      $('#vedioBtn').click(function() {
+        console.log('vedioBtn clicked')
+        window.pause = !window.pause;
+        if (window.pause) {
+          toast('已【暂停】播放录像')
+          $('#vedioBtnPlay')[0].style.display = 'none';
+          $('#vedioBtnPause')[0].style.display = 'block';
+        } else {
+          toast('已【恢复】播放录像')
+          $('#vedioBtnPause')[0].style.display = 'none';
+          $('#vedioBtnPlay')[0].style.display = 'block';
+        }
+      })
       canvasTips.addEventListener('dragover', function (e) {
         console.log(e)
         e.preventDefault(); // 必须阻止默认事件
@@ -207,7 +222,8 @@
           // code
           blobToDataURL(files[0], (base64) => {
             console.log(base64)
-            localStorage[localStorage.romurl] = (atob(base64.replace('data:application/octet-stream;base64,', '')));
+            localStorage[localStorage.romurl] = (atob(base64.replace('data:application/octet-stream;base64,',
+              '')));
             loadSavedData()
           })
         } else {
@@ -243,14 +259,17 @@
       width: 100%;
       height: 100%;
     }
+
     .btn {
       max-width: 14vh;
     }
+
     #btnspeed.open {
       /* opacity: 1 !important;
       right: -18vw !important; */
       filter: drop-shadow(#ff0000 2px 2px) !important;
     }
+
     #changePlayer {
       display: none;
     }
@@ -331,6 +350,7 @@
       overflow: hidden;
       opacity: .8;
       transform: rotateZ(90deg);
+      z-index: 1;
     }
 
     #game-list {
@@ -364,25 +384,60 @@
       color: white;
       transform: rotateZ(90deg);
       right: calc(4vw - 27px);
-      bottom: 65px;
+      bottom: 40px;
     }
 
     @media screen and (min-width: 800px) {
-      /* body {
-        transform: rotateZ(-90deg);
-        max-width: 512px;
+      body {
+        transform: none !important;
+        max-width: none !important;
       }
+
+      #time {
+        display: none !important;
+      }
+
       .btn {
         display: none;
       }
+
       #canvas {
         width: 100% !important;
-        max-width: 512px;
-        margin-left: -20vh !important;
+        height: 100% !important;
+        max-height: 100%;
+        max-width: 100%;
+        transform: none !important;
       }
+
       .rankArea {
         margin-left: 0px !important;
-      } */
+      }
+
+      .aTransBox {
+        display: none;
+      }
+
+      .toast-tips {
+        top: 0 !important;
+        ;
+        right: 0 !important;
+        ;
+        left: 0 !important;
+        ;
+        margin: auto !important;
+        ;
+        transform: none !important;
+      }
+
+      .developer span {
+        position: fixed !important;
+        left: auto !important;
+        top: auto !important;
+        transform: none !important;
+        right: 1em;
+        bottom: 0;
+        width: auto !important;
+      }
     }
   </style>
   <script>
@@ -566,56 +621,58 @@
   <img id="checkImg"></img>
   <canvas id="check" width='12px' height='16px'></canvas>
   <!-- <div id="btnall"
-    style="opacity:0.5;width:45vw;height:45vw;background-size: 100% auto;background-image:url('./img/btn.png');background-repeat:no-repeat;position:fixed;left:5vw;top:5vw;transform: rotate(90deg);">
+    style="opacity:0.5;width:45vw;height:45vw;background-size: 100% auto;background-image:url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/btn.png');background-repeat:no-repeat;position:fixed;left:5vw;top:5vw;transform: rotate(90deg);">
   </div> -->
   <div class="btn" id="changePlayer"
-    style="opacity:0.5;width:20vw;height:8.88vw;background-size: 100% auto;background-image:url('./img/player1.png');background-repeat:no-repeat;position:fixed;right:10vw;top:10vw;transform: rotate(90deg);">
+    style="opacity:0.5;width:20vw;height:8.88vw;background-size: 100% auto;background-image:url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/player1.png');background-repeat:no-repeat;position:fixed;right:10vw;top:10vw;transform: rotate(90deg);">
   </div>
   <div class="btn" id="btnup">
   </div>
   <div class="btn" id="btnright"
-    style="opacity:0.5;width:15vw;height:21vw;background-size: 100% auto;background-image:url('./img/btn.png');background-repeat:no-repeat;position:fixed;left:20vw;top:29vw;transform: rotate(180deg);">
+    style="opacity:0.5;width:15vw;height:21vw;background-size: 100% auto;background-image:url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/btn.png');background-repeat:no-repeat;position:fixed;left:20vw;top:29vw;transform: rotate(180deg);">
   </div>
   <div class="btn" id="btn12"
-    style="width:15vw;height:15vw;background-size: 100% auto;background-image:url('./img/empty.png');background-repeat:no-repeat;position:fixed;left:35vw;top:35vw;transform: rotate(180deg);">
+    style="width:15vw;height:15vw;background-size: 100% auto;background-image:url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/empty.png');background-repeat:no-repeat;position:fixed;left:35vw;top:35vw;transform: rotate(180deg);">
   </div>
   <div class="btn" id="btndown">
   </div>
   <div class="btn" id="btn23"
-    style="width:15vw;height:15vw;background-size: 100% auto;background-image:url('./img/empty.png');background-repeat:no-repeat;position:fixed;left:5vw;top:35vw;transform: rotate(180deg);">
+    style="width:15vw;height:15vw;background-size: 100% auto;background-image:url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/empty.png');background-repeat:no-repeat;position:fixed;left:5vw;top:35vw;transform: rotate(180deg);">
   </div>
   <div class="btn" id="btnleft"
-    style="opacity:0.5;width:15vw;height:21vw;background-size: 100% auto;background-image:url('./img/btn.png');background-repeat:no-repeat;position:fixed;left:20vw;top:5vw;">
+    style="opacity:0.5;width:15vw;height:21vw;background-size: 100% auto;background-image:url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/btn.png');background-repeat:no-repeat;position:fixed;left:20vw;top:5vw;">
   </div>
   <div class="btn" id="btn34"
-    style="width:15vw;height:15vw;background-size: 100% auto;background-image:url('./img/empty.png');background-repeat:no-repeat;position:fixed;left:5vw;top:5vw;transform: rotate(180deg);">
+    style="width:15vw;height:15vw;background-size: 100% auto;background-image:url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/empty.png');background-repeat:no-repeat;position:fixed;left:5vw;top:5vw;transform: rotate(180deg);">
   </div>
   <div class="btn" id="btn14"
-    style="width:15vw;height:15vw;background-size: 100% auto;background-image:url('./img/empty.png');background-repeat:no-repeat;position:fixed;left:35vw;top:5vw;transform: rotate(180deg);">
+    style="width:15vw;height:15vw;background-size: 100% auto;background-image:url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/empty.png');background-repeat:no-repeat;position:fixed;left:35vw;top:5vw;transform: rotate(180deg);">
   </div>
   <div class="btn top-btn" id="btnsave"
-    style="opacity:0.5;width:20vw;height:8.88vw;background-size: 100% auto;background-image:url('./img/btnsave.png');background-repeat:no-repeat;position:fixed;right:2vw;top:10vw;transform: rotate(90deg);">
+    style="opacity:0.5;width:20vw;height:8.88vw;background-size: 100% auto;background-image:url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/btnsave.png');background-repeat:no-repeat;position:fixed;right:2vw;top:10vw;transform: rotate(90deg);">
   </div>
   <div class="btn top-btn" id="btnload"
-    style="display:none;opacity:0.5;width:20vw;height:8.88vw;background-size: 100% auto;background-image:url('./img/btnload.png');background-repeat:no-repeat;position:fixed;right:2vw;top:10vw;transform: rotate(90deg);">
+    style="display:none;opacity:0.5;width:20vw;height:8.88vw;background-size: 100% auto;background-image:url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/btnload.png');background-repeat:no-repeat;position:fixed;right:2vw;top:10vw;transform: rotate(90deg);">
   </div>
   <div class="btn top-btn" id="btnspeed"
-    style="opacity:0.5;width:20vw;height:8.88vw;background-size: 100% auto;background-image:url('./img/btnspeed.png');background-repeat:no-repeat;position:fixed;right:2vw;top:35vw;transform: rotate(90deg);">
+    style="opacity:0.5;width:20vw;height:8.88vw;background-size: 100% auto;background-image:url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/btnspeed.png');background-repeat:no-repeat;position:fixed;right:2vw;top:35vw;transform: rotate(90deg);">
   </div>
   <div class="btn top-btn" id="btnselect"
-    style="opacity:0.5;width:20vw;height:8.88vw;background-size: 100% auto;background-image:url('./img/btnselect.png');background-repeat:no-repeat;position:fixed;right:2vw;bottom:35vw;transform: rotate(90deg);">
+    style="opacity:0.5;width:20vw;height:8.88vw;background-size: 100% auto;background-image:url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/btnselect.png');background-repeat:no-repeat;position:fixed;right:2vw;bottom:35vw;transform: rotate(90deg);">
   </div>
   <div class="btn top-btn" id="btnstart"
-    style="opacity:0.5;width:20vw;height:8.88vw;background-size: 100% auto;background-image:url('./img/btnstart.png');background-repeat:no-repeat;position:fixed;right:2vw;bottom:10vw;transform: rotate(90deg);">
+    style="opacity:0.5;width:20vw;height:8.88vw;background-size: 100% auto;background-image:url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/btnstart.png');background-repeat:no-repeat;position:fixed;right:2vw;bottom:10vw;transform: rotate(90deg);">
   </div>
   <div class="btn" id="btnb"
-    style="opacity:0.5;width:22vw;height:22vw;background-size: 100% auto;background-image:url('./img/btnb.png');background-repeat:no-repeat;position:fixed;left:5vw;bottom:26vw;transform: rotate(90deg);">
+    style="opacity:0.5;width:22vw;height:22vw;background-size: 100% auto;background-image:url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/btnb.png');background-repeat:no-repeat;position:fixed;left:5vw;bottom:26vw;transform: rotate(90deg);">
   </div>
   <div class="btn" id="btna"
-    style="opacity:0.5;width:22vw;height:22vw;background-size: 100% auto;background-image:url('./img/btna.png');background-repeat:no-repeat;position:fixed;left:5vw;bottom:5vw;transform: rotate(90deg);">
+    style="opacity:0.5;width:22vw;height:22vw;background-size: 100% auto;background-image:url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/btna.png');background-repeat:no-repeat;position:fixed;left:5vw;bottom:5vw;transform: rotate(90deg);">
   </div>
   <div class="config-btn top-btn btn" id="config-btn"
-    style="opacity: 0.5;width: 6vh;height: 6vh;background-size: 100% auto;background-image: url(./img/config.png);background-repeat: no-repeat;position: fixed;top: 47vh;right: -3vw;transform: rotate(90deg);">
+    style="opacity: 0.5;width: 6vh;height: 6vh;background-size: 100% auto;background-image: url(https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/config.png);background-repeat: no-repeat;position: fixed;top: 47vh;right: -3vw;transform: rotate(90deg);">
+  </div>
+  <div class="developer"><span onclick="copystr('maqijun123456', {'hasToast': true})">开发者：马琦钧 微信：maqijun123456</span>
   </div>
   <div class="toast-tips" id="toast-tips" style="display: none;">
     <div class="toast-confirm" id="toast-confirm">确定</div>
@@ -623,110 +680,196 @@
   <div class="game-list-box" id="game-list-box">
     <div class="game-list" id="game-list">
       <p
-        onclick="localStorage.romurl = './rom/Chip To Dale No Daisakusen 2 (J).nes';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/Chip To Dale No Daisakusen 2 (J).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
         松鼠大作战</p>
-      <p onclick="localStorage.romurl = './rom/mario.nes';window.location.href = window.location.href;">马里奥</p>
-      <p onclick="localStorage.romurl = './rom/希特勒复活.nes';window.location.href = window.location.href;">希特勒复活</p>
-      <p onclick="localStorage.romurl = './rom/c31.nes';window.location.href = window.location.href;">中国象棋</p>
-      <p onclick="localStorage.romurl = './rom/Double Dragon (U).nes';window.location.href = window.location.href;">
+      <p
+        onclick="localStorage.romurl = './rom/mario.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        马里奥</p>
+      <p
+        onclick="localStorage.romurl = './rom/希特勒复活.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        希特勒复活</p>
+      <p
+        onclick="localStorage.romurl = './rom/c31.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        中国象棋</p>
+      <p
+        onclick="localStorage.romurl = './rom/Double Dragon (U).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
         双截龙1(美版)</p>
-      <p onclick="localStorage.romurl = './rom/Yie Ar Kung-Fu (J).nes';window.location.href = window.location.href;">功夫
-      </p>
-      <p onclick="localStorage.romurl = './rom/iceclimb.nes';window.location.href = window.location.href;">雪人兄弟</p>
       <p
-        onclick="localStorage.romurl = './rom/Dragonlance - Dragons of Flame (J).nes';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/Yie Ar Kung-Fu (J).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        功夫
+      </p>
+      <p
+        onclick="localStorage.romurl = './rom/iceclimb.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        雪人兄弟</p>
+      <p
+        onclick="localStorage.romurl = './rom/Dragonlance - Dragons of Flame (J).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
         龙的火焰</p>
-      <p onclick="localStorage.romurl = './rom/vs dr mario.nes';window.location.href = window.location.href;">马里奥医生</p>
-      <p onclick="localStorage.romurl = './rom/马戏团.nes';window.location.href = window.location.href;">马戏团(中文)</p>
-      <p onclick="localStorage.romurl = './rom/Makaimura (J).nes';window.location.href = window.location.href;">魔界村</p>
-      <p onclick="localStorage.romurl = './rom/Battle City (J).nes';window.location.href = window.location.href;">坦克大战
-      </p>
-      <p onclick="localStorage.romurl = './rom/CONTRA.NES';window.location.href = window.location.href;">魂斗罗</p>
-      <p onclick="localStorage.romurl = './rom/NINJAGA3.NES';window.location.href = window.location.href;">忍者龙剑传3</p>
-      <p onclick="localStorage.romurl = './rom/zhonghuadaxian.nes';window.location.href = window.location.href;">中华大仙
+      <p
+        onclick="localStorage.romurl = './rom/vs dr mario.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        马里奥医生</p>
+      <p
+        onclick="localStorage.romurl = './rom/马戏团.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        马戏团(中文)</p>
+      <p
+        onclick="localStorage.romurl = './rom/Makaimura (J).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        魔界村</p>
+      <p
+        onclick="localStorage.romurl = './rom/Battle City (J).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        坦克大战
       </p>
       <p
-        onclick="localStorage.romurl = './rom/Chuugoku Senseijutsu (Japan).nes';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/CONTRA.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        魂斗罗</p>
+      <p
+        onclick="localStorage.romurl = './rom/NINJAGA3.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        忍者龙剑传3</p>
+      <p
+        onclick="localStorage.romurl = './rom/zhonghuadaxian.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        中华大仙
+      </p>
+      <p
+        onclick="localStorage.romurl = './rom/Chuugoku Senseijutsu (Japan).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
         中国占星术</p>
-      <p onclick="localStorage.romurl = './rom/BOMBMAN.NES';window.location.href = window.location.href;">炸弹人</p>
-      <p onclick="localStorage.romurl = './rom/Bomberman 2 (U).nes';window.location.href = window.location.href;">炸弹人2
-      </p>
-      <p onclick="localStorage.romurl = './rom/smbc.nes';window.location.href = window.location.href;">马里奥双人版</p>
-      <p onclick="localStorage.romurl = './rom/X-MEN.NES';window.location.href = window.location.href;">X-MEN</p>
-      <p onclick="localStorage.romurl = './rom/kdxfzwb.nes';window.location.href = window.location.href;">快打旋风中文</p>
-      <p onclick="localStorage.romurl = './rom/ZELDA.NES';window.location.href = window.location.href;">ZELDA</p>
-      <p onclick="localStorage.romurl = './rom/ZELDA2.NES';window.location.href = window.location.href;">ZELDA2</p>
-      <p onclick="localStorage.romurl = './rom/Zelda Outlands.nes';window.location.href = window.location.href;">
-        塞尔达1</p>
-      <p onclick="localStorage.romurl = './rom/KIRBYADV.NES';window.location.href = window.location.href;">卡比历险记</p>
       <p
-        onclick="localStorage.romurl = './rom/Hoshi No Kirby - Yume No Izumi No Monogatari (J).nes';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/BOMBMAN.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        炸弹人</p>
+      <p
+        onclick="localStorage.romurl = './rom/Bomberman 2 (U).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        炸弹人2
+      </p>
+      <p
+        onclick="localStorage.romurl = './rom/smbc.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        马里奥双人版</p>
+      <p
+        onclick="localStorage.romurl = './rom/X-MEN.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        X-MEN</p>
+      <p
+        onclick="localStorage.romurl = './rom/kdxfzwb.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        快打旋风中文</p>
+      <p
+        onclick="localStorage.romurl = './rom/ZELDA.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        ZELDA</p>
+      <p
+        onclick="localStorage.romurl = './rom/ZELDA2.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        ZELDA2</p>
+      <p
+        onclick="localStorage.romurl = './rom/Zelda Outlands.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        塞尔达1</p>
+      <p
+        onclick="localStorage.romurl = './rom/KIRBYADV.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        卡比历险记</p>
+      <p
+        onclick="localStorage.romurl = './rom/Hoshi No Kirby - Yume No Izumi No Monogatari (J).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
         卡比历险记-日</p>
       <p
-        onclick="localStorage.romurl = './rom/Meitantei Holmes - Kiri No London Satsujin Jiken (J).nes';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/Meitantei Holmes - Kiri No London Satsujin Jiken (J).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
         侦探-日</p>
-      <p onclick="localStorage.romurl = './rom/Startropics.NES';window.location.href = window.location.href;">
+      <p
+        onclick="localStorage.romurl = './rom/Startropics.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
         Startropics</p>
       <p
-        onclick="localStorage.romurl = './rom/Adventures of Lolo (J).nes';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/Adventures of Lolo (J).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
         Lolo</p>
-      <p onclick="localStorage.romurl = './rom/LOLO2.NES';window.location.href = window.location.href;">Lolo2</p>
-      <p onclick="localStorage.romurl = './rom/LOLO3.NES';window.location.href = window.location.href;">Lolo3</p>
-      <p onclick="localStorage.romurl = './rom/Moon Ranger (U).nes';window.location.href = window.location.href;">Moon
+      <p
+        onclick="localStorage.romurl = './rom/LOLO2.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        Lolo2</p>
+      <p
+        onclick="localStorage.romurl = './rom/LOLO3.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        Lolo3</p>
+      <p
+        onclick="localStorage.romurl = './rom/Moon Ranger (U).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        Moon
         Ranger</p>
-      <p onclick="localStorage.romurl = './rom/rexuequgunqiu.nes';window.location.href = window.location.href;">热血曲棍球
-      </p>
-      <p onclick="localStorage.romurl = './rom/热血物语中文版.nes';window.location.href = window.location.href;">热血物语</p>
       <p
-        onclick="localStorage.romurl = './rom/re_xue_gao_xiao_duo_bi_qiu.nes';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/rexuequgunqiu.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        热血曲棍球
+      </p>
+      <p
+        onclick="localStorage.romurl = './rom/热血物语中文版.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        热血物语</p>
+      <p
+        onclick="localStorage.romurl = './rom/re_xue_gao_xiao_duo_bi_qiu.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
         热血高校</p>
-      <p onclick="localStorage.romurl = './rom/rxgd.nes';window.location.href = window.location.href;">热血格斗</p>
       <p
-        onclick="localStorage.romurl = './rom/Kunio_Kun_no_Nekketsu_Soccer_League_(J)(T+C)(AirTeam)build_070217.nes';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/rxgd.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        热血格斗</p>
+      <p
+        onclick="localStorage.romurl = './rom/Kunio_Kun_no_Nekketsu_Soccer_League_(J)(T+C)(AirTeam)build_070217.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
         热血足球3</p>
-      <!-- <p onclick="localStorage.romurl = './rom/rxsdj.nes';window.location.href = window.location.href;">热血时代剧</p> -->
+      <!-- <p onclick="localStorage.romurl = './rom/rxsdj.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">热血时代剧</p> -->
 
-      <p onclick="localStorage.romurl = './rom/三国志英杰传(吞食天地1).NES';window.location.href = window.location.href;">吞食天地1
+      <p
+        onclick="localStorage.romurl = './rom/三国志英杰传(吞食天地1).NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        吞食天地1
       </p>
-      <p onclick="localStorage.romurl = './rom/吞食天地2 (不花屏版) [先锋卡通汉化].nes';window.location.href = window.location.href;">
+      <p
+        onclick="localStorage.romurl = './rom/吞食天地2 (不花屏版) [先锋卡通汉化].nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
         吞食天地2</p>
-      <p onclick="localStorage.romurl = './rom/呑食天地Ⅰ曹魏英豪传（吞2音乐）.nes';window.location.href = window.location.href;">吞1曹魏
+      <p
+        onclick="localStorage.romurl = './rom/呑食天地Ⅰ曹魏英豪传（吞2音乐）.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        吞1曹魏
       </p>
-      <p onclick="localStorage.romurl = './rom/冒险岛1.nes';window.location.href = window.location.href;">冒险岛1</p>
-      <p onclick="localStorage.romurl = './rom/冒险岛2.nes';window.location.href = window.location.href;">冒险岛2</p>
-      <p onclick="localStorage.romurl = './rom/冒险岛3.nes';window.location.href = window.location.href;">冒险岛3</p>
-      <p onclick="localStorage.romurl = './rom/冒险岛4.nes';window.location.href = window.location.href;">冒险岛4</p>
+      <p
+        onclick="localStorage.romurl = './rom/冒险岛1.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        冒险岛1</p>
+      <p
+        onclick="localStorage.romurl = './rom/冒险岛2.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        冒险岛2</p>
+      <p
+        onclick="localStorage.romurl = './rom/冒险岛3.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        冒险岛3</p>
+      <p
+        onclick="localStorage.romurl = './rom/冒险岛4.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        冒险岛4</p>
 
-      <p onclick="localStorage.romurl = './rom/冒险岛1(无敌).nes';window.location.href = window.location.href;">冒险1无敌</p>
-      <p onclick="localStorage.romurl = './rom/冒险岛2无限.nes';window.location.href = window.location.href;">冒险2无限</p>
-      <p onclick="localStorage.romurl = './rom/冒险岛3(无限人、血).nes';window.location.href = window.location.href;">冒险3无限</p>
-      <p onclick="localStorage.romurl = './rom/冒险岛4(无敌).nes';window.location.href = window.location.href;">冒险4无敌</p>
+      <p
+        onclick="localStorage.romurl = './rom/冒险岛1(无敌).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        冒险1无敌</p>
+      <p
+        onclick="localStorage.romurl = './rom/冒险岛2无限.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        冒险2无限</p>
+      <p
+        onclick="localStorage.romurl = './rom/冒险岛3(无限人、血).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        冒险3无限</p>
+      <p
+        onclick="localStorage.romurl = './rom/冒险岛4(无敌).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        冒险4无敌</p>
 
 
-      <!-- <p onclick="localStorage.romurl = './rom/爆笑三国(上古神剑).nes';window.location.href = window.location.href;">爆笑三国</p> -->
-      <!-- <p onclick="localStorage.romurl = './rom/三国志Ⅱ--霸王的大陆_外星汉化版.nes';window.location.href = window.location.href;">三国志Ⅱ</p> -->
-      <!-- <p onclick="localStorage.romurl = './rom/三国志超级版.nes';window.location.href = window.location.href;">三国志超级版</p> -->
-      <!-- <p onclick="localStorage.romurl = './rom/重装机兵plus6.0大车版.nes';window.location.href = window.location.href;">重装机兵大车版</p> -->
-      <!-- <p onclick="localStorage.romurl = './rom/第2次超级机器人大战.NES';window.location.href = window.location.href;">机器人大战2</p> -->
-      <!-- <p onclick="localStorage.romurl = './rom/第4次机器人大战.NES';window.location.href = window.location.href;">机器人大战4</p> -->
+      <!-- <p onclick="localStorage.romurl = './rom/爆笑三国(上古神剑).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">爆笑三国</p> -->
+      <!-- <p onclick="localStorage.romurl = './rom/三国志Ⅱ--霸王的大陆_外星汉化版.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">三国志Ⅱ</p> -->
+      <!-- <p onclick="localStorage.romurl = './rom/三国志超级版.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">三国志超级版</p> -->
+      <!-- <p onclick="localStorage.romurl = './rom/重装机兵plus6.0大车版.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">重装机兵大车版</p> -->
+      <!-- <p onclick="localStorage.romurl = './rom/第2次超级机器人大战.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">机器人大战2</p> -->
+      <!-- <p onclick="localStorage.romurl = './rom/第4次机器人大战.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">机器人大战4</p> -->
       <!-- 74 -->
-      <p onclick="localStorage.romurl = './rom/影子传说.nes';window.location.href = window.location.href;">影子传说</p>
-      <p onclick="localStorage.romurl = './rom/影子传说 [中伟汉化 MS修正].nes';window.location.href = window.location.href;">
+      <p
+        onclick="localStorage.romurl = './rom/影子传说.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        影子传说</p>
+      <p
+        onclick="localStorage.romurl = './rom/影子传说 [中伟汉化 MS修正].nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
         影子传说(中)</p>
 
-      <p onclick="localStorage.romurl = './rom/Duck Tales  (E).nes';window.location.href = window.location.href;">唐老鸭大陆1
+      <p
+        onclick="localStorage.romurl = './rom/Duck Tales  (E).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        唐老鸭大陆1
       </p>
-      <p onclick="localStorage.romurl = './rom/Duck Tales 2  (U).nes';window.location.href = window.location.href;">
+      <p
+        onclick="localStorage.romurl = './rom/Duck Tales 2  (U).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
         唐老鸭大陆2</p>
-      <!-- <p onclick="localStorage.romurl = './rom/100IN1.NES';window.location.href = window.location.href;">100IN1</p> -->
+      <!-- <p onclick="localStorage.romurl = './rom/100IN1.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">100IN1</p> -->
 
 
       <p onclick="window.location.href = '/gba'">gba</p>
 
       <!-- This ROM uses a mapper not supported by JSNES: Namcot 106 chip(19) -->
-      <!-- <p onclick="localStorage.romurl = './rom/Sangokushi 2.nes';window.location.href = window.location.href;">三国志2霸王的大陆</p> -->
+      <!-- <p onclick="localStorage.romurl = './rom/Sangokushi 2.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">三国志2霸王的大陆</p> -->
 
     </div>
+  </div>
+  <div id="vedioBtn" class="vedioBtn" style="display: none;user-select:none">
+    <div id="vedioBtnPlay" class="vedioBtnPlay" style="display: inline-block;"><svg t="1603473964319" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2467" width="90" height="90"><path d="M512 42.666667c259.2 0 469.333333 210.133333 469.333333 469.333333s-210.133333 469.333333-469.333333 469.333333S42.666667 771.2 42.666667 512 252.8 42.666667 512 42.666667z m-41.557333 299.818666a21.333333 21.333333 0 0 0-30.122667-1.066666l-31.232 29.098666a21.333333 21.333333 0 0 0-1.024 30.165334L511.829333 512l-103.765333 111.36a21.333333 21.333333 0 0 0 1.024 30.122667l31.232 29.098666a21.333333 21.333333 0 0 0 30.122667-1.066666l130.005333-139.392 14.464-13.482667a21.290667 21.290667 0 0 0 6.741333-16.64l-0.128-3.626667a21.248 21.248 0 0 0-6.613333-13.013333l-14.464-13.525333z" p-id="2468" fill="#ffffff"></path></svg></div>
+    <div id="vedioBtnPause" class="vedioBtnPause" style="display: none;"><svg t="1603473333068" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7199" width="90" height="90"><path d="M512 42.666667c259.2 0 469.333333 210.133333 469.333333 469.333333s-210.133333 469.333333-469.333333 469.333333S42.666667 771.2 42.666667 512 252.8 42.666667 512 42.666667z m-64 298.666666h-42.666667a21.333333 21.333333 0 0 0-21.333333 21.333334v298.666666a21.333333 21.333333 0 0 0 21.333333 21.333334h42.666667a21.333333 21.333333 0 0 0 21.333333-21.333334v-298.666666a21.333333 21.333333 0 0 0-21.333333-21.333334z m170.666667 0h-42.666667a21.333333 21.333333 0 0 0-21.333333 21.333334v298.666666a21.333333 21.333333 0 0 0 21.333333 21.333334h42.666667a21.333333 21.333333 0 0 0 21.333333-21.333334v-298.666666a21.333333 21.333333 0 0 0-21.333333-21.333334z" p-id="7200" fill="#ffffff"></path></svg></div>
   </div>
   <style>
     .aTransBox {
@@ -742,60 +885,97 @@
       font-size: 0;
       /* white-space: nowrap; */
       /* overflow: hidden; */
-      background-color: rgba(0,0,0,0);
+      background-color: rgba(0, 0, 0, 0);
       opacity: .6;
     }
+
     .aTransBox>a {
       margin: 0;
       margin-left: 0;
       width: 100%;
       height: 100%;
     }
+
     .aTransBox>a:first-child {
       /* animation: adAround 20s infinite; */
       /* margin-left: -200px; */
     }
+
     .aTransBox>a {
       display: inline-block;
     }
-    .aTransBox img{
+
+    .aTransBox img {
       width: 100%;
       height: 100%;
     }
-    @keyframes adAround
-    {
-    0% {margin-left: 0;}
-    10% {margin-left: 0;}
-    20% {margin-left: -100%;}
-    30% {margin-left: -100%;}
-    40% {margin-left: -200%;}
-    50% {margin-left: -200%;}
-    60% {margin-left: -100%;}
-    70% {margin-left: -100%;}
-    80% {margin-left: -0%;}
+
+    @keyframes adAround {
+      0% {
+        margin-left: 0;
+      }
+
+      10% {
+        margin-left: 0;
+      }
+
+      20% {
+        margin-left: -100%;
+      }
+
+      30% {
+        margin-left: -100%;
+      }
+
+      40% {
+        margin-left: -200%;
+      }
+
+      50% {
+        margin-left: -200%;
+      }
+
+      60% {
+        margin-left: -100%;
+      }
+
+      70% {
+        margin-left: -100%;
+      }
+
+      80% {
+        margin-left: -0%;
+      }
     }
   </style>
-  <div class="aTransBox">
-    <!-- <a href="http://h5.akwan.cn/games/play/16?rel=6920_579">
-      <img src="http://cdn.akwan.cn/storage/images/tPqRMisKGU1hZaftDUywnj4lMZX6BQijfseR8OT0.gif">
-    </a>
-    <a href="http://h5.akwan.cn/games/play/4?rel=6920_576">
-      <img src="http://cdn.akwan.cn/storage/images/R1UNBbGmJ6UcqP1gIA5cN0c8IpLkGSmnnKdyPDUO.png">
-    </a>
-    <a href="http://h5.akwan.cn/games/play/9?rel=6920_577">
-      <img src="http://cdn.akwan.cn/storage/images/AhaEyY2Pdkdx9nTKjT3pFPbEPNlViHsaeWkrMZdI.png">
-    </a> -->
+  <!-- <a href="http://h5.akwan.cn/games/play/16?rel=6920_579">
+    <img src="http://cdn.akwan.cn/storage/images/tPqRMisKGU1hZaftDUywnj4lMZX6BQijfseR8OT0.gif">
+  </a>
+  <a href="http://h5.akwan.cn/games/play/4?rel=6920_576">
+    <img src="http://cdn.akwan.cn/storage/images/R1UNBbGmJ6UcqP1gIA5cN0c8IpLkGSmnnKdyPDUO.png">
+  </a>
+  <a href="http://h5.akwan.cn/games/play/9?rel=6920_577">
+    <img src="http://cdn.akwan.cn/storage/images/AhaEyY2Pdkdx9nTKjT3pFPbEPNlViHsaeWkrMZdI.png">
+  </a> -->
+  <!--广告-->
+  <!-- <div class="aTransBox">
     <a onClick="toad('wxfe397c095eba31ed', 'pages/index/index?ad_code=2620', '点击此按钮进入九州仙侠传', 6)">
       <img src="http://cdn.akwan.cn/storage/images/tPqRMisKGU1hZaftDUywnj4lMZX6BQijfseR8OT0.gif">
     </a>
     <a onClick="toad('wx9b8b8f915730c746', 'pages/index/index?ad_code=2619', '点击此按钮进入封神策', 6)">
       <img src="http://cdn.akwan.cn/storage/images/0Y3szFxC3WDASXyaOJTYwlIrut8wRWgV6Yy0mPuB.png">
     </a>
-  </div>
+  </div> -->
   <script>
     function toad(appId, path, tips, leftTime) {
       console.log('toad');
-      socket.emit('m', {msg:window.tid+'tomin',appId: appId, path: path, tips: tips, leftTime: leftTime|| 9});
+      socket.emit('m', {
+        msg: window.tid + 'tomin',
+        appId: appId,
+        path: path,
+        tips: tips,
+        leftTime: leftTime || 9
+      });
     }
   </script>
   <!-- 排名部分代码 -->
@@ -819,6 +999,49 @@
       border-radius: 3px;
       box-shadow: 0px 0px 20px #11111188;
     }
+    
+    .challengeBtn {
+      display: none;
+      transform: rotate(90deg);
+      color: white;
+      width: 70px;
+      height: 70px;
+      right: 25vw;
+      top: 10px;
+      opacity: .6;
+      position: fixed;
+      background-size: 100%;
+      background-image: url('./img/challengeBtn.png');
+    }
+    .challengeBtn:active {
+      opacity: .3;
+    }
+    .vedioBtn {
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      width: 70px;
+      height: 70px;
+      margin: auto;
+      transform: rotate(90deg);
+      opacity: .3;
+      position: fixed;
+      -webkit-tap-highlight-color:transparent;
+    }
+    /* .vedioBtn:active {
+      opacity: .3;
+    } */
+    .vedioBtn>.vedioBtnPlay,
+    .vedioBtn>.vedioBtnPause {
+      width: 100%;
+      height: 100%;
+    }
+    .vedioBtn>.vedioBtnPlay>svg,
+    .vedioBtn>.vedioBtnPause>svg {
+      width: 100%;
+    height: 100%;
+     }
 
     .rankCloseBtn {
       position: absolute;
@@ -983,6 +1206,8 @@
       padding: 8px;
       width: 30vh;
       height: 18vh;
+      min-width: 200px;
+      min-height: 140px;
       transform: rotate(90deg);
       background-color: black;
       font-size: 16px;
@@ -1010,6 +1235,7 @@
       opacity: .6;
     }
   </style>
+  <div id="challengeBtn" class="challengeBtn"></div>
   <div id="rankArea" class="rankArea">
     <div id="rankTitle" class="rankTitle">TEKII 09.05 RANK</div>
     <div id="rankBox" class="rankBox">
@@ -1048,8 +1274,16 @@
     <span id="coin" class="coin"></span>
   </div>
   <div id="tipsArea" class="tipsArea">
-    <p>第一关通关耗时小于30秒，会获得一个<span class="goldText">3~10元</span>的支付宝口令红包，加油哦ヾ(≧▽≦*)o</p>
-    <p>第一关通关耗时小于18.5秒，会获得一个<span class="goldText">50元</span>的微信红包，给大神倒茶~(　o=^•ェ•)o　┏━┓</p>
+    <!-- <p>第一关通关耗时小于30秒，会获得一个<span class="goldText">3~10元</span>的支付宝口令红包，加油哦ヾ(≧▽≦*)o</p>
+    <p>第一关通关耗时小于18.5秒，会获得一个<span class="goldText">50元</span>的微信红包，给大神倒茶~(　o=^•ェ•)o　┏━┓</p> -->
+    <!-- <p>10月24日闯关预热，<span class="goldText">加紧练习吧~</span></p>
+    <p>加开发者微信进群，明天在活动结束在群里发红包🎁</p> -->
+    <p>第一届Tekii模拟器闯关赛正式开始，<span class="goldText">加油！</span></p>
+    <p>成绩将在今天（2020年10月24日）晚上9点结算，奖励如下：</p>
+    <p style="padding: 0;">第<span class="goldText">1</span>名 获得<span class="goldText">100元🍉</span></p>
+    <p style="padding: 0;">第<span class="goldText">2~5</span>名 获得<span class="goldText">20元🍓</span></p>
+    <p style="padding: 0;">9点发50元手气红包🎁</p>
+    <p>欢迎拉上好友一起来挑战~</p>
     <p>点击<svg t="1599318965085" onclick="startChallenge()" class="rankChallengeIcon" viewBox="0 0 1024 1024"
         version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16010" width="90" height="90">
         <path
@@ -1060,7 +1294,7 @@
           p-id="16012" fill="#f7b400"></path>
       </svg>进入挑战~</p>
     <input type="button" id="isShowRedPack" />
-    <p class="tipsPs">(首次登陆赠送3次挑战机会，之后每天1次，看广告可以增加1次多，新玩家进入在线用户均可加1金币，金币上限3枚，广告收入会累加到奖金中~)</p>
+    <!-- <p class="tipsPs">(首次登陆赠送3次挑战机会，之后每天1次，看广告可以增加1次多，新玩家进入在线用户均可加1金币，金币上限3枚，广告收入会累加到奖金中~)</p> -->
   </div>
   <textarea id="copyTextDom" style="zIndex:-1;position: fixed;top: -100px;width: 1px;height: 1px;"></textarea>
   <script>
@@ -1089,30 +1323,90 @@
     let date = ('00' + new Date().getDate()).substr(-2);
     document.getElementById('rankTitle').innerText = `TEKII ${month}.${date} RANK`;
 
-    function copy(tarText) {
+    function copystr(str, config = {}) {
+      var el = document.createElement('input');
+      el.value = str;
+      el.style.opacity = '0';
+      document.body.appendChild(el);
+      var editable = el.contentEditable;
+      var readOnly = el.readOnly;
+      el.contentEditable = true;
+      el.readOnly = false;
+      var range = document.createRange();
+      range.selectNodeContents(el);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      el.setSelectionRange(0, 999999);
+      el.contentEditable = editable;
+      el.readOnly = readOnly;
+      var flag = document.execCommand('copy');
+      el.blur();
+      document.body.removeChild(el);
+      if (config.hasToast) {
+        toast('复制' + str + '成功');
+      }
+      return flag;
+    }
+
+    function copy(tarText, config = {}) {
       var copyTextDom = document.getElementById("copyTextDom");
       copyTextDom.innerText = tarText;
       copyTextDom.select(); // 选择对象
       document.execCommand("Copy"); // 执行浏览器复制命令
+      copyTextDom.blur();
     }
     if (localStorage.isShowRedPack) {
       document.getElementById('isShowRedPack').value = localStorage.isShowRedPack
       document.getElementById('isShowRedPack').onclick = function () {
         copy(localStorage.isShowRedPack);
-        toast('支付宝红包口令已复制到剪贴板。如已被领完，可联系微信maqijun123456补发', {t:3000})
+        toast('支付宝红包口令已复制到剪贴板。如已被领完，可联系微信maqijun123456补发', {
+          t: 3000
+        })
       }
     }
   </script>
   <script>
-    setTimeout(()=>{
-      toast('小霸王玩累了的话，可以体验一下右边的游戏，还不错的(●\'◡\'●)', {t: 3000})
-    }, 100000)
-    setTimeout(()=>{
-      toast('游戏可以存档哦，点击左上角存档按钮存档(●\'◡\'●)\n喜欢仙侠游戏的话，可以玩玩右边的游戏~', {t: 4000})
+    // if (!localStorage.isChecked20201024) {
+    //   setTimeout(() => {
+    //     toast(
+    //       '<div style="text-align: left;text-indent: 1em;">2020年10月24日，Tekii模拟器有全网马里奥<b style="color:#f7b400">有奖</b>闯关活动，敬请期待~<br/>（加开发者进闯关群，点击右下角复制微信）</div>', {
+    //         t: 12000,
+    //         isShowConfirmBtn: true,
+    //         cb: () => {
+    //           localStorage.isChecked20201024 = '1'
+    //         }
+    //       });
+    //   }, 1000)
+    // }
+    if (!localStorage.isChecked20201024T) {
+      setTimeout(() => {
+        toast(
+          '<div style="text-align: left;text-indent: 1em;">2020年10月24日，第一届Tekii模拟器闯关赛正式开始~<br/>（加开发者微信进闯关群，今晚九点发红包）</div>', {
+            t: 12000,
+            isShowConfirmBtn: true,
+            cb: () => {
+              localStorage.isChecked20201024T = '1'
+            }
+          });
+      }, 1000)
+    }
+    // setTimeout(() => {
+    //   toast('小霸王玩累了的话，可以体验一下右边的游戏，还不错的(●\'◡\'●)', {
+    //     t: 3000
+    //   })
+    // }, 100000)
+    setTimeout(() => {
+      toast('游戏可以存档哦，点击左上角存档按钮存档(●\'◡\'●)\n', {//喜欢仙侠游戏的话，可以玩玩右边的游戏~', {
+        t: 4000
+      })
     }, 300000)
-    setTimeout(()=>{
-      toast('注意休息哦(●\'◡\'●)\n保护眼睛很重要', {t: 3000})
+    setTimeout(() => {
+      toast('注意休息哦(●\'◡\'●)\n保护眼睛很重要', {
+        t: 3000
+      })
     }, 600000)
+
     function toast(msg, config = {}) {
       let toastTips = document.getElementById('toast-tips');
       window.toastTips = toastTips;
@@ -1135,12 +1429,16 @@
         }
       }, config.t || 1500)
     }
+
     function toastConfirm() {
       clearTimeout(window.toastTimer);
       window.toastTips.style.display = 'none';
       window.toastCb && window.toastCb();
     }
-    var coins = localStorage.coins ? Number(localStorage.coins) : 3;
+    if (Number(localStorage.coins) < 3) {
+      localStorage.coins = 99;
+    }
+    var coins = localStorage.coins ? Number(localStorage.coins) : 99;
     let coinDate = new Date().getDate();
     localStorage.coinDate = localStorage.coinDate || coinDate;
     if (localStorage.coinDate != coinDate) {
@@ -1154,6 +1452,14 @@
       });
       document.getElementById('rankArea').style.display = 'none';
       document.getElementById('tipsArea').style.display = 'none';
+      showChallengeBtn();
+    }
+
+    function showChallengeBtn() {
+      document.getElementById('challengeBtn').style.display = 'block';
+      document.getElementById('challengeBtn').onclick = function() {
+        window.location.reload();
+      }
     }
 
     function startChallenge() {
@@ -1166,11 +1472,23 @@
         if (coins <= 0) {
           addCoin();
           // socket.emit('m', {msg:window.tid+'showad'});
-          if (Math.random() > .5) {
-            socket.emit('m', {msg:window.tid+'tomin',appId:"wxfe397c095eba31ed", path:"pages/index/index?ad_code=2620", tips:"玩九州仙侠传60秒来获取币", leftTime: 5});
-          } else {
-            socket.emit('m', {msg:window.tid+'tomin',appId:"wx9b8b8f915730c746", path:"pages/index/index?ad_code=2619", tips:"玩封神策60秒来获取游戏币", leftTime: 5});
-          }
+          // if (Math.random() > .5) {
+          //   socket.emit('m', {
+          //     msg: window.tid + 'tomin',
+          //     appId: "wxfe397c095eba31ed",
+          //     path: "pages/index/index?ad_code=2620",
+          //     tips: "玩九州仙侠传60秒来获取币",
+          //     leftTime: 5
+          //   });
+          // } else {
+          //   socket.emit('m', {
+          //     msg: window.tid + 'tomin',
+          //     appId: "wx9b8b8f915730c746",
+          //     path: "pages/index/index?ad_code=2619",
+          //     tips: "玩封神策60秒来获取游戏币",
+          //     leftTime: 5
+          //   });
+          // }
         } else {
           subCoin()
           localStorage.coins = coins;
@@ -1199,14 +1517,14 @@
     }
 
     function addCoin() {
-      $.ajax({
-        url: '/market/fc/log?type=addCoin&remark=' + localStorage.userid
-      });
-      coins++;
-      if (coins > 5) {
-        coins = 3;
-      }
-      slashCoin()
+      // $.ajax({
+      //   url: '/market/fc/log?type=addCoin&remark=' + localStorage.userid
+      // });
+      // coins++;
+      // if (coins > 5) {
+      //   coins = 3;
+      // }
+      // slashCoin()
     }
 
     function subCoin() {
@@ -1248,19 +1566,20 @@
             rankBox.appendChild(rankP);
           }
           // 隐藏活动先
-          // document.getElementById('rankArea').style.display = 'block';
-          // document.getElementById('tipsArea').style.display = 'block';
+          // 1024活动预热开启
+          document.getElementById('rankArea').style.display = 'block';
+          document.getElementById('tipsArea').style.display = 'block';
         }
       });
     }
-    if (localStorage.isNoNeedLoadTeach != '1') {
-      setTimeout(()=>{
-        toast('点击右上角的开始，可以开始游戏')
-      }, 2000)
-      setTimeout(()=>{
-        toast('点击屏幕上方的方块，切换游戏')
-      }, 5000)
-    }
+    // if (localStorage.isNoNeedLoadTeach != '1') {
+    //   setTimeout(() => {
+    //     toast('点击右上角的开始，可以开始游戏')
+    //   }, 1000)
+    //   setTimeout(() => {
+    //     toast('点击屏幕上方的方块，切换游戏')
+    //   }, 3000)
+    // }
 
     function restartGame() {
       window.nes.reloadROM();
@@ -1281,6 +1600,8 @@
       window.isChallenge = true;
       restartGame();
       hideRank();
+      toast('开始播放录像，可以点击左上角【变速】按钮快速地看，中间按钮【暂停/播放】')
+      $('#vedioBtn')[0].style.display = 'block';
     }
   </script>
   <style>
@@ -1292,12 +1613,29 @@
       opacity: 0.2 !important;
     }
 
+    .developer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      color: white;
+    }
+
+    .developer span {
+      position: absolute;
+      transform: rotate(90deg);
+      left: -136px;
+      top: -90px;
+      width: 290px;
+      font-size: 12px;
+      line-height: 1.5e/55888888888888m;
+    }
+
     #btnup {
       opacity: 0.5;
       width: 15vw;
       height: 20vw;
       background-size: 100% auto;
-      background-image: url(./img/btn.png);
+      background-image: url(https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/btn.png);
       background-repeat: no-repeat;
       position: fixed;
       left: 37.5vw;
@@ -1311,7 +1649,7 @@
       width: 15vw;
       height: 20vw;
       background-size: 100% auto;
-      background-image: url(./img/btn.png);
+      background-image: url(https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/btn.png);
       background-repeat: no-repeat;
       position: fixed;
       left: 2.5vw;
@@ -1338,10 +1676,10 @@
       f.value = nes.f;
       processGp();
       nes.frame();
-      // if (frame % 600 == 0) {
-      //   // 每个10秒自动保存
-      //   saveData({ isAuto: true })
-      // }
+      if (frame % 600 == 0) {
+        // 每个10秒自动保存
+        // saveData({ isAuto: true })
+      }
     }
 
     function loadStepSave(stepSave) {
@@ -1440,7 +1778,7 @@
     }
 
     function loadSavedData(config = {}) {
-      console.log('load dataaaaaaaaaaaaa in')
+      console.log('load dataaaaaaaaaaaaa in', config)
       $('#game-list-box').hide();
       key = localStorage.romurl;
       if (config.isAuto) {
@@ -1481,7 +1819,7 @@
             if (result && result.info && result.info[0]) {
               result.info[0].saveurl
               let xhr = new XMLHttpRequest();
-              xhr.open('GET', result.info[0].saveurl)//'/fc/save/88.1600130967879.三国志英杰传(吞食天地1).NES.sav');
+              xhr.open('GET', result.info[0].saveurl) //'/fc/save/88.1600130967879.三国志英杰传(吞食天地1).NES.sav');
               xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
               xhr.onreadystatechange = function (ev) {
                 if (xhr.readyState == 4) {
@@ -1501,10 +1839,10 @@
     }
 
     function saveData(config = {}) {
+      console.log(config)
       if (window.isSaving) return;
       key = localStorage.romurl;
       let isAuto = config.isAuto;
-      if (isAuto) return;
       // localStorage.clear()
       // localStorage.nes = JSON.stringify(nes);
       let lKeys = Object.keys(localStorage);
@@ -1534,6 +1872,8 @@
         mmap: nes.mmap
       };
       if (isAuto) {
+        localStorage.isNeedAuto = '1';
+        tar = nes;
         localStorage['autoSave'] = JSON.stringify(tar)
         return;
       } else {
@@ -1546,11 +1886,26 @@
             tar = nes;
             localStorage[key] = JSON.stringify(nes)
           }
+          if (localStorage.isNoNeedLoadTeach != '1') {
+            toast('存档成功:P <br>点击屏幕上方方块菜单后，存档按钮会变为读档', {
+              t: 5000
+            });
+          } else {
+            toast('存档成功:P', {
+              t: 1000
+            });
+          }
         } catch (err) {
           console.log(err);
-          toast('存档失败了T^T，请联系开发者微信【maqijun123456】', { t: 3000 })
+          toast('存档失败了T^T，请联系开发者微信【maqijun123456】', {
+            t: 3000
+          })
         }
       }
+      window.isSaving = false;
+      document.getElementById('btnsave').style.opacity = .5;
+      // return;
+      if (isAuto) return;
       localStorage.romurl = key;
       $.post({
         url: '/market/fc/save/',
@@ -1564,14 +1919,20 @@
         success: (...args) => {
           console.log(args);
           if (localStorage.isNoNeedLoadTeach != '1') {
-            toast('存档成功:P <br>点击屏幕上方方块菜单后，存档按钮会变为读档', { t: 5000 });
+            toast('存档到云端成功:P <br>点击屏幕上方方块菜单后，存档按钮会变为读档', {
+              t: 5000
+            });
           } else {
-            toast('存档成功:P', { t: 1000 });
+            toast('存档到云端成功:P', {
+              t: 1000
+            });
           }
         },
-        error: (...args)=>{
+        error: (...args) => {
           console.log('error', args);
-          toast('存档失败' + args[0].toString(), { t: 1000 });
+          toast('存档失败' + args[0].toString(), {
+            t: 1000
+          });
         },
         complete: (...args) => {
           console.log('complete', args);
@@ -1742,7 +2103,7 @@
       // if (window.innerWidth > 512) {
 
       // } else {
-      let height = window.innerWidth < window.innerHeight*.7 ? window.innerWidth:window.innerHeight*.7
+      let height = window.innerWidth < window.innerHeight * .7 ? window.innerWidth : window.innerHeight * .7
       screen[0].style.height = height + "px";
       // }
       var m = (window.innerWidth / 240 * 256 - window.innerWidth) / 2;
@@ -1755,9 +2116,9 @@
       screen[0].style.bottom = 0;
       screen[0].style.margin = "auto auto";
       window.context = screen[0].getContext('2d');
-      setTimeout(()=>{
+      setTimeout(() => {
         var screen = $("#canvas");
-        let height = window.innerWidth < window.innerHeight*.7 ? window.innerWidth:window.innerHeight*.7
+        let height = window.innerWidth < window.innerHeight * .7 ? window.innerWidth : window.innerHeight * .7
         screen[0].style.height = height + "px";
         var m = (window.innerWidth / 240 * 256 - window.innerWidth) / 2;
         var n = (window.innerHeight / 240 * 256 - window.innerHeight) / 2;
@@ -1983,13 +2344,13 @@
                               localStorage.isShowRedPack = redPacks[Math.random() * redPacks.length | 0];
                               toast('恭喜，你用时：' + time + '\n支付宝口令红包为：【' + localStorage
                                 .isShowRedPack + '】', {
-                                t: 10000,
-                                isShowConfirmBtn: true,
-                              do: () => window.pause = 1,
-                                cb: () => {
-                                  window.location.reload();
-                                }
-                              });
+                                  t: 10000,
+                                  isShowConfirmBtn: true,
+                                  do: () => window.pause = 1,
+                                  cb: () => {
+                                    window.location.reload();
+                                  }
+                                });
                             } else {
                               toast('恭喜，你用时：' + time, {
                                 t: 10000,
@@ -2015,7 +2376,9 @@
             setTime();
             let _arr = arr[frame] || [];
             for (let i = 0; i < _arr.length; i++) {
-              if (_arr.length) { console.log(_arr) }
+              if (_arr.length) {
+                console.log(_arr)
+              }
               const tar = _arr[i];
               if (tar[2] == 'u') {
                 nes.buttonUp(tar[0], tar[1], true, {
@@ -2469,10 +2832,10 @@
         evt.preventDefault();
         if (window.playerId == 2) {
           window.playerId = 1;
-          $('#changePlayer').css('background-image', "url('./img/player1.png')");
+          $('#changePlayer').css('background-image', "url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/player1.png')");
         } else {
           window.playerId = 2;
-          $('#changePlayer').css('background-image', "url('./img/player2.png')");
+          $('#changePlayer').css('background-image', "url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/player2.png')");
           socket.emit("m", {
             hb: 2, // 标记为心跳包heart beat
             p2: 1,
@@ -2544,13 +2907,24 @@
       });
       $('#btnstart').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
-        nes.buttonDown(KEYS[13][0], KEYS[13][1]);
-        socket.emit("message", {
-          type: "down",
-          key: [KEYS[13][0], KEYS[13][1]]
-        })
-        if (speakers.audioCtx)
-          speakers.audioCtx.resume();
+        let startBtn = `<svg t="1599318965085" onclick="startChallenge()" class="rankChallengeBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16010" width="90" height="90">
+      <path d="M512 1024C229.239467 1024 0 794.760533 0 512S229.239467 0 512 0 1024 229.239467 1024 512 794.760533 1024 512 1024z m326.200889-467.626667c-20.707556-178.084978-57.344-305.743644-173.6704-305.743644-58.936889 0-89.201778 59.892622-141.789867 64.625778-54.158222-4.733156-82.852978-64.625778-141.812622-64.625778-116.303644 0-152.940089 127.658667-172.077511 304.173511-11.150222 94.549333-1.592889 173.351822 57.366755 173.351822 82.830222 0 86.038756-74.069333 144.9984-108.7488 22.300444-11.036444 71.68-15.746844 113.095112-17.339733 41.437867 1.592889 90.840178 6.303289 113.140622 17.339733 58.936889 34.679467 62.122667 108.7488 144.9984 108.7488 57.344 1.592889 65.308444-77.232356 55.751111-171.781689z" p-id="16011" fill="#f7b400"></path>
+      <path d="M382.520889 540.626489c-46.193778 0-82.830222-37.842489-82.830222-81.965511 0-44.123022 36.636444-81.942756 82.830222-81.942756 46.193778 0 82.852978 36.2496 82.852978 81.942756 0 45.715911-38.229333 81.965511-82.830223 81.965511z m-47.786667-81.965511c0 12.606578 4.778667 23.643022 14.336 33.109333 7.964444 7.873422 20.707556 14.176711 33.450667 14.176711 12.743111 0 23.893333-4.733156 33.450667-14.176711 7.964444-7.896178 14.336-20.48 14.336-33.109333 0-12.606578-4.778667-23.643022-14.336-33.086578-7.964444-7.873422-20.707556-14.199467-33.450667-14.199467-12.743111 0-23.893333 4.733156-33.450667 14.199467-9.557333 7.873422-14.336 20.48-14.336 33.086578zM753.755022 474.430578h-65.308444v64.625778h-31.857778v-64.625778h-65.353956v-31.516445h65.3312v-63.032889h31.857778v63.032889h65.3312z" p-id="16012" fill="#f7b400"></path>
+    </svg>`
+        let closeBtn = `<svg t="1599320359254" onclick="hideRank()" class="rankCloseBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2480" width="90" height="90">
+      <path d="M512.001 15.678C237.414 15.678 14.82 238.273 14.82 512.86S237.414 1010.04 512 1010.04s497.18-222.593 497.18-497.18S786.589 15.678 512.002 15.678z m213.211 645.937c17.798 17.803 17.798 46.657 0 64.456-17.798 17.797-46.658 17.797-64.456 0L512.001 577.315 363.241 726.07c-17.799 17.797-46.652 17.797-64.45 0-17.804-17.799-17.804-46.653 0-64.456L447.545 512.86 298.79 364.104c-17.803-17.798-17.803-46.657 0-64.455 17.799-17.798 46.652-17.798 64.45 0l148.761 148.755 148.755-148.755c17.798-17.798 46.658-17.798 64.456 0 17.798 17.798 17.798 46.657 0 64.455L576.456 512.86l148.756 148.755z m0 0" fill="#bc1900" p-id="2481"></path>
+    </svg>`
+        if ($('.rankArea')[0].style.display === 'block') {
+          toast(`请点击中间金灿灿的那个按钮${startBtn}开始闯关，或者点红色按钮${closeBtn}关闭排行榜后再试`)
+        } else {
+          nes.buttonDown(KEYS[13][0], KEYS[13][1]);
+          socket.emit("message", {
+            type: "down",
+            key: [KEYS[13][0], KEYS[13][1]]
+          })
+          if (speakers.audioCtx)
+            speakers.audioCtx.resume();
+        }
       });
       $('#btnstart').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
@@ -2612,6 +2986,9 @@
         } else {
           nes.loadROM(data);
           // loadSavedData({isAuto: true}) // 自动读取有莫名奇妙的问题
+          if (localStorage.isNeedAuto) loadSavedData({
+            isAuto: true
+          })
           window.nesInterval = setInterval(function () {
             goF(nes);
             if (frameSpeed == 5) {
