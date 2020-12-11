@@ -11,8 +11,9 @@
   <script type="text/javascript" src="https://maxmon.oss-cn-shanghai.aliyuncs.com/js/jquery-3.4.0.min.js"></script>
   <!-- <script type="text/javascript" src="https://unpkg.com/jsnes/dist/jsnes.min.js"></script> -->
   <!-- <script type="text/javascript" src="./js/jsnes.min.js"></script> -->
-  <script type="text/javascript" src="https://maxmon.oss-cn-shanghai.aliyuncs.com/js/jsnes.min.js"></script>
+  <script type="text/javascript" src="./js/jsnes.min.js"></script>
   <script>
+    // console.log = ()=>{};
     if (window.location.href.indexOf('http:') > -1) {
       window.location.href = window.location.href.replace('http:', 'https:')
     }
@@ -194,7 +195,7 @@
       }
     }
     window.onload = function () {
-      $('#vedioBtn').click(function() {
+      $('#vedioBtn').click(function () {
         console.log('vedioBtn clicked')
         window.pause = !window.pause;
         if (window.pause) {
@@ -258,6 +259,27 @@
       max-width: 70vh;
       width: 100%;
       height: 100%;
+    }
+
+    .rankBox::-webkit-scrollbar {
+      /*滚动条整体样式*/
+      width: 5px;
+      /*高宽分别对应横竖滚动条的尺寸*/
+      height: 1px;
+    }
+
+    .rankBox::-webkit-scrollbar-thumb {
+      /*滚动条里面小方块*/
+      border-radius: 10px;
+      -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+      background: #535353;
+    }
+
+    .rankBox::-webkit-scrollbar-track {
+      /*滚动条里面轨道*/
+      -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      background: #EDEDED;
     }
 
     .btn {
@@ -410,7 +432,25 @@
       }
 
       .rankArea {
-        margin-left: 0px !important;
+        /* margin-left: 0px !important; */
+        transform: none !important;
+        bottom: 0 !important;
+        right: 160px !important;
+      }
+
+      .tipsArea {
+        transform: none !important;
+        top: 0 !important;
+        left: 200px !important;
+      }
+
+      .challengeBtn {
+        left: 0 !important;
+        transform: none !important;
+      }
+
+      .vedioBtn {
+        transform: none !important;
       }
 
       .aTransBox {
@@ -629,7 +669,7 @@
   <div class="btn" id="btnup">
   </div>
   <div class="btn" id="btnright"
-    style="opacity:0.5;width:15vw;height:21vw;background-size: 100% auto;background-image:url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/btn.png');background-repeat:no-repeat;position:fixed;left:20vw;top:29vw;transform: rotate(180deg);">
+    style="opacity:0.5;width:15vw;height:22vw;background-size: 100% auto;background-image:url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/btn.png');background-repeat:no-repeat;position:fixed;left:20vw;top:28vw;transform: rotate(180deg);">
   </div>
   <div class="btn" id="btn12"
     style="width:15vw;height:15vw;background-size: 100% auto;background-image:url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/empty.png');background-repeat:no-repeat;position:fixed;left:35vw;top:35vw;transform: rotate(180deg);">
@@ -640,7 +680,7 @@
     style="width:15vw;height:15vw;background-size: 100% auto;background-image:url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/empty.png');background-repeat:no-repeat;position:fixed;left:5vw;top:35vw;transform: rotate(180deg);">
   </div>
   <div class="btn" id="btnleft"
-    style="opacity:0.5;width:15vw;height:21vw;background-size: 100% auto;background-image:url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/btn.png');background-repeat:no-repeat;position:fixed;left:20vw;top:5vw;">
+    style="opacity:0.5;width:15vw;height:22vw;background-size: 100% auto;background-image:url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/btn.png');background-repeat:no-repeat;position:fixed;left:20vw;top:5vw;">
   </div>
   <div class="btn" id="btn34"
     style="width:15vw;height:15vw;background-size: 100% auto;background-image:url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/empty.png');background-repeat:no-repeat;position:fixed;left:5vw;top:5vw;transform: rotate(180deg);">
@@ -672,7 +712,7 @@
   <div class="config-btn top-btn btn" id="config-btn"
     style="opacity: 0.5;width: 6vh;height: 6vh;background-size: 100% auto;background-image: url(https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/config.png);background-repeat: no-repeat;position: fixed;top: 47vh;right: -3vw;transform: rotate(90deg);">
   </div>
-  <div class="developer"><span onclick="copystr('maqijun123456', {'hasToast': true})">开发者：马琦钧 微信：maqijun123456</span>
+  <!-- <div class="developer"><span onclick="copystr('maqijun123456', {'hasToast': true})">开发者：马琦钧 微信：maqijun123456</span> -->
   </div>
   <div class="toast-tips" id="toast-tips" style="display: none;">
     <div class="toast-confirm" id="toast-confirm">确定</div>
@@ -868,8 +908,18 @@
     </div>
   </div>
   <div id="vedioBtn" class="vedioBtn" style="display: none;user-select:none">
-    <div id="vedioBtnPlay" class="vedioBtnPlay" style="display: inline-block;"><svg t="1603473964319" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2467" width="90" height="90"><path d="M512 42.666667c259.2 0 469.333333 210.133333 469.333333 469.333333s-210.133333 469.333333-469.333333 469.333333S42.666667 771.2 42.666667 512 252.8 42.666667 512 42.666667z m-41.557333 299.818666a21.333333 21.333333 0 0 0-30.122667-1.066666l-31.232 29.098666a21.333333 21.333333 0 0 0-1.024 30.165334L511.829333 512l-103.765333 111.36a21.333333 21.333333 0 0 0 1.024 30.122667l31.232 29.098666a21.333333 21.333333 0 0 0 30.122667-1.066666l130.005333-139.392 14.464-13.482667a21.290667 21.290667 0 0 0 6.741333-16.64l-0.128-3.626667a21.248 21.248 0 0 0-6.613333-13.013333l-14.464-13.525333z" p-id="2468" fill="#ffffff"></path></svg></div>
-    <div id="vedioBtnPause" class="vedioBtnPause" style="display: none;"><svg t="1603473333068" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7199" width="90" height="90"><path d="M512 42.666667c259.2 0 469.333333 210.133333 469.333333 469.333333s-210.133333 469.333333-469.333333 469.333333S42.666667 771.2 42.666667 512 252.8 42.666667 512 42.666667z m-64 298.666666h-42.666667a21.333333 21.333333 0 0 0-21.333333 21.333334v298.666666a21.333333 21.333333 0 0 0 21.333333 21.333334h42.666667a21.333333 21.333333 0 0 0 21.333333-21.333334v-298.666666a21.333333 21.333333 0 0 0-21.333333-21.333334z m170.666667 0h-42.666667a21.333333 21.333333 0 0 0-21.333333 21.333334v298.666666a21.333333 21.333333 0 0 0 21.333333 21.333334h42.666667a21.333333 21.333333 0 0 0 21.333333-21.333334v-298.666666a21.333333 21.333333 0 0 0-21.333333-21.333334z" p-id="7200" fill="#ffffff"></path></svg></div>
+    <div id="vedioBtnPlay" class="vedioBtnPlay" style="display: inline-block;"><svg t="1603473964319" class="icon"
+        viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2467" width="90" height="90">
+        <path
+          d="M512 42.666667c259.2 0 469.333333 210.133333 469.333333 469.333333s-210.133333 469.333333-469.333333 469.333333S42.666667 771.2 42.666667 512 252.8 42.666667 512 42.666667z m-41.557333 299.818666a21.333333 21.333333 0 0 0-30.122667-1.066666l-31.232 29.098666a21.333333 21.333333 0 0 0-1.024 30.165334L511.829333 512l-103.765333 111.36a21.333333 21.333333 0 0 0 1.024 30.122667l31.232 29.098666a21.333333 21.333333 0 0 0 30.122667-1.066666l130.005333-139.392 14.464-13.482667a21.290667 21.290667 0 0 0 6.741333-16.64l-0.128-3.626667a21.248 21.248 0 0 0-6.613333-13.013333l-14.464-13.525333z"
+          p-id="2468" fill="#ffffff"></path>
+      </svg></div>
+    <div id="vedioBtnPause" class="vedioBtnPause" style="display: none;"><svg t="1603473333068" class="icon"
+        viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7199" width="90" height="90">
+        <path
+          d="M512 42.666667c259.2 0 469.333333 210.133333 469.333333 469.333333s-210.133333 469.333333-469.333333 469.333333S42.666667 771.2 42.666667 512 252.8 42.666667 512 42.666667z m-64 298.666666h-42.666667a21.333333 21.333333 0 0 0-21.333333 21.333334v298.666666a21.333333 21.333333 0 0 0 21.333333 21.333334h42.666667a21.333333 21.333333 0 0 0 21.333333-21.333334v-298.666666a21.333333 21.333333 0 0 0-21.333333-21.333334z m170.666667 0h-42.666667a21.333333 21.333333 0 0 0-21.333333 21.333334v298.666666a21.333333 21.333333 0 0 0 21.333333 21.333334h42.666667a21.333333 21.333333 0 0 0 21.333333-21.333334v-298.666666a21.333333 21.333333 0 0 0-21.333333-21.333334z"
+          p-id="7200" fill="#ffffff"></path>
+      </svg></div>
   </div>
   <style>
     .aTransBox {
@@ -999,7 +1049,7 @@
       border-radius: 3px;
       box-shadow: 0px 0px 20px #11111188;
     }
-    
+
     .challengeBtn {
       display: none;
       transform: rotate(90deg);
@@ -1013,9 +1063,11 @@
       background-size: 100%;
       background-image: url('./img/challengeBtn.png');
     }
+
     .challengeBtn:active {
       opacity: .3;
     }
+
     .vedioBtn {
       top: 0;
       right: 0;
@@ -1027,8 +1079,9 @@
       transform: rotate(90deg);
       opacity: .3;
       position: fixed;
-      -webkit-tap-highlight-color:transparent;
+      -webkit-tap-highlight-color: transparent;
     }
+
     /* .vedioBtn:active {
       opacity: .3;
     } */
@@ -1037,11 +1090,12 @@
       width: 100%;
       height: 100%;
     }
+
     .vedioBtn>.vedioBtnPlay>svg,
     .vedioBtn>.vedioBtnPause>svg {
       width: 100%;
-    height: 100%;
-     }
+      height: 100%;
+    }
 
     .rankCloseBtn {
       position: absolute;
@@ -1278,11 +1332,12 @@
     <p>第一关通关耗时小于18.5秒，会获得一个<span class="goldText">50元</span>的微信红包，给大神倒茶~(　o=^•ェ•)o　┏━┓</p> -->
     <!-- <p>10月24日闯关预热，<span class="goldText">加紧练习吧~</span></p>
     <p>加开发者微信进群，明天在活动结束在群里发红包🎁</p> -->
-    <p>第一届Tekii模拟器闯关赛正式开始，<span class="goldText">加油！</span></p>
+    <!-- <p>第一届Tekii模拟器闯关赛正式开始，<span class="goldText">加油！</span></p>
     <p>成绩将在今天（2020年10月24日）晚上9点结算，奖励如下：</p>
     <p style="padding: 0;">第<span class="goldText">1</span>名 获得<span class="goldText">100元🍉</span></p>
     <p style="padding: 0;">第<span class="goldText">2~5</span>名 获得<span class="goldText">20元🍓</span></p>
-    <p style="padding: 0;">9点发50元手气红包🎁</p>
+    <p style="padding: 0;">9点发50元手气红包🎁</p> -->
+    <p>第一届Tekii模拟器闯关赛圆满结束，这里还可以日常挑战，就是没有奖金了，哈哈</p>
     <p>欢迎拉上好友一起来挑战~</p>
     <p>点击<svg t="1599318965085" onclick="startChallenge()" class="rankChallengeIcon" viewBox="0 0 1024 1024"
         version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16010" width="90" height="90">
@@ -1358,12 +1413,12 @@
     }
     if (localStorage.isShowRedPack) {
       document.getElementById('isShowRedPack').value = localStorage.isShowRedPack
-      document.getElementById('isShowRedPack').onclick = function () {
-        copy(localStorage.isShowRedPack);
-        toast('支付宝红包口令已复制到剪贴板。如已被领完，可联系微信maqijun123456补发', {
-          t: 3000
-        })
-      }
+      // document.getElementById('isShowRedPack').onclick = function () {
+      //   copy(localStorage.isShowRedPack);
+      //   toast('支付宝红包口令已复制到剪贴板。如已被领完，可联系微信maqijun123456补发', {
+      //     t: 3000
+      //   })
+      // }
     }
   </script>
   <script>
@@ -1379,30 +1434,47 @@
     //       });
     //   }, 1000)
     // }
-    if (!localStorage.isChecked20201024T) {
-      setTimeout(() => {
-        toast(
-          '<div style="text-align: left;text-indent: 1em;">2020年10月24日，第一届Tekii模拟器闯关赛正式开始~<br/>（加开发者微信进闯关群，今晚九点发红包）</div>', {
-            t: 12000,
-            isShowConfirmBtn: true,
-            cb: () => {
-              localStorage.isChecked20201024T = '1'
-            }
-          });
-      }, 1000)
-    }
+    // if (!localStorage.isChecked20201024T) {
+    //   setTimeout(() => {
+    //     toast(
+    //       '<div style="text-align: left;text-indent: 1em;">2020年10月24日，第一届Tekii模拟器闯关赛正式开始~<br/>（加开发者微信进闯关群，今晚九点发红包）</div>', {
+    //         t: 12000,
+    //         isShowConfirmBtn: true,
+    //         cb: () => {
+    //           localStorage.isChecked20201024T = '1'
+    //         }
+    //       });
+    //   }, 1000)
+    // }
     // setTimeout(() => {
     //   toast('小霸王玩累了的话，可以体验一下右边的游戏，还不错的(●\'◡\'●)', {
     //     t: 3000
     //   })
     // }, 100000)
+    if (!localStorage.isNewCheck) {
+      setTimeout(() => {
+        toast(
+          '欢迎你，新玩家~点击上方方块可以切换游戏，存档键也会变读档键', {
+            t: 10000,
+            isShowConfirmBtn: true,
+            cb: () => {
+              localStorage.isNewCheck = '1'
+            }
+          });
+      }, 1000)
+    }
+    // setTimeout(() => {
+    //   toast({ //'小霸王玩累了的话，可以体验一下右边的游戏，还不错的(●\'◡\'●)', {
+    //     t: 3000
+    //   })
+    // }, 100000)
     setTimeout(() => {
-      toast('游戏可以存档哦，点击左上角存档按钮存档(●\'◡\'●)\n', {//喜欢仙侠游戏的话，可以玩玩右边的游戏~', {
+      toast('游戏可以存档哦，点击左上角存档按钮存档(●\'◡\'●)\n', { //喜欢仙侠游戏的话，可以玩玩右边的游戏~', {
         t: 4000
       })
     }, 300000)
     setTimeout(() => {
-      toast('注意休息哦(●\'◡\'●)\n保护眼睛很重要', {
+      toast('注意休息哦(●\'◡\'●)\n保护眼睛很重要，点上面的方块，还有更多游戏~', {
         t: 3000
       })
     }, 600000)
@@ -1457,7 +1529,7 @@
 
     function showChallengeBtn() {
       document.getElementById('challengeBtn').style.display = 'block';
-      document.getElementById('challengeBtn').onclick = function() {
+      document.getElementById('challengeBtn').onclick = function () {
         window.location.reload();
       }
     }
@@ -1784,7 +1856,7 @@
       if (config.isAuto) {
         key = 'autoSave'
       }
-      if (localStorage[key]) {
+      if (localStorage[key] && localStorage['userid'] != '639') {
         console.log('inininin')
         console.log('load dataaaaaaaaaaaaa innnnnnnnnnnnnnnn')
 
@@ -1880,10 +1952,16 @@
         window.isSaving = true;
         document.getElementById('btnsave').style.opacity = .2;
         try {
-          if (key.indexOf('吞') > -1) {
+          if (key.indexOf('吞xxxxx') > -1) { // 这里不走了，采用全保存
             localStorage[key] = JSON.stringify(tar);
           } else {
             tar = nes;
+            nes.ppu.buffer = [];
+            nes.ppu.pixrendered = [];
+            nes.ppu.bgbuffer = [];
+            // tar.ppu.vramMirrorTable  = []; // 这个参数用来扩展地图内容，不能删
+            // nes.ppu.vramMem = []; // 这个去掉了会灰屏
+            delete nes.romData;
             localStorage[key] = JSON.stringify(nes)
           }
           if (localStorage.isNoNeedLoadTeach != '1') {
@@ -1891,6 +1969,7 @@
               t: 5000
             });
           } else {
+            console.log()
             toast('存档成功:P', {
               t: 1000
             });
@@ -2203,6 +2282,8 @@
             var pixel, i, j;
             let c = 0;
             let transDic = {};
+            frame += 1;
+            setTime();
             if (frame > 0) {
               for (i = 0; i < 256 * 240; i++) {
                 pixel = buffer[i];
@@ -2342,15 +2423,23 @@
                             let redPacks = ['Tekii模拟器马里奥30秒通过达成']
                             if (usetimeS < 30 && !localStorage.isShowRedPack) {
                               localStorage.isShowRedPack = redPacks[Math.random() * redPacks.length | 0];
-                              toast('恭喜，你用时：' + time + '\n支付宝口令红包为：【' + localStorage
-                                .isShowRedPack + '】', {
-                                  t: 10000,
-                                  isShowConfirmBtn: true,
-                                  do: () => window.pause = 1,
-                                  cb: () => {
-                                    window.location.reload();
-                                  }
-                                });
+                              // toast('恭喜，你用时：' + time + '\n支付宝口令红包为：【' + localStorage
+                              //   .isShowRedPack + '】', {
+                              //     t: 10000,
+                              //     isShowConfirmBtn: true,
+                              //     do: () => window.pause = 1,
+                              //     cb: () => {
+                              //       window.location.reload();
+                              //     }
+                              //   });
+                              toast('恭喜，你用时：' + time, {
+                                t: 10000,
+                                isShowConfirmBtn: true,
+                                do: () => window.pause = 1,
+                                cb: () => {
+                                  window.location.reload();
+                                }
+                              });
                             } else {
                               toast('恭喜，你用时：' + time, {
                                 t: 10000,
@@ -2372,8 +2461,7 @@
               // ctx.strokeRect(200, 72, 12, 16);
               // goPikachu()
             }
-            frame += 1;
-            setTime();
+
             let _arr = arr[frame] || [];
             for (let i = 0; i < _arr.length; i++) {
               if (_arr.length) {
@@ -2832,10 +2920,12 @@
         evt.preventDefault();
         if (window.playerId == 2) {
           window.playerId = 1;
-          $('#changePlayer').css('background-image', "url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/player1.png')");
+          $('#changePlayer').css('background-image',
+            "url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/player1.png')");
         } else {
           window.playerId = 2;
-          $('#changePlayer').css('background-image', "url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/player2.png')");
+          $('#changePlayer').css('background-image',
+            "url('https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/player2.png')");
           socket.emit("m", {
             hb: 2, // 标记为心跳包heart beat
             p2: 1,
@@ -3005,6 +3095,26 @@
               window.lastF = frame;
             }
           }, 16);
+          // function go() {
+          //   goF(nes);
+          //   if (window.frameSpeed == 5) {
+          //     goF(nes);
+          //     goF(nes);
+          //   }
+          //   if (!window.isChallenge && (frame % 100 == 0)) {
+          //     let ms = Date.now() - window.ts;
+          //     let f = frame - window.lastF;
+          //     time.style.display = 'inline-block';
+          //     // console.log(ms, frame, ms / frame);
+          //     ms / f ? (time.innerText = (f * 1000 / (ms)).toFixed(2)) : '';
+          //     window.ts = Date.now();
+          //     window.lastF = frame;
+          //   }
+          //   requestAnimationFrame(()=>{
+          //     go()
+          //   })
+          // }
+          // go()
           // 重要！！！ 这里可以证明 只要把整个 nes存下来 就可以 做到存档
           // setTimeout(()=>{
           //   nes2 = nes;
