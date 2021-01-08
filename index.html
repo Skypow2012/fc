@@ -530,17 +530,18 @@
       window.y = ev.offsetY;
       window.w = ev.target.offsetWidth;
       window.h = ev.target.offsetHeight;
-      tX = x * 256 / w;
-      tY = y * 240 / h;
+      console.log(window.x, window.y, window.w, window.h)
+      window.tX = window.x * 256 / window.w;
+      window.tY = window.y * 240 / window.h;
       window.sTs = Date.now();
-      console.log('src', tX, tY)
+      console.log('src', window.tX, window.tY)
       window.tX2 = 0;
       window.tY2 = 0;
       if (!img) {
         console.log('change img')
         // img = ctx.getImageData(tX, tY, 12, 16);
-        img = JSON.parse(JSON.stringify(context.getImageData(tX, tY, 12, 16)));
-        console.log(context.getImageData(tX, tY, 12, 16), img);
+        img = JSON.parse(JSON.stringify(context.getImageData(window.tX, window.tY, 12, 16)));
+        console.log(context.getImageData(window.tX, window.tY, 12, 16), img);
         img.width = 12;
         img.height = 16;
       }
@@ -654,9 +655,9 @@
   <input id="f" disabled />
   <span id="time">Ready</span>
   <canvas id="canvas" width='256px' height='240px'></canvas>
-  <!-- <script>
+  <script>
     canvas.addEventListener('click', myFunction); // 关闭监听 画框
-  </script> -->
+  </script>
   <div id="canvasTips"></div>
   <img id="checkImg"></img>
   <canvas id="check" width='12px' height='16px'></canvas>
@@ -1368,9 +1369,9 @@
     <div id="missionTitle" class="leftTitle">MISSION SELECT</div>
     <div id="rankBox" class="leftBox">
       <div class="missionBox complete">
-        <span class="idx">01</span>
+        <span class="idx" onclick="startChallenge();window.mission=1;">01</span>
       </div>
-      <div class="missionBox " onclick="startChallenge();loadSavedData({mission:1});">
+      <div class="missionBox " onclick="startChallenge({noStartBtn:true});loadSavedData({mission:2});">
         <span class="idx">02</span>
       </div>
       <div class="missionBox locked">
@@ -1421,6 +1422,7 @@
           d="M382.520889 540.626489c-46.193778 0-82.830222-37.842489-82.830222-81.965511 0-44.123022 36.636444-81.942756 82.830222-81.942756 46.193778 0 82.852978 36.2496 82.852978 81.942756 0 45.715911-38.229333 81.965511-82.830223 81.965511z m-47.786667-81.965511c0 12.606578 4.778667 23.643022 14.336 33.109333 7.964444 7.873422 20.707556 14.176711 33.450667 14.176711 12.743111 0 23.893333-4.733156 33.450667-14.176711 7.964444-7.896178 14.336-20.48 14.336-33.109333 0-12.606578-4.778667-23.643022-14.336-33.086578-7.964444-7.873422-20.707556-14.199467-33.450667-14.199467-12.743111 0-23.893333 4.733156-33.450667 14.199467-9.557333 7.873422-14.336 20.48-14.336 33.086578zM753.755022 474.430578h-65.308444v64.625778h-31.857778v-64.625778h-65.353956v-31.516445h65.3312v-63.032889h31.857778v63.032889h65.3312z"
           p-id="16012" fill="#f7b400"></path>
       </svg>进入挑战~</p>
+      <div onclick="changeShowType()">选择关卡/查看排名</div>
     <input type="button" id="isShowRedPack" />
     <!-- <p class="tipsPs">(首次登陆赠送3次挑战机会，之后每天1次，看广告可以增加1次多，新玩家进入在线用户均可加1金币，金币上限3枚，广告收入会累加到奖金中~)</p> -->
   </div>
@@ -1524,6 +1526,16 @@
     //     t: 3000
     //   })
     // }, 100000)
+    function changeShowType() {
+      window.isShowRank = !window.isShowRank;
+      if (window.isShowRank) {
+        document.getElementById('rankArea').style.display = 'inline-block';
+        document.getElementById('missionArea').style.display = 'none';
+      } else {
+        document.getElementById('rankArea').style.display = 'none';
+        document.getElementById('missionArea').style.display = 'inline-block';
+      }
+    }
     if (!localStorage.isNewCheck) {
       setTimeout(() => {
         toast(
@@ -1608,7 +1620,7 @@
       }
     }
 
-    function startChallenge() {
+    function startChallenge(config={}) {
       $.ajax({
         url: '/market/fc/log?type=startChallenge&remark=' + localStorage.userid
       });
@@ -1640,18 +1652,22 @@
           localStorage.coins = coins;
           hideRank();
           window.isChallenge = true;
-          setTimeout(() => {
-            nes.buttonDown(1, jsnes.Controller.BUTTON_START);
+          if (!config.noStartBtn) {
             setTimeout(() => {
-              nes.buttonUp(1, jsnes.Controller.BUTTON_START);
+              nes.buttonDown(1, jsnes.Controller.BUTTON_START);
+              setTimeout(() => {
+                nes.buttonUp(1, jsnes.Controller.BUTTON_START);
+              }, 200)
             }, 200)
-          }, 200)
-          setTimeout(() => {
-            nes.buttonDown(1, jsnes.Controller.BUTTON_START);
             setTimeout(() => {
-              nes.buttonUp(1, jsnes.Controller.BUTTON_START);
-            }, 200)
-          }, 1500)
+              nes.buttonDown(1, jsnes.Controller.BUTTON_START);
+              setTimeout(() => {
+                nes.buttonUp(1, jsnes.Controller.BUTTON_START);
+              }, 200)
+            }, 1500)
+          } else {
+            startFrame = frame;
+          }
           if (speakers.audioCtx)
             speakers.audioCtx.resume();
           // setTimeout(()=>{
@@ -1742,6 +1758,10 @@
     }
 
     function showZZDJS(id) {
+      if (window.winList[id].mission) {
+        let mission = window.winList[id].mission;
+        loadSavedData(config = {mission})
+      }
       window.arr = JSON.parse(window.winList[id].step);
       window.isZZDJS = true;
       window.isChallenge = true;
@@ -1982,6 +2002,7 @@
                   window.nes2 = nes2;
                   // console.log(nes2)
                   setB2A(nes, nes2);
+                  startFrame = 0;
                 }
               }
               xhr.send()
@@ -2497,7 +2518,8 @@
                             xhr.send(JSON.stringify({
                               "userid": localStorage.userid,
                               "step": localStorage.arr,
-                              "usetime": usetimeS * 1000
+                              "usetime": usetimeS * 1000,
+                              "mission": window.mission || 0,
                             }))
                             window.pause = 1;
                             isCatch = false;
@@ -2542,7 +2564,7 @@
                 }
               }
               // ctx.strokeRect(200, 72, 12, 16);
-              // goPikachu()
+              goPikachu()
             }
 
             let _arr = arr[frame] || [];
