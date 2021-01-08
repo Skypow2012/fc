@@ -1030,6 +1030,7 @@
   </script>
   <!-- 排名部分代码 -->
   <style>
+    .leftArea,
     .rankArea {
       display: none;
       font-size: 0;
@@ -1138,17 +1139,25 @@
       opacity: .6;
     }
 
+    .leftBox,
     .rankBox {
       height: calc(100% - 30px - 60px);
       overflow: auto;
     }
+    .leftBox {
+      float: left;
+      padding: 12px 17px 12px 25px;
+    }
 
+    .leftTitle,
     .rankTitle {
       font-size: 20px;
       color: #fffeff;
       margin-bottom: 5px;
     }
 
+    .missionBox,
+    .leftP,
     .rankP {
       padding-left: 2px;
       background-color: #b15400;
@@ -1159,6 +1168,25 @@
       border: 1px solid #e6a886;
       margin: 1px 0;
       text-align: left;
+    }
+    .missionBox {
+      float: left;
+      position: relative;
+      margin: 0 8px 8px 0;
+      width: 30px;
+      height: 30px;
+      border: 1px dashed #ffffff;
+      background-color: #00000000;
+      border-radius: 2px;
+    }
+    .missionBox.complete {
+      border: 1px solid #f7b400;
+      background-color: #f7b400;
+    }
+    .missionBox.locked {
+      border: 1px dashed #cccccc;
+      background-color: #cccccc;
+      opacity: .6;
     }
 
     .rankP.me {
@@ -1182,6 +1210,15 @@
       width: 30px;
       color: #f7b400;
       font-size: 20px;
+    }
+    .idx {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      color: #ffffff;
+      font-size: 22px;
     }
 
     .rankName {
@@ -1327,6 +1364,42 @@
     </svg>
     <span id="coin" class="coin"></span>
   </div>
+  <div id="missionArea" class="leftArea">
+    <div id="missionTitle" class="leftTitle">MISSION SELECT</div>
+    <div id="rankBox" class="leftBox">
+      <div class="missionBox complete">
+        <span class="idx">01</span>
+      </div>
+      <div class="missionBox " onclick="startChallenge();loadSavedData({mission:1});">
+        <span class="idx">02</span>
+      </div>
+      <div class="missionBox locked">
+        <span class="idx">03</span>
+      </div>
+      <div class="missionBox locked">
+        <span class="idx">04</span>
+      </div>
+      <div class="missionBox locked">
+        <span class="idx">05</span>
+      </div>
+    </div>
+    <svg t="1599320359254" onclick="hideRank()" class="rankCloseBtn" viewBox="0 0 1024 1024" version="1.1"
+      xmlns="http://www.w3.org/2000/svg" p-id="2480" width="90" height="90">
+      <path
+        d="M512.001 15.678C237.414 15.678 14.82 238.273 14.82 512.86S237.414 1010.04 512 1010.04s497.18-222.593 497.18-497.18S786.589 15.678 512.002 15.678z m213.211 645.937c17.798 17.803 17.798 46.657 0 64.456-17.798 17.797-46.658 17.797-64.456 0L512.001 577.315 363.241 726.07c-17.799 17.797-46.652 17.797-64.45 0-17.804-17.799-17.804-46.653 0-64.456L447.545 512.86 298.79 364.104c-17.803-17.798-17.803-46.657 0-64.455 17.799-17.798 46.652-17.798 64.45 0l148.761 148.755 148.755-148.755c17.798-17.798 46.658-17.798 64.456 0 17.798 17.798 17.798 46.657 0 64.455L576.456 512.86l148.756 148.755z m0 0"
+        fill="#bc1900" p-id="2481"></path>
+    </svg>
+    <svg t="1599318965085" onclick="startChallenge()" class="rankChallengeBtn" viewBox="0 0 1024 1024" version="1.1"
+      xmlns="http://www.w3.org/2000/svg" p-id="16010" width="90" height="90">
+      <path
+        d="M512 1024C229.239467 1024 0 794.760533 0 512S229.239467 0 512 0 1024 229.239467 1024 512 794.760533 1024 512 1024z m326.200889-467.626667c-20.707556-178.084978-57.344-305.743644-173.6704-305.743644-58.936889 0-89.201778 59.892622-141.789867 64.625778-54.158222-4.733156-82.852978-64.625778-141.812622-64.625778-116.303644 0-152.940089 127.658667-172.077511 304.173511-11.150222 94.549333-1.592889 173.351822 57.366755 173.351822 82.830222 0 86.038756-74.069333 144.9984-108.7488 22.300444-11.036444 71.68-15.746844 113.095112-17.339733 41.437867 1.592889 90.840178 6.303289 113.140622 17.339733 58.936889 34.679467 62.122667 108.7488 144.9984 108.7488 57.344 1.592889 65.308444-77.232356 55.751111-171.781689z"
+        p-id="16011" fill="#f7b400"></path>
+      <path
+        d="M382.520889 540.626489c-46.193778 0-82.830222-37.842489-82.830222-81.965511 0-44.123022 36.636444-81.942756 82.830222-81.942756 46.193778 0 82.852978 36.2496 82.852978 81.942756 0 45.715911-38.229333 81.965511-82.830223 81.965511z m-47.786667-81.965511c0 12.606578 4.778667 23.643022 14.336 33.109333 7.964444 7.873422 20.707556 14.176711 33.450667 14.176711 12.743111 0 23.893333-4.733156 33.450667-14.176711 7.964444-7.896178 14.336-20.48 14.336-33.109333 0-12.606578-4.778667-23.643022-14.336-33.086578-7.964444-7.873422-20.707556-14.199467-33.450667-14.199467-12.743111 0-23.893333 4.733156-33.450667 14.199467-9.557333 7.873422-14.336 20.48-14.336 33.086578zM753.755022 474.430578h-65.308444v64.625778h-31.857778v-64.625778h-65.353956v-31.516445h65.3312v-63.032889h31.857778v63.032889h65.3312z"
+        p-id="16012" fill="#f7b400"></path>
+    </svg>
+    <span id="coin" class="coin"></span>
+  </div>
   <div id="tipsArea" class="tipsArea">
     <!-- <p>第一关通关耗时小于30秒，会获得一个<span class="goldText">3~10元</span>的支付宝口令红包，加油哦ヾ(≧▽≦*)o</p>
     <p>第一关通关耗时小于18.5秒，会获得一个<span class="goldText">50元</span>的微信红包，给大神倒茶~(　o=^•ェ•)o　┏━┓</p> -->
@@ -1367,7 +1440,7 @@
       url: '/market/fc/login?userkey=' + window.userkey,
       complete: function (xhr, status) {
         let result = xhr.responseJSON
-        if (result.info) {
+        if (result && result.info) {
           localStorage.userid = result.info.id;
           window.name = result.info.name;
           window.tid = result.info.tid;
@@ -1524,6 +1597,7 @@
       });
       document.getElementById('rankArea').style.display = 'none';
       document.getElementById('tipsArea').style.display = 'none';
+      document.getElementById('missionArea').style.display = 'none';
       showChallengeBtn();
     }
 
@@ -1617,7 +1691,7 @@
       $.ajax({
         url: '/market/fc/getWin',
         complete: function (xhr, status) {
-          let winList = xhr.responseJSON.info || [];
+          let winList = xhr.responseJSON ? (xhr.responseJSON.info || []) : [];
           window.winList = winList;
           let rankBox = document.getElementById('rankBox');
           console.log(winList)
@@ -1639,7 +1713,8 @@
           }
           // 隐藏活动先
           // 1024活动预热开启
-          document.getElementById('rankArea').style.display = 'block';
+          // document.getElementById('rankArea').style.display = 'block';
+          document.getElementById('missionArea').style.display = 'block';
           document.getElementById('tipsArea').style.display = 'block';
         }
       });
@@ -1850,13 +1925,14 @@
     }
 
     function loadSavedData(config = {}) {
+      window.mission = config.mission;
       console.log('load dataaaaaaaaaaaaa in', config)
       $('#game-list-box').hide();
       key = localStorage.romurl;
       if (config.isAuto) {
         key = 'autoSave'
       }
-      if (localStorage[key] && localStorage['userid'] != '639') {
+      if (localStorage[key] && localStorage['userid'] != '639' && !config.mission) {
         console.log('inininin')
         console.log('load dataaaaaaaaaaaaa innnnnnnnnnnnnnnn')
 
@@ -1883,7 +1959,13 @@
       } else {
         let userid = localStorage.userid;
         let xhr = new XMLHttpRequest();
-        xhr.open('GET', `/market/fc/load/?userid=${userid}&romurl=${encodeURIComponent(key)}`);
+        let url = ''
+        if (config.mission) {
+          url = `/market/fc/load/?mission=${config.mission}`;
+        } else {
+          url = `/market/fc/load/?userid=${userid}&romurl=${encodeURIComponent(key)}`;
+        }
+        xhr.open('GET', url);
         xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
         xhr.onreadystatechange = function (ev) {
           if (xhr.readyState == 4) {
@@ -2351,7 +2433,8 @@
                             xhr.send(JSON.stringify({
                               "userid": localStorage.userid,
                               "step": localStorage.arr,
-                              "usetime": 999 * 1000
+                              "usetime": 999 * 1000,
+                              "mission": window.mission || 0,
                             }))
                             toast('已阵亡，少侠请重新来过', {
                               t: 10000,
