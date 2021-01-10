@@ -5,7 +5,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
   <!-- <script src="https://www.norchant.com/js/vconsole.min.js"></script> -->
-  <title>红白机模拟器</title>
+  <title>Tekii模拟器【红白机】</title>
   <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.0.min.js"></script> -->
   <!-- <script type="text/javascript" src="./js/jquery-3.4.0.min.js"></script> -->
   <script type="text/javascript" src="https://maxmon.oss-cn-shanghai.aliyuncs.com/js/jquery-3.4.0.min.js"></script>
@@ -1826,6 +1826,16 @@
     }
   </style>
   <script>
+    // 进入对应游戏
+    let currentGame = window.location.search.match(/currentGame=(.*?)$/)[1];
+    if (currentGame) {
+      let tarRomurl = `./rom/${currentGame}`;
+      if (localStorage.romurl !== tarRomurl) {
+        localStorage.romurl = `./rom/${currentGame}`;
+        localStorage.isNeedAuto = '';
+        window.location.href = window.location.href;
+      }
+    }
     window.playerId = window.location.href.indexOf('p2') > -1 ? 2 : 1;
     let f = document.getElementById('f')
     window.cId = Math.random().toString().substr(2, 5);
