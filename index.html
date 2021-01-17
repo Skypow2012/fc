@@ -4,7 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
-  <!-- <script src="https://www.norchant.com/js/vconsole.min.js"></script> -->
+  <script src="https://www.norchant.com/js/vconsole.min.js"></script>
   <title>Tekii模拟器【红白机】</title>
   <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.0.min.js"></script> -->
   <!-- <script type="text/javascript" src="./js/jquery-3.4.0.min.js"></script> -->
@@ -13,6 +13,9 @@
   <!-- <script type="text/javascript" src="./js/jsnes.min.js"></script> -->
   <script type="text/javascript" src="./js/jsnes.min.js"></script>
   <script>
+    if (window.location.href.indexOf('xszz') === -1 && window.location.href.indexOf('ame') === -1) {
+      window.location.href = '/fc.car';
+    }
     // console.log = ()=>{};
     if (window.location.href.indexOf('http:') > -1) {
       window.location.href = window.location.href.replace('http:', 'https:')
@@ -194,7 +197,32 @@
         }
       }
     }
+    function getQuery(key) {
+      let match = window.location.search.match(new RegExp(`.*${key}=(.*?)($|&)`));
+      if (match) {
+        return match[1];
+      } else {
+        return '';
+      }
+    }
     window.onload = function () {
+      // document.body.innerText = window.location.href;
+      // document.body.style.color = "#ffffff";
+      // 开发传递调试
+      const res = getQuery('res');
+      const tarRes = decodeURIComponent(res).replace(/\\\"/g, '"').replace(/^"/, '').replace(/"$/, ''); //Object.keys(JSON.parse(decodeURIComponent(res))).join(',');
+      const tarResJson = tarRes ? JSON.parse(tarRes) : undefined;
+      console.log('tarRes', tarResJson);
+      if (tarResJson && tarResJson.referrerInfo && tarResJson.referrerInfo.extraData && tarResJson.referrerInfo.extraData.picId) {
+        console.log('omomomomomo');
+        document.getElementById('someInfo').innerText = window.location.search.replace(/^\?/, '').replace('res=' + res, 'xszzId=' + tarResJson.referrerInfo.extraData.picId);
+        window.location.href = window.location.href.replace('res=' + res, 'xszzId=' + tarResJson.referrerInfo.extraData.picId);
+        // window.location.href = window.location.href.replace('res=' + res, 'xszzId=' + 'ce805e785ffc7cdf0409679a642661f6')//tarResJson.referrerInfo.extraData.picId);
+      } else {
+        document.getElementById('someInfo').innerText = window.location.search.replace(/^\?/, '');
+      }
+      document.getElementById('someInfo').innerText = window.location.search.replace(/^\?/, '').replace('res=' + res, tarRes);
+      // return;
       $('#vedioBtn').click(function () {
         console.log('vedioBtn clicked')
         window.pause = !window.pause;
@@ -231,7 +259,7 @@
           // code
           blobToDataURL(files[0], (base64) => {
             nes.loadROM(atob(base64.replace('data:application/octet-stream;base64,', '')));
-            nes.stop();
+            // nes.stop();
             nes.reloadROM();
           })
         }
@@ -431,7 +459,8 @@
         transform: none !important;
       }
 
-      .rankArea {
+      .rankArea,
+      .leftArea {
         /* margin-left: 0px !important; */
         transform: none !important;
         bottom: 0 !important;
@@ -714,6 +743,7 @@
     style="opacity: 0.5;width: 6vh;height: 6vh;background-size: 100% auto;background-image: url(https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/config.png);background-repeat: no-repeat;position: fixed;top: 47vh;right: -3vw;transform: rotate(90deg);">
   </div>
   <!-- <div class="developer"><span onclick="copystr('maqijun123456', {'hasToast': true})">开发者：马琦钧 微信：maqijun123456</span> -->
+  <div class="developer"><span id="someInfo"></span>
   </div>
   <div class="toast-tips" id="toast-tips" style="display: none;">
     <div class="toast-confirm" id="toast-confirm">确定</div>
@@ -1017,6 +1047,11 @@
       <img src="http://cdn.akwan.cn/storage/images/0Y3szFxC3WDASXyaOJTYwlIrut8wRWgV6Yy0mPuB.png">
     </a>
   </div> -->
+  <div class="aTransBox">
+    <a onClick="toad('wx77bc6e7da764c6a8', '?picThemeId=54bac78c5ecfbf85007080aa46b1bc4a&env=trial', '前往像素制造之旅', 6)">
+      <img src="./img/xszzLogo.png">
+    </a>
+  </div>
   <script>
     function toad(appId, path, tips, leftTime) {
       console.log('toad');
@@ -1790,11 +1825,15 @@
     .developer span {
       position: absolute;
       transform: rotate(90deg);
-      left: -136px;
-      top: -90px;
+      /* left: -136px; */
+      left: 0px;
+      top: calc(140px - 100vh);
+      /* top: -90px; */
       width: 290px;
       font-size: 12px;
       line-height: 1.5e/55888888888888m;
+      color: #eeeeee;
+      z-index: 9999;
     }
 
     #btnup {
@@ -1827,7 +1866,8 @@
   </style>
   <script>
     // 进入对应游戏
-    let currentGame = window.location.search.match(/currentGame=(.*?)$/)[1];
+    let currentGameMatched = window.location.search.match(/currentGame=(.*?)(&|$)/)
+    let currentGame = currentGameMatched ? currentGameMatched[1] : null;
     if (currentGame) {
       let tarRomurl = `./rom/${currentGame}`;
       if (localStorage.romurl !== tarRomurl) {
@@ -1835,6 +1875,34 @@
         localStorage.isNeedAuto = '';
         window.location.href = window.location.href;
       }
+    }
+    // 像素制造相关
+    let xszzNameMatched = window.location.search.match(/xszzName=(.*?)(&|$)/)
+    let xszzName = xszzNameMatched ? xszzNameMatched[1] : null;
+    let xszzIdMatched = window.location.search.match(/xszzId=(.*?)(&|$)/)
+    let xszzId = xszzIdMatched ? xszzIdMatched[1] : null;
+    let xszzUrl = xszzId ? '/market/fc/generateNes?_id=' + xszzId : (xszzName ? '/market/fc/generateNes?name=' + xszzName : '');
+    console.error('222222222222222222222222222222222222222', xszzUrl);
+    if (xszzUrl) {
+      console.error('ininininininininininii')
+      $.ajax({
+        url: xszzUrl,
+        complete: function (xhr, status) {
+          console.error('completecompletecompletecomplete')
+          let result = xhr.responseJSON
+          console.error('11111111111111111111111111111111', result);
+          if (result && result.info) {
+            window.location.href = `https://tekii.cn/fc/?currentGame=${result.info}`
+          } else {
+            toast('图片没有按要求，回炉重造下吧:P', {
+              t: 3000
+            });
+            setTimeout(()=>{
+              toad('back')
+            }, 3000)
+          }
+        }
+      });
     }
     window.playerId = window.location.href.indexOf('p2') > -1 ? 2 : 1;
     let f = document.getElementById('f')
@@ -2777,7 +2845,7 @@
 
       function stopPlaying() {
         if (nes !== null) {
-          nes.stop();
+          // nes.stop();
           nes = null;
         }
         clearScreen();
