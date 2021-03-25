@@ -771,6 +771,17 @@
         松鼠大作战</p>
       <p onclick="localStorage.romurl = './rom/mario.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         马里奥</p>
+      <p onclick="localStorage.romurl = './rom/绿野仙踪.NES';localStorage.isNeedAuto = '';window.location.href = '/fc';">
+        绿野仙踪</p>
+      <p onclick="localStorage.romurl = './rom/机器猫小叮当.NES';localStorage.isNeedAuto = '';window.location.href = '/fc';">
+        小叮当</p>
+      <p onclick="localStorage.romurl = './rom/创世纪英雄.NES';localStorage.isNeedAuto = '';window.location.href = '/fc';">
+        创世纪英雄</p>
+      <p onclick="localStorage.romurl = './rom/西游记1.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
+        西游记1</p>
+      <p onclick="localStorage.romurl = './rom/成龙之龙.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
+        成龙之龙</p>
+        
       <p onclick="localStorage.romurl = './rom/希特勒复活.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         希特勒复活</p>
       <p onclick="localStorage.romurl = './rom/c31.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
@@ -2698,7 +2709,7 @@
         // if (localStorage.arr) {
         //   window.arr = JSON.parse(localStorage.arr);
         // }
-        nes.buttonUp = (k0, k1, isNoEmit, config = {}) => {
+        nes.buttonUp = (k0, k1, isNoEmit=true, config = {}) => {
           console.log('buttonUp', k0, k1, isNoEmit, config)
           if (window.isZZDJS && !config.isVedio) {
             // 演示他人视频时，不能操控
@@ -2736,7 +2747,7 @@
           }
           srcButtonUp(k0, k1);
         }
-        nes.buttonDown = (k0, k1, isNoEmit, config = {}) => {
+        nes.buttonDown = (k0, k1, isNoEmit=true, config = {}) => {
           console.log(k0, k1)
           if (window.isZZDJS && !config.isVedio) {
             // 演示他人视频时，不能操控
@@ -3285,7 +3296,8 @@
               window.lastF = frame;
             }
             if (window.playerId === 1) {
-              !isNoEmit && socket.emit("m", {
+              let id = Math.random().toString().substr(2, 3);
+              !window.isNoEmit && socket.emit("m", {
                 key: [],
                 type: "up",
                 ts: Date.now(),
