@@ -3284,6 +3284,20 @@
               window.ts = Date.now();
               window.lastF = frame;
             }
+            if (window.playerId === 1) {
+              !isNoEmit && socket.emit("m", {
+                key: [],
+                type: "up",
+                ts: Date.now(),
+                id,
+                cId: window.cId,
+                uId: localStorage.userid,
+                rom: window.romurl,
+                p: window.playerId,
+                f: nes.f,
+                m: ""
+              });
+            }
           }, 16);
           // function go() {
           //   goF(nes);
@@ -3428,8 +3442,10 @@
         }
       } else {
         if (obj.p == 1 && obj.rom == localStorage.romurl) {
-          window.arr[obj.f] = window.arr[obj.f] || [];
-          window.arr[obj.f].push([key[0], key[1], obj.type == 'up' ? 'u' : 'd']);
+          if (key[0] != undefined && key[1] != undefined) {
+            window.arr[obj.f] = window.arr[obj.f] || [];
+            window.arr[obj.f].push([key[0], key[1], obj.type == 'up' ? 'u' : 'd']);
+          }
           window.maxF = obj.f;
           while (nes.f < obj.f - 2) {
             goF(nes); // 追上队友的frameCount
