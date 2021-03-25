@@ -4,7 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
-  <script src="https://www.norchant.com/js/vconsole.min.js"></script>
+  <!-- <script src="https://www.norchant.com/js/vconsole.min.js"></script> -->
   <title>Tekii模拟器【红白机】</title>
   <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.0.min.js"></script> -->
   <!-- <script type="text/javascript" src="./js/jquery-3.4.0.min.js"></script> -->
@@ -13,9 +13,9 @@
   <!-- <script type="text/javascript" src="./js/jsnes.min.js"></script> -->
   <script type="text/javascript" src="./js/jsnes.min.js"></script>
   <script>
-    if (window.location.href.indexOf('xszz') === -1 && window.location.href.indexOf('ame') === -1) {
-      window.location.href = '/fc.car';
-    }
+    // if (window.location.href.indexOf('xszz') === -1 && window.location.href.indexOf('ame') === -1) {
+    //   window.location.href = '/fc.car';
+    // }
     // console.log = ()=>{};
     if (window.location.href.indexOf('http:') > -1) {
       window.location.href = window.location.href.replace('http:', 'https:')
@@ -197,6 +197,7 @@
         }
       }
     }
+
     function getQuery(key) {
       let match = window.location.search.match(new RegExp(`.*${key}=(.*?)($|&)`));
       if (match) {
@@ -210,18 +211,23 @@
       // document.body.style.color = "#ffffff";
       // 开发传递调试
       const res = getQuery('res');
-      const tarRes = decodeURIComponent(res).replace(/\\\"/g, '"').replace(/^"/, '').replace(/"$/, ''); //Object.keys(JSON.parse(decodeURIComponent(res))).join(',');
+      const tarRes = decodeURIComponent(res).replace(/\\\"/g, '"').replace(/^"/, '').replace(/"$/,
+      ''); //Object.keys(JSON.parse(decodeURIComponent(res))).join(',');
       const tarResJson = tarRes ? JSON.parse(tarRes) : undefined;
       console.log('tarRes', tarResJson);
-      if (tarResJson && tarResJson.referrerInfo && tarResJson.referrerInfo.extraData && tarResJson.referrerInfo.extraData.picId) {
+      if (tarResJson && tarResJson.referrerInfo && tarResJson.referrerInfo.extraData && tarResJson.referrerInfo
+        .extraData.picId) {
         console.log('omomomomomo');
-        document.getElementById('someInfo').innerText = window.location.search.replace(/^\?/, '').replace('res=' + res, 'xszzId=' + tarResJson.referrerInfo.extraData.picId);
-        window.location.href = window.location.href.replace('res=' + res, 'xszzId=' + tarResJson.referrerInfo.extraData.picId);
+        document.getElementById('someInfo').innerText = window.location.search.replace(/^\?/, '').replace('res=' +
+          res, 'xszzId=' + tarResJson.referrerInfo.extraData.picId);
+        // window.location.href = window.location.href.replace('res=' + res, 'xszzId=' + tarResJson.referrerInfo.extraData.picId);
         // window.location.href = window.location.href.replace('res=' + res, 'xszzId=' + 'ce805e785ffc7cdf0409679a642661f6')//tarResJson.referrerInfo.extraData.picId);
+        generateNesByXszz(tarResJson.referrerInfo.extraData.picId)
       } else {
         document.getElementById('someInfo').innerText = window.location.search.replace(/^\?/, '');
       }
-      document.getElementById('someInfo').innerText = window.location.search.replace(/^\?/, '').replace('res=' + res, tarRes);
+      document.getElementById('someInfo').innerText = window.location.search.replace(/^\?/, '').replace('res=' + res,
+        tarRes);
       // return;
       $('#vedioBtn').click(function () {
         console.log('vedioBtn clicked')
@@ -276,6 +282,16 @@
     }
   </script>
   <style>
+    * {
+      user-select: none !important;
+      -webkit-overflow-scrolling: touch;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+    }
+
     body {
       position: fixed;
       top: 0;
@@ -743,7 +759,7 @@
     style="opacity: 0.5;width: 6vh;height: 6vh;background-size: 100% auto;background-image: url(https://maxmon.oss-cn-shanghai.aliyuncs.com/img/fc/config.png);background-repeat: no-repeat;position: fixed;top: 47vh;right: -3vw;transform: rotate(90deg);">
   </div>
   <!-- <div class="developer"><span onclick="copystr('maqijun123456', {'hasToast': true})">开发者：马琦钧 微信：maqijun123456</span> -->
-  <div class="developer"><span id="someInfo"></span>
+  <div class="developer" style="display: none;"><span id="someInfo"></span>
   </div>
   <div class="toast-tips" id="toast-tips" style="display: none;">
     <div class="toast-confirm" id="toast-confirm">确定</div>
@@ -751,190 +767,169 @@
   <div class="game-list-box" id="game-list-box">
     <div class="game-list" id="game-list">
       <p
-        onclick="localStorage.romurl = './rom/Chip To Dale No Daisakusen 2 (J).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/Chip To Dale No Daisakusen 2 (J).nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         松鼠大作战</p>
-      <p
-        onclick="localStorage.romurl = './rom/mario.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+      <p onclick="localStorage.romurl = './rom/mario.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         马里奥</p>
-      <p
-        onclick="localStorage.romurl = './rom/希特勒复活.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+      <p onclick="localStorage.romurl = './rom/希特勒复活.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         希特勒复活</p>
-      <p
-        onclick="localStorage.romurl = './rom/c31.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+      <p onclick="localStorage.romurl = './rom/c31.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         中国象棋</p>
       <p
-        onclick="localStorage.romurl = './rom/Double Dragon (U).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/Double Dragon (U).nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         双截龙1(美版)</p>
       <p
-        onclick="localStorage.romurl = './rom/Yie Ar Kung-Fu (J).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/Yie Ar Kung-Fu (J).nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         功夫
       </p>
       <p
-        onclick="localStorage.romurl = './rom/iceclimb.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/iceclimb.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         雪人兄弟</p>
       <p
-        onclick="localStorage.romurl = './rom/Dragonlance - Dragons of Flame (J).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/Dragonlance - Dragons of Flame (J).nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         龙的火焰</p>
       <p
-        onclick="localStorage.romurl = './rom/vs dr mario.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/vs dr mario.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         马里奥医生</p>
-      <p
-        onclick="localStorage.romurl = './rom/马戏团.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+      <p onclick="localStorage.romurl = './rom/马戏团.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         马戏团(中文)</p>
       <p
-        onclick="localStorage.romurl = './rom/Makaimura (J).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/Makaimura (J).nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         魔界村</p>
       <p
-        onclick="localStorage.romurl = './rom/Battle City (J).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/Battle City (J).nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         坦克大战
       </p>
-      <p
-        onclick="localStorage.romurl = './rom/CONTRA.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+      <p onclick="localStorage.romurl = './rom/CONTRA.NES';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         魂斗罗</p>
       <p
-        onclick="localStorage.romurl = './rom/NINJAGA3.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/NINJAGA3.NES';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         忍者龙剑传3</p>
       <p
-        onclick="localStorage.romurl = './rom/zhonghuadaxian.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/zhonghuadaxian.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         中华大仙
       </p>
       <p
-        onclick="localStorage.romurl = './rom/Chuugoku Senseijutsu (Japan).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/Chuugoku Senseijutsu (Japan).nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         中国占星术</p>
-      <p
-        onclick="localStorage.romurl = './rom/BOMBMAN.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+      <p onclick="localStorage.romurl = './rom/BOMBMAN.NES';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         炸弹人</p>
       <p
-        onclick="localStorage.romurl = './rom/Bomberman 2 (U).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/Bomberman 2 (U).nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         炸弹人2
       </p>
-      <p
-        onclick="localStorage.romurl = './rom/smbc.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+      <p onclick="localStorage.romurl = './rom/smbc.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         马里奥双人版</p>
-      <p
-        onclick="localStorage.romurl = './rom/X-MEN.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+      <p onclick="localStorage.romurl = './rom/X-MEN.NES';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         X-MEN</p>
-      <p
-        onclick="localStorage.romurl = './rom/kdxfzwb.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+      <p onclick="localStorage.romurl = './rom/kdxfzwb.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         快打旋风中文</p>
-      <p
-        onclick="localStorage.romurl = './rom/ZELDA.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+      <p onclick="localStorage.romurl = './rom/ZELDA.NES';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         ZELDA</p>
-      <p
-        onclick="localStorage.romurl = './rom/ZELDA2.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+      <p onclick="localStorage.romurl = './rom/ZELDA2.NES';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         ZELDA2</p>
       <p
-        onclick="localStorage.romurl = './rom/Zelda Outlands.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/Zelda Outlands.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         塞尔达1</p>
       <p
-        onclick="localStorage.romurl = './rom/KIRBYADV.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/KIRBYADV.NES';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         卡比历险记</p>
       <p
-        onclick="localStorage.romurl = './rom/Hoshi No Kirby - Yume No Izumi No Monogatari (J).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/Hoshi No Kirby - Yume No Izumi No Monogatari (J).nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         卡比历险记-日</p>
       <p
-        onclick="localStorage.romurl = './rom/Meitantei Holmes - Kiri No London Satsujin Jiken (J).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/Meitantei Holmes - Kiri No London Satsujin Jiken (J).nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         侦探-日</p>
       <p
-        onclick="localStorage.romurl = './rom/Startropics.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/Startropics.NES';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         Startropics</p>
       <p
-        onclick="localStorage.romurl = './rom/Adventures of Lolo (J).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/Adventures of Lolo (J).nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         Lolo</p>
-      <p
-        onclick="localStorage.romurl = './rom/LOLO2.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+      <p onclick="localStorage.romurl = './rom/LOLO2.NES';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         Lolo2</p>
-      <p
-        onclick="localStorage.romurl = './rom/LOLO3.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+      <p onclick="localStorage.romurl = './rom/LOLO3.NES';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         Lolo3</p>
       <p
-        onclick="localStorage.romurl = './rom/Moon Ranger (U).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/Moon Ranger (U).nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         Moon
         Ranger</p>
       <p
-        onclick="localStorage.romurl = './rom/rexuequgunqiu.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/rexuequgunqiu.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         热血曲棍球
       </p>
-      <p
-        onclick="localStorage.romurl = './rom/热血物语中文版.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+      <p onclick="localStorage.romurl = './rom/热血物语中文版.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         热血物语</p>
       <p
-        onclick="localStorage.romurl = './rom/re_xue_gao_xiao_duo_bi_qiu.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/re_xue_gao_xiao_duo_bi_qiu.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         热血高校</p>
-      <p
-        onclick="localStorage.romurl = './rom/rxgd.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+      <p onclick="localStorage.romurl = './rom/rxgd.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         热血格斗</p>
       <p
-        onclick="localStorage.romurl = './rom/Kunio_Kun_no_Nekketsu_Soccer_League_(J)(T+C)(AirTeam)build_070217.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/Kunio_Kun_no_Nekketsu_Soccer_League_(J)(T+C)(AirTeam)build_070217.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         热血足球3</p>
-      <!-- <p onclick="localStorage.romurl = './rom/rxsdj.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">热血时代剧</p> -->
+      <!-- <p onclick="localStorage.romurl = './rom/rxsdj.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">热血时代剧</p> -->
 
       <p
-        onclick="localStorage.romurl = './rom/三国志英杰传(吞食天地1).NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/三国志英杰传(吞食天地1).NES';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         吞食天地1
       </p>
       <p
-        onclick="localStorage.romurl = './rom/吞食天地2 (不花屏版) [先锋卡通汉化].nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/吞食天地2 (不花屏版) [先锋卡通汉化].nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         吞食天地2</p>
       <p
-        onclick="localStorage.romurl = './rom/呑食天地Ⅰ曹魏英豪传（吞2音乐）.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/呑食天地Ⅰ曹魏英豪传（吞2音乐）.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         吞1曹魏
       </p>
-      <p
-        onclick="localStorage.romurl = './rom/冒险岛1.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+      <p onclick="localStorage.romurl = './rom/冒险岛1.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         冒险岛1</p>
-      <p
-        onclick="localStorage.romurl = './rom/冒险岛2.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+      <p onclick="localStorage.romurl = './rom/冒险岛2.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         冒险岛2</p>
-      <p
-        onclick="localStorage.romurl = './rom/冒险岛3.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+      <p onclick="localStorage.romurl = './rom/冒险岛3.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         冒险岛3</p>
-      <p
-        onclick="localStorage.romurl = './rom/冒险岛4.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+      <p onclick="localStorage.romurl = './rom/冒险岛4.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         冒险岛4</p>
 
       <p
-        onclick="localStorage.romurl = './rom/冒险岛1(无敌).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/冒险岛1(无敌).nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         冒险1无敌</p>
-      <p
-        onclick="localStorage.romurl = './rom/冒险岛2无限.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+      <p onclick="localStorage.romurl = './rom/冒险岛2无限.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         冒险2无限</p>
       <p
-        onclick="localStorage.romurl = './rom/冒险岛3(无限人、血).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/冒险岛3(无限人、血).nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         冒险3无限</p>
       <p
-        onclick="localStorage.romurl = './rom/冒险岛4(无敌).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/冒险岛4(无敌).nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         冒险4无敌</p>
 
 
-      <!-- <p onclick="localStorage.romurl = './rom/爆笑三国(上古神剑).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">爆笑三国</p> -->
-      <!-- <p onclick="localStorage.romurl = './rom/三国志Ⅱ--霸王的大陆_外星汉化版.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">三国志Ⅱ</p> -->
-      <!-- <p onclick="localStorage.romurl = './rom/三国志超级版.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">三国志超级版</p> -->
-      <!-- <p onclick="localStorage.romurl = './rom/重装机兵plus6.0大车版.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">重装机兵大车版</p> -->
-      <!-- <p onclick="localStorage.romurl = './rom/第2次超级机器人大战.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">机器人大战2</p> -->
-      <!-- <p onclick="localStorage.romurl = './rom/第4次机器人大战.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">机器人大战4</p> -->
+      <!-- <p onclick="localStorage.romurl = './rom/爆笑三国(上古神剑).nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">爆笑三国</p> -->
+      <!-- <p onclick="localStorage.romurl = './rom/三国志Ⅱ--霸王的大陆_外星汉化版.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">三国志Ⅱ</p> -->
+      <!-- <p onclick="localStorage.romurl = './rom/三国志超级版.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">三国志超级版</p> -->
+      <!-- <p onclick="localStorage.romurl = './rom/重装机兵plus6.0大车版.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">重装机兵大车版</p> -->
+      <!-- <p onclick="localStorage.romurl = './rom/第2次超级机器人大战.NES';localStorage.isNeedAuto = '';window.location.href = '/fc';">机器人大战2</p> -->
+      <!-- <p onclick="localStorage.romurl = './rom/第4次机器人大战.NES';localStorage.isNeedAuto = '';window.location.href = '/fc';">机器人大战4</p> -->
       <!-- 74 -->
-      <p
-        onclick="localStorage.romurl = './rom/影子传说.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+      <p onclick="localStorage.romurl = './rom/影子传说.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         影子传说</p>
       <p
-        onclick="localStorage.romurl = './rom/影子传说 [中伟汉化 MS修正].nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/影子传说 [中伟汉化 MS修正].nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         影子传说(中)</p>
 
       <p
-        onclick="localStorage.romurl = './rom/Duck Tales  (E).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/Duck Tales  (E).nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         唐老鸭大陆1
       </p>
       <p
-        onclick="localStorage.romurl = './rom/Duck Tales 2  (U).nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">
+        onclick="localStorage.romurl = './rom/Duck Tales 2  (U).nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         唐老鸭大陆2</p>
-      <!-- <p onclick="localStorage.romurl = './rom/100IN1.NES';localStorage.isNeedAuto = '';window.location.href = window.location.href;">100IN1</p> -->
+      <!-- <p onclick="localStorage.romurl = './rom/100IN1.NES';localStorage.isNeedAuto = '';window.location.href = '/fc';">100IN1</p> -->
 
 
       <p onclick="window.location.href = '/gba'">gba</p>
 
       <!-- This ROM uses a mapper not supported by JSNES: Namcot 106 chip(19) -->
-      <!-- <p onclick="localStorage.romurl = './rom/Sangokushi 2.nes';localStorage.isNeedAuto = '';window.location.href = window.location.href;">三国志2霸王的大陆</p> -->
+      <!-- <p onclick="localStorage.romurl = './rom/Sangokushi 2.nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">三国志2霸王的大陆</p> -->
 
     </div>
   </div>
@@ -1048,7 +1043,8 @@
     </a>
   </div> -->
   <div class="aTransBox">
-    <a onClick="toad('wx77bc6e7da764c6a8', '?picThemeId=54bac78c5ecfbf85007080aa46b1bc4a&env=trial', '前往像素制造之旅', 6)">
+    <a onClick="toad('wx77bc6e7da764c6a8', '?picThemeId=54bac78c5ecfbf85007080aa46b1bc4a&env=release', '前往像素制造之旅', 6)">
+      <!-- trial|release -->
       <img src="./img/xszzLogo.png">
     </a>
   </div>
@@ -1180,6 +1176,7 @@
       height: calc(100% - 30px - 60px);
       overflow: auto;
     }
+
     .leftBox {
       float: left;
       padding: 12px 17px 12px 25px;
@@ -1205,6 +1202,7 @@
       margin: 1px 0;
       text-align: left;
     }
+
     .missionBox {
       float: left;
       position: relative;
@@ -1215,10 +1213,12 @@
       background-color: #00000000;
       border-radius: 2px;
     }
+
     .missionBox.complete {
       border: 1px solid #f7b400;
       background-color: #f7b400;
     }
+
     .missionBox.locked {
       border: 1px dashed #cccccc;
       background-color: #cccccc;
@@ -1247,6 +1247,7 @@
       color: #f7b400;
       font-size: 20px;
     }
+
     .idx {
       position: absolute;
       top: 0;
@@ -1457,7 +1458,7 @@
           d="M382.520889 540.626489c-46.193778 0-82.830222-37.842489-82.830222-81.965511 0-44.123022 36.636444-81.942756 82.830222-81.942756 46.193778 0 82.852978 36.2496 82.852978 81.942756 0 45.715911-38.229333 81.965511-82.830223 81.965511z m-47.786667-81.965511c0 12.606578 4.778667 23.643022 14.336 33.109333 7.964444 7.873422 20.707556 14.176711 33.450667 14.176711 12.743111 0 23.893333-4.733156 33.450667-14.176711 7.964444-7.896178 14.336-20.48 14.336-33.109333 0-12.606578-4.778667-23.643022-14.336-33.086578-7.964444-7.873422-20.707556-14.199467-33.450667-14.199467-12.743111 0-23.893333 4.733156-33.450667 14.199467-9.557333 7.873422-14.336 20.48-14.336 33.086578zM753.755022 474.430578h-65.308444v64.625778h-31.857778v-64.625778h-65.353956v-31.516445h65.3312v-63.032889h31.857778v63.032889h65.3312z"
           p-id="16012" fill="#f7b400"></path>
       </svg>进入挑战~</p>
-      <div onclick="changeShowType()">选择关卡/查看排名</div>
+    <div onclick="changeShowType()">选择关卡/查看排名</div>
     <input type="button" id="isShowRedPack" />
     <!-- <p class="tipsPs">(首次登陆赠送3次挑战机会，之后每天1次，看广告可以增加1次多，新玩家进入在线用户均可加1金币，金币上限3枚，广告收入会累加到奖金中~)</p> -->
   </div>
@@ -1655,7 +1656,7 @@
       }
     }
 
-    function startChallenge(config={}) {
+    function startChallenge(config = {}) {
       $.ajax({
         url: '/market/fc/log?type=startChallenge&remark=' + localStorage.userid
       });
@@ -1795,7 +1796,9 @@
     function showZZDJS(id) {
       if (window.winList[id].mission) {
         let mission = window.winList[id].mission;
-        loadSavedData(config = {mission})
+        loadSavedData(config = {
+          mission
+        })
       }
       window.arr = JSON.parse(window.winList[id].step);
       window.isZZDJS = true;
@@ -1873,7 +1876,7 @@
       if (localStorage.romurl !== tarRomurl) {
         localStorage.romurl = `./rom/${currentGame}`;
         localStorage.isNeedAuto = '';
-        window.location.href = window.location.href;
+        window.location.href = '/fc';
       }
     }
     // 像素制造相关
@@ -1881,28 +1884,32 @@
     let xszzName = xszzNameMatched ? xszzNameMatched[1] : null;
     let xszzIdMatched = window.location.search.match(/xszzId=(.*?)(&|$)/)
     let xszzId = xszzIdMatched ? xszzIdMatched[1] : null;
-    let xszzUrl = xszzId ? '/market/fc/generateNes?_id=' + xszzId : (xszzName ? '/market/fc/generateNes?name=' + xszzName : '');
-    console.error('222222222222222222222222222222222222222', xszzUrl);
-    if (xszzUrl) {
-      console.error('ininininininininininii')
-      $.ajax({
-        url: xszzUrl,
-        complete: function (xhr, status) {
-          console.error('completecompletecompletecomplete')
-          let result = xhr.responseJSON
-          console.error('11111111111111111111111111111111', result);
-          if (result && result.info) {
-            window.location.href = `https://tekii.cn/fc/?currentGame=${result.info}`
-          } else {
-            toast('图片没有按要求，回炉重造下吧:P', {
-              t: 3000
-            });
-            setTimeout(()=>{
-              toad('back')
-            }, 3000)
+
+    function generateNesByXszz(xszzId, xszzName) {
+      let xszzUrl = xszzId ? '/market/fc/generateNes?_id=' + xszzId : (xszzName ? '/market/fc/generateNes?name=' +
+        xszzName : '');
+      console.error('222222222222222222222222222222222222222', xszzUrl);
+      if (xszzUrl) {
+        console.error('ininininininininininii')
+        $.ajax({
+          url: xszzUrl,
+          complete: function (xhr, status) {
+            console.error('completecompletecompletecomplete')
+            let result = xhr.responseJSON
+            console.error('11111111111111111111111111111111', result);
+            if (result && result.info) {
+              window.location.href = `https://tekii.cn/fc/?currentGame=${result.info}`
+            } else {
+              toast('图片没有按要求，回炉重造下吧:P', {
+                t: 3000
+              });
+              setTimeout(() => {
+                toad('back')
+              }, 3000)
+            }
           }
-        }
-      });
+        });
+      }
     }
     window.playerId = window.location.href.indexOf('p2') > -1 ? 2 : 1;
     let f = document.getElementById('f')
