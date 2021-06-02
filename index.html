@@ -4,7 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
-  <!-- <script src="https://www.norchant.com/js/vconsole.min.js"></script> -->
+  <script src="https://www.norchant.com/js/vconsole.min.js"></script>
   <title>Tekii模拟器【红白机】</title>
   <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.0.min.js"></script> -->
   <!-- <script type="text/javascript" src="./js/jquery-3.4.0.min.js"></script> -->
@@ -16,7 +16,7 @@
     // if (window.location.href.indexOf('xszz') === -1 && window.location.href.indexOf('ame') === -1) {
     //   window.location.href = '/fc.car';
     // }
-    // console.log = ()=>{};
+    // console.log = function() {};
     if (window.location.href.indexOf('http:') > -1) {
       window.location.href = window.location.href.replace('http:', 'https:')
     }
@@ -32,7 +32,7 @@
     function processGp() {
 
       if (window.gp) {
-        let gpKeyDic = {
+        var gpKeyDic = {
           0: 'A',
           1: 'B',
           3: 'X',
@@ -51,7 +51,7 @@
           23: '↓',
           24: '←',
         }
-        let gpKey2KeysDic = {
+        var gpKey2KeysDic = {
           0: 88,
           1: 89,
           3: 88,
@@ -71,14 +71,14 @@
         window.gp = navigator.getGamepads()[0];
         // 按钮部分
         window.gpBtnDownDic = window.gpBtnDownDic || {};
-        let buttons = window.gp.buttons;
-        for (let i = 0; i < buttons.length; i++) {
-          const btn = buttons[i];
-          let gpKey = i;
+        var buttons = window.gp.buttons;
+        for (var i = 0; i < buttons.length; i++) {
+          var btn = buttons[i];
+          var gpKey = i;
           if (btn.value == 1) {
             if (!window.gpBtnDownDic[i]) {
               window.gpBtnDownDic[i] = 1;
-              let key = KEYS[gpKey2KeysDic[gpKey]];
+              var key = KEYS[gpKey2KeysDic[gpKey]];
               console.log(gpKey, 'is down');
               nes.buttonDown(key[0], key[1]);
             } else {
@@ -87,7 +87,7 @@
           } else {
             if (window.gpBtnDownDic[i]) {
               window.gpBtnDownDic[i] = 0;
-              let key = KEYS[gpKey2KeysDic[gpKey]];
+              var key = KEYS[gpKey2KeysDic[gpKey]];
               console.log(gpKey, 'is up');
               nes.buttonUp(key[0], key[1]);
             } else {
@@ -106,16 +106,16 @@
         // idx5 右摇杆 上 -1
         // idx5 右摇杆 下 1
         window.gpAxesDownDic = window.gpAxesDownDic || {};
-        let axes = window.gp.axes;
-        for (let i = 0; i <= 1; i++) {
-          const axe = axes[i];
-          let gpKey;
+        var axes = window.gp.axes;
+        for (var i = 0; i <= 1; i++) {
+          var axe = axes[i];
+          var gpKey;
           if (i == 0) {
             gpKey = 24;
             if (axe < -.5) {
               if (!window.gpAxesDownDic[gpKey]) {
                 window.gpAxesDownDic[gpKey] = 1;
-                let key = KEYS[gpKey2KeysDic[gpKey]];
+                var key = KEYS[gpKey2KeysDic[gpKey]];
                 console.log(gpKey, 'is down');
                 nes.buttonDown(key[0], key[1]);
               } else {
@@ -124,7 +124,7 @@
             } else {
               if (window.gpAxesDownDic[gpKey]) {
                 window.gpAxesDownDic[gpKey] = 0;
-                let key = KEYS[gpKey2KeysDic[gpKey]];
+                var key = KEYS[gpKey2KeysDic[gpKey]];
                 console.log(gpKey, 'is up');
                 nes.buttonUp(key[0], key[1]);
               } else {
@@ -135,7 +135,7 @@
             if (axe > .5) {
               if (!window.gpAxesDownDic[gpKey]) {
                 window.gpAxesDownDic[gpKey] = 1;
-                let key = KEYS[gpKey2KeysDic[gpKey]];
+                var key = KEYS[gpKey2KeysDic[gpKey]];
                 console.log(gpKey, 'is down');
                 nes.buttonDown(key[0], key[1]);
               } else {
@@ -144,7 +144,7 @@
             } else {
               if (window.gpAxesDownDic[gpKey]) {
                 window.gpAxesDownDic[gpKey] = 0;
-                let key = KEYS[gpKey2KeysDic[gpKey]];
+                var key = KEYS[gpKey2KeysDic[gpKey]];
                 console.log(gpKey, 'is up');
                 nes.buttonUp(key[0], key[1]);
               } else {
@@ -157,7 +157,7 @@
             if (axe < -.5) {
               if (!window.gpAxesDownDic[gpKey]) {
                 window.gpAxesDownDic[gpKey] = 1;
-                let key = KEYS[gpKey2KeysDic[gpKey]];
+                var key = KEYS[gpKey2KeysDic[gpKey]];
                 console.log(gpKey, 'is down');
                 nes.buttonDown(key[0], key[1]);
               } else {
@@ -166,7 +166,7 @@
             } else {
               if (window.gpAxesDownDic[gpKey]) {
                 window.gpAxesDownDic[gpKey] = 0;
-                let key = KEYS[gpKey2KeysDic[gpKey]];
+                var key = KEYS[gpKey2KeysDic[gpKey]];
                 console.log(gpKey, 'is up');
                 nes.buttonUp(key[0], key[1]);
               } else {
@@ -177,7 +177,7 @@
             if (axe > .5) {
               if (!window.gpAxesDownDic[gpKey]) {
                 window.gpAxesDownDic[gpKey] = 1;
-                let key = KEYS[gpKey2KeysDic[gpKey]];
+                var key = KEYS[gpKey2KeysDic[gpKey]];
                 console.log(gpKey, 'is down');
                 nes.buttonDown(key[0], key[1]);
               } else {
@@ -186,7 +186,7 @@
             } else {
               if (window.gpAxesDownDic[gpKey]) {
                 window.gpAxesDownDic[gpKey] = 0;
-                let key = KEYS[gpKey2KeysDic[gpKey]];
+                var key = KEYS[gpKey2KeysDic[gpKey]];
                 console.log(gpKey, 'is up');
                 nes.buttonUp(key[0], key[1]);
               } else {
@@ -199,7 +199,7 @@
     }
 
     function getQuery(key) {
-      let match = window.location.search.match(new RegExp(`.*${key}=(.*?)($|&)`));
+      var match = window.location.search.match(new RegExp(`.*${key}=(.*?)($|&)`));
       if (match) {
         return match[1];
       } else {
@@ -210,10 +210,10 @@
       // document.body.innerText = window.location.href;
       // document.body.style.color = "#ffffff";
       // 开发传递调试
-      const res = getQuery('res');
-      const tarRes = decodeURIComponent(res).replace(/\\\"/g, '"').replace(/^"/, '').replace(/"$/,
+      var res = getQuery('res');
+      var tarRes = decodeURIComponent(res).replace(/\\\"/g, '"').replace(/^"/, '').replace(/"$/,
       ''); //Object.keys(JSON.parse(decodeURIComponent(res))).join(',');
-      const tarResJson = tarRes ? JSON.parse(tarRes) : undefined;
+      var tarResJson = tarRes ? JSON.parse(tarRes) : undefined;
       console.log('tarRes', tarResJson);
       if (tarResJson && tarResJson.referrerInfo && tarResJson.referrerInfo.extraData && tarResJson.referrerInfo
         .extraData.picId) {
@@ -255,7 +255,7 @@
         window.files = files;
         if (files[0].name.indexOf('.sav') > -1) {
           // code
-          blobToDataURL(files[0], (base64) => {
+          blobToDataURL(files[0], function(base64) {
             console.log(base64)
             localStorage[localStorage.romurl] = (atob(base64.replace('data:application/octet-stream;base64,',
               '')));
@@ -263,7 +263,7 @@
           })
         } else {
           // code
-          blobToDataURL(files[0], (base64) => {
+          blobToDataURL(files[0], function(base64) {
             nes.loadROM(atob(base64.replace('data:application/octet-stream;base64,', '')));
             // nes.stop();
             nes.reloadROM();
@@ -272,7 +272,7 @@
       }, false);
 
       function blobToDataURL(blob, cb) {
-        let reader = new FileReader();
+        var reader = new FileReader();
         reader.onload = function (evt) {
           var base64 = evt.target.result
           cb(base64)
@@ -563,16 +563,16 @@
         a: a
       };
     }
-    // let ctx = canvas.getContext('2d');
+    // var ctx = canvas.getContext('2d');
     // window.ctx = ctx;
     // ctx.fillStyle = "red";
     // ctx.lineWidth = 4;
-    let x = 0;
-    let y = 0;
-    let img;
-    let img3;
-    let tX = 0;
-    let tY = 0;
+    var x = 0;
+    var y = 0;
+    var img;
+    var img3;
+    var tX = 0;
+    var tY = 0;
 
     function myFunction(ev) {
       console.log('123123')
@@ -605,9 +605,9 @@
       if (!window.w) {
         return;
       }
-      let maxEC = 0;
-      let isFind = false;
-      for (let k = 0; k < w * h; k++) {
+      var maxEC = 0;
+      var isFind = false;
+      for (var k = 0; k < w * h; k++) {
         if ((k % w) > 100) {
           continue;
         }
@@ -617,26 +617,26 @@
         if ((k / w | 0) < tY - 30 || (k / w | 0) > tY + 30) {
           continue;
         }
-        let img2 = context.getImageData(k % w, k / w | 0, 12, 16);
-        let eC = 0; // 颜色相同统计
-        for (let j = 0; j < img.height; j++) {
-          for (let i = 0; i < img.width; i++) {
-            let idx = (j * img.width + i) * 4;
-            let r = img.data[idx];
-            let g = img.data[idx + 1];
-            let b = img.data[idx + 2];
-            let a = img.data[idx + 3];
+        var img2 = context.getImageData(k % w, k / w | 0, 12, 16);
+        var eC = 0; // 颜色相同统计
+        for (var j = 0; j < img.height; j++) {
+          for (var i = 0; i < img.width; i++) {
+            var idx = (j * img.width + i) * 4;
+            var r = img.data[idx];
+            var g = img.data[idx + 1];
+            var b = img.data[idx + 2];
+            var a = img.data[idx + 3];
 
-            let r2 = img2.data[idx];
-            let g2 = img2.data[idx + 1];
-            let b2 = img2.data[idx + 2];
-            let a2 = img2.data[idx + 3];
+            var r2 = img2.data[idx];
+            var g2 = img2.data[idx + 1];
+            var b2 = img2.data[idx + 2];
+            var a2 = img2.data[idx + 3];
 
             if (img3) {
-              let r3 = img3.data[idx];
-              let g3 = img3.data[idx + 1];
-              let b3 = img3.data[idx + 2];
-              let a3 = img3.data[idx + 3];
+              var r3 = img3.data[idx];
+              var g3 = img3.data[idx + 1];
+              var b3 = img3.data[idx + 2];
+              var a3 = img3.data[idx + 3];
               if (r3 == r2 && g3 == g2 && b3 == b2) {
                 eC = eC + 0.05;
                 // console.log(r,g,b);
@@ -692,7 +692,7 @@
       if (tX2 && tY2 && isFind) {
         // console.log('tar', w * h, tX2, tY2)
         clearInterval(window.shadowInter);
-        window.shadowInter = setInterval(() => {
+        window.shadowInter = setInterval(function() {
           // ctx.fillRect(tX2, tY2, 12, 16);
           context.strokeRect(tX2, tY2, 12, 16);
         })
@@ -775,12 +775,12 @@
   <div class="game-list-box" id="game-list-box">
     <script>
       function showSearch() {
-        const searhKey = prompt('请输入需要查询的游戏名:');
+        var searhKey = prompt('请输入需要查询的游戏名:');
         searchGame(searhKey);
       }
       function searchGame(searhKey) {
-        const gameListDom = document.getElementById('game-list');
-        [].map.call(gameListDom.children, (item)=>{
+        var gameListDom = document.getElementById('game-list');
+        [].map.call(gameListDom.children, function(item) {
           if (item.tagName !== 'P') return; // 非游戏选项略过
           if (!searhKey) return item.style.display = 'inline-block'; // 没有查询时，显示全部
           if (item.innerText.indexOf(searhKey) > -1) return item.style.display = 'inline-block';
@@ -1249,7 +1249,7 @@
       border-radius: 2px;
     }
 
-    .missionBox.complete {
+    .missionBox.compvare {
       border: 1px solid #f7b400;
       background-color: #f7b400;
     }
@@ -1439,7 +1439,7 @@
   <div id="missionArea" class="leftArea">
     <div id="missionTitle" class="leftTitle">MISSION SELECT</div>
     <div id="rankBox" class="leftBox">
-      <div class="missionBox complete">
+      <div class="missionBox compvare">
         <span class="idx" onclick="startChallenge();window.mission=1;">01</span>
       </div>
       <div class="missionBox " onclick="startChallenge({noStartBtn:true});loadSavedData({mission:2});">
@@ -1502,11 +1502,11 @@
     $.get('/market/fc/roms', function(data) {
       // 获取游戏列表
       if (data.errCode === 0) {
-        const gameList = document.getElementById('game-list');
-        data.info.map((romName)=>{
+        var gameList = document.getElementById('game-list');
+        data.info.map(function(romName) {
           if (romName.length > 20) return; // 去掉一些名字太长的游戏
-          const dom = document.createElement('p');
-          dom.onclick = () => {
+          var dom = document.createElement('p');
+          dom.onclick = function() {
             localStorage.romurl = `./rom/${romName}`;localStorage.isNeedAuto = '';window.location.href = '/fc';
           }
           dom.innerText = romName.split('.')[0];
@@ -1515,9 +1515,9 @@
       }
     })
     function generateUserkey() {
-      let charStr = '23456789ABCDEFGHIJKLMNPQSTUVWXYZ';
-      let userkey = '';
-      for (let i = 0; i < 4; i++) {
+      var charStr = '23456789ABCDEFGHIJKLMNPQSTUVWXYZ';
+      var userkey = '';
+      for (var i = 0; i < 4; i++) {
         userkey += charStr[charStr.length * Math.random() | 0];
       }
       return userkey;
@@ -1526,8 +1526,8 @@
     window.userkey = localStorage.userkey;
     $.ajax({
       url: '/market/fc/login?userkey=' + window.userkey,
-      complete: function (xhr, status) {
-        let result = xhr.responseJSON
+      compvare: function (xhr, status) {
+        var result = xhr.responseJSON
         if (result && result.info) {
           localStorage.userid = result.info.id;
           window.name = result.info.name;
@@ -1535,11 +1535,12 @@
         }
       }
     });
-    let month = ('00' + (new Date().getMonth() + 1)).substr(-2);
-    let date = ('00' + new Date().getDate()).substr(-2);
+    var month = ('00' + (new Date().getMonth() + 1)).substr(-2);
+    var date = ('00' + new Date().getDate()).substr(-2);
     document.getElementById('rankTitle').innerText = `TEKII ${month}.${date} RANK`;
 
-    function copystr(str, config = {}) {
+    function copystr(str, config) {
+      config = config || {};
       var el = document.createElement('input');
       el.value = str;
       el.style.opacity = '0';
@@ -1565,7 +1566,8 @@
       return flag;
     }
 
-    function copy(tarText, config = {}) {
+    function copy(tarText, config) {
+      config = config || {};
       var copyTextDom = document.getElementById("copyTextDom");
       copyTextDom.innerText = tarText;
       copyTextDom.select(); // 选择对象
@@ -1584,30 +1586,30 @@
   </script>
   <script>
     // if (!localStorage.isChecked20201024) {
-    //   setTimeout(() => {
+    //   setTimeout(function() {
     //     toast(
     //       '<div style="text-align: left;text-indent: 1em;">2020年10月24日，Tekii模拟器有全网马里奥<b style="color:#f7b400">有奖</b>闯关活动，敬请期待~<br/>（加开发者进闯关群，点击右下角复制微信）</div>', {
     //         t: 12000,
     //         isShowConfirmBtn: true,
-    //         cb: () => {
+    //         cb: function() {
     //           localStorage.isChecked20201024 = '1'
     //         }
     //       });
     //   }, 1000)
     // }
     // if (!localStorage.isChecked20201024T) {
-    //   setTimeout(() => {
+    //   setTimeout(function() {
     //     toast(
     //       '<div style="text-align: left;text-indent: 1em;">2020年10月24日，第一届Tekii模拟器闯关赛正式开始~<br/>（加开发者微信进闯关群，今晚九点发红包）</div>', {
     //         t: 12000,
     //         isShowConfirmBtn: true,
-    //         cb: () => {
+    //         cb: function() {
     //           localStorage.isChecked20201024T = '1'
-    //         }
+    //         }1
     //       });
     //   }, 1000)
     // }
-    // setTimeout(() => {
+    // setTimeout(function() {
     //   toast('小霸王玩累了的话，可以体验一下右边的游戏，还不错的(●\'◡\'●)', {
     //     t: 3000
     //   })
@@ -1623,39 +1625,40 @@
       }
     }
     if (!localStorage.isNewCheck) {
-      setTimeout(() => {
+      setTimeout(function() {
         toast(
           '欢迎你，新玩家~点击上方方块可以切换游戏，存档键也会变读档键', {
             t: 10000,
             isShowConfirmBtn: true,
-            cb: () => {
+            cb: function() {
               localStorage.isNewCheck = '1'
             }
           });
       }, 1000)
     }
-    // setTimeout(() => {
+    // setTimeout(function() {
     //   toast({ //'小霸王玩累了的话，可以体验一下右边的游戏，还不错的(●\'◡\'●)', {
     //     t: 3000
     //   })
     // }, 100000)
-    setTimeout(() => {
+    setTimeout(function() {
       toast('游戏可以存档哦，点击左上角存档按钮存档(●\'◡\'●)\n', { //喜欢仙侠游戏的话，可以玩玩右边的游戏~', {
         t: 4000
       })
     }, 300000)
-    setTimeout(() => {
+    setTimeout(function() {
       toast('注意休息哦(●\'◡\'●)\n保护眼睛很重要，点上面的方块，还有更多游戏~', {
         t: 3000
       })
     }, 600000)
 
-    function toast(msg, config = {}) {
-      let toastTips = document.getElementById('toast-tips');
+    function toast(msg, config) {
+      config = config || {};
+      var toastTips = document.getElementById('toast-tips');
       window.toastTips = toastTips;
       if (config.do) config.do();
       toastTips.innerHTML = `${msg}<div class="toast-confirm" id="toast-confirm">确定</div>`;
-      let toastConfirmBtn = document.getElementById('toast-confirm');
+      var toastConfirmBtn = document.getElementById('toast-confirm');
       clearTimeout(window.toastTimer);
       window.toastCb = config.cb;
       if (config.isShowConfirmBtn) {
@@ -1665,7 +1668,7 @@
         toastConfirmBtn.style.display = 'none';
       }
       toastTips.style.display = 'inline-block';
-      window.toastTimer = setTimeout(() => {
+      window.toastTimer = setTimeout(function() {
         toastTips.style.display = 'none';
         if (config.cb) {
           window.toastCb()
@@ -1682,7 +1685,7 @@
       localStorage.coins = 99;
     }
     var coins = localStorage.coins ? Number(localStorage.coins) : 99;
-    let coinDate = new Date().getDate();
+    var coinDate = new Date().getDate();
     localStorage.coinDate = localStorage.coinDate || coinDate;
     if (localStorage.coinDate != coinDate) {
       addCoin();
@@ -1706,7 +1709,8 @@
       }
     }
 
-    function startChallenge(config = {}) {
+    function startChallenge(config) {
+      config = config || {};
       $.ajax({
         url: '/market/fc/log?type=startChallenge&remark=' + localStorage.userid
       });
@@ -1739,15 +1743,15 @@
           hideRank();
           window.isChallenge = true;
           if (!config.noStartBtn) {
-            setTimeout(() => {
+            setTimeout(function() {
               nes.buttonDown(1, jsnes.Controller.BUTTON_START);
-              setTimeout(() => {
+              setTimeout(function() {
                 nes.buttonUp(1, jsnes.Controller.BUTTON_START);
               }, 200)
             }, 200)
-            setTimeout(() => {
+            setTimeout(function() {
               nes.buttonDown(1, jsnes.Controller.BUTTON_START);
-              setTimeout(() => {
+              setTimeout(function() {
                 nes.buttonUp(1, jsnes.Controller.BUTTON_START);
               }, 200)
             }, 1500)
@@ -1756,7 +1760,7 @@
           }
           if (speakers.audioCtx)
             speakers.audioCtx.resume();
-          // setTimeout(()=>{
+          // setTimeout(function() {
           //   if (speakers.audioCtx)
           //     speakers.audioCtx.resume();
           // }, 5000)
@@ -1792,14 +1796,14 @@
     function getRank() {
       $.ajax({
         url: '/market/fc/getWin',
-        complete: function (xhr, status) {
-          let winList = xhr.responseJSON ? (xhr.responseJSON.info || []) : [];
+        compvare: function (xhr, status) {
+          var winList = xhr.responseJSON ? (xhr.responseJSON.info || []) : [];
           window.winList = winList;
-          let rankBox = document.getElementById('rankBox');
+          var rankBox = document.getElementById('rankBox');
           console.log(winList)
           rankBox.innerHTML = '';
-          for (let i = 0; i < winList.length; i++) {
-            let rankP = document.createElement('div');
+          for (var i = 0; i < winList.length; i++) {
+            var rankP = document.createElement('div');
             rankP.className = 'rankP';
             console.log(localStorage.userid, winList[i].userid)
             if (localStorage.userid == winList[i].userid) {
@@ -1822,10 +1826,10 @@
       });
     }
     // if (localStorage.isNoNeedLoadTeach != '1') {
-    //   setTimeout(() => {
+    //   setTimeout(function() {
     //     toast('点击右上角的开始，可以开始游戏')
     //   }, 1000)
-    //   setTimeout(() => {
+    //   setTimeout(function() {
     //     toast('点击屏幕上方的方块，切换游戏')
     //   }, 3000)
     // }
@@ -1845,7 +1849,7 @@
 
     function showZZDJS(id) {
       if (window.winList[id].mission) {
-        let mission = window.winList[id].mission;
+        var mission = window.winList[id].mission;
         loadSavedData(config = {
           mission
         })
@@ -1919,10 +1923,10 @@
   </style>
   <script>
     // 进入对应游戏
-    let currentGameMatched = window.location.search.match(/currentGame=(.*?)(&|$)/)
-    let currentGame = currentGameMatched ? currentGameMatched[1] : null;
+    var currentGameMatched = window.location.search.match(/currentGame=(.*?)(&|$)/)
+    var currentGame = currentGameMatched ? currentGameMatched[1] : null;
     if (currentGame) {
-      let tarRomurl = `./rom/${currentGame}`;
+      var tarRomurl = `./rom/${currentGame}`;
       if (localStorage.romurl !== tarRomurl) {
         localStorage.romurl = `./rom/${currentGame}`;
         localStorage.isNeedAuto = '';
@@ -1930,22 +1934,22 @@
       }
     }
     // 像素制造相关
-    let xszzNameMatched = window.location.search.match(/xszzName=(.*?)(&|$)/)
-    let xszzName = xszzNameMatched ? xszzNameMatched[1] : null;
-    let xszzIdMatched = window.location.search.match(/xszzId=(.*?)(&|$)/)
-    let xszzId = xszzIdMatched ? xszzIdMatched[1] : null;
+    var xszzNameMatched = window.location.search.match(/xszzName=(.*?)(&|$)/)
+    var xszzName = xszzNameMatched ? xszzNameMatched[1] : null;
+    var xszzIdMatched = window.location.search.match(/xszzId=(.*?)(&|$)/)
+    var xszzId = xszzIdMatched ? xszzIdMatched[1] : null;
 
     function generateNesByXszz(xszzId, xszzName) {
-      let xszzUrl = xszzId ? '/market/fc/generateNes?_id=' + xszzId : (xszzName ? '/market/fc/generateNes?name=' +
+      var xszzUrl = xszzId ? '/market/fc/generateNes?_id=' + xszzId : (xszzName ? '/market/fc/generateNes?name=' +
         xszzName : '');
       console.error('222222222222222222222222222222222222222', xszzUrl);
       if (xszzUrl) {
         console.error('ininininininininininii')
         $.ajax({
           url: xszzUrl,
-          complete: function (xhr, status) {
-            console.error('completecompletecompletecomplete')
-            let result = xhr.responseJSON
+          compvare: function (xhr, status) {
+            console.error('compvarecompvarecompvarecompvare')
+            var result = xhr.responseJSON
             console.error('11111111111111111111111111111111', result);
             if (result && result.info) {
               window.location.href = `https://tekii.cn/fc/?currentGame=${result.info}`
@@ -1953,7 +1957,7 @@
               toast('图片没有按要求，回炉重造下吧:P', {
                 t: 3000
               });
-              setTimeout(() => {
+              setTimeout(function() {
                 toad('back')
               }, 3000)
             }
@@ -1962,9 +1966,9 @@
       }
     }
     window.playerId = window.location.href.indexOf('p2') > -1 ? 2 : 1;
-    let f = document.getElementById('f')
+    var f = document.getElementById('f')
     window.cId = Math.random().toString().substr(2, 5);
-    let startFrame = 0;
+    var startFrame = 0;
 
     function goF(nes) {
       if (window.pause) {
@@ -1986,13 +1990,13 @@
 
     function loadStepSave(stepSave) {
       window.arr = stepSave;
-      let sTs = Date.now();
-      for (const i in stepSave) {
+      var sTs = Date.now();
+      for (var i in stepSave) {
         while (nes.f < i) {
           goF(nes);
         }
       }
-      let eTs = Date.now();
+      var eTs = Date.now();
       console.log(eTs - sTs, window.frame, window.frame * 1000 / (eTs - sTs));
     }
     window.loadStepSave = loadStepSave;
@@ -2018,22 +2022,23 @@
       getRank()
     }
     // 是否是存入档案阶段，不是 就自动读档
-    let isNesIn = false;
+    var isNesIn = false;
     window.nes = null;
     var nes2 = null;
     // if (!isNesIn) {
     //   localStorage.nes ? (nes2 = JSON.parse(localStorage.nes)) : '';
     // }
     // 加载速度
-    let frameSpeed = 1;
-    let isConfigShow = false;
+    var frameSpeed = 1;
+    var isConfigShow = false;
     var interval;
-    let rDic = {}
+    var rDic = {}
 
-    function setB2A(a, b, _k = []) {
-      for (const key in b) {
+    function setB2A(a, b, _k) {
+      _k = _k || [];
+      for (var key in b) {
         if (b.hasOwnProperty(key)) {
-          const bV = b[key];
+          var bV = b[key];
           if (bV instanceof Object) {
             if (a[key]) {
               // 透明度好了 step1 加上了这个好了
@@ -2041,13 +2046,17 @@
               //   return;
               //   console.log('keykeykeyk', opaque)
               // }
-              setB2A(a[key], b[key], [..._k, key]);
+              keys = _k.map(function(_) {return _});
+              keys.push(key);
+              setB2A(a[key], b[key], keys);
             } else {
               // a[key] = {};
               // 这个地方很神奇，如果转换了 就报错了Cannot read property 'opaque' of undefined，但能显示主角，不显示背景
               // 如果把这里注释掉，就能显示背景，但主角和怪物什么的 都会变成马赛克
               a[key] = {}; // 透明度好了 step2 加上了这个好了
-              setB2A(a[key], b[key], [..._k, key]);
+              keys = _k.map(function(_) {return _});
+              keys.push(key);
+              setB2A(a[key], b[key], keys);
               // console.log('key', key, bV)
             }
           } else {
@@ -2056,7 +2065,7 @@
               rDic[_k.toString()] = 1
             }
             // if (_k[1] == 'mem' || _k[0] == 'mmap'
-            //     // || _k[1] == 'vramMem' || _k[1] == 'spriteMem' || _k[1] == 'imgPalette' || _k[1] == 'buffer' || _k[1] == 'pixrendered' || _k[1] == 'bgbuffer'
+            //     // || _k[1] == 'vramMem' || _k[1] == 'spriteMem' || _k[1] == 'imgPavarte' || _k[1] == 'buffer' || _k[1] == 'pixrendered' || _k[1] == 'bgbuffer'
             //     || _k[1] == 'nameTable'
             //     ) {
             //   a[key] = b[key];
@@ -2079,7 +2088,8 @@
       setB2A(nes.mmap, mmap)
     }
 
-    function loadSavedData(config = {}) {
+    function loadSavedData(config) {
+      config = config || {}
       window.mission = config.mission;
       console.log('load dataaaaaaaaaaaaa in', config)
       $('#game-list-box').hide();
@@ -2112,9 +2122,9 @@
         // loadPpuNameTable(nes, nesSav.nameTable)
         // loadMmap(nes, nesSav.mmap)
       } else {
-        let userid = localStorage.userid;
-        let xhr = new XMLHttpRequest();
-        let url = ''
+        var userid = localStorage.userid;
+        var xhr = new XMLHttpRequest();
+        var url = ''
         if (config.mission) {
           url = `/market/fc/load/?mission=${config.mission}`;
         } else {
@@ -2124,10 +2134,10 @@
         xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
         xhr.onreadystatechange = function (ev) {
           if (xhr.readyState == 4) {
-            let result = JSON.parse(ev.target.responseText);
+            var result = JSON.parse(ev.target.responseText);
             if (result && result.info && result.info[0]) {
               result.info[0].saveurl
-              let xhr = new XMLHttpRequest();
+              var xhr = new XMLHttpRequest();
               xhr.open('GET', result.info[0].saveurl) //'/fc/save/88.1600130967879.三国志英杰传(吞食天地1).NES.sav');
               xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
               xhr.onreadystatechange = function (ev) {
@@ -2148,20 +2158,21 @@
       }
     }
 
-    function saveData(config = {}) {
+    function saveData(config) {
+      config = config || {}
       console.log(config)
       if (window.isSaving) return;
       key = localStorage.romurl;
-      let isAuto = config.isAuto;
+      var isAuto = config.isAuto;
       // localStorage.clear()
       // localStorage.nes = JSON.stringify(nes);
-      let lKeys = Object.keys(localStorage);
+      var lKeys = Object.keys(localStorage);
       console.log(lKeys);
       // 删除其他存档，防止空间不足无法存储，限制为4M左右，1个存档就有2M了，所以同一时间只有1个游戏的存档，除非之后开发出新的小存储办法，虽然我试过了，小的办法都会漏东西，大的都会在细小的地方有差别 2020-09-09 23:46
       // 现在只要200k了，所以没事了
       // 现在还是改成 没改游戏就读本地，改了 就从服务器读
-      for (let i = 0; i < lKeys.length; i++) {
-        const key = lKeys[i];
+      for (var i = 0; i < lKeys.length; i++) {
+        var key = lKeys[i];
         if (key.indexOf('./rom') > -1) {
           delete localStorage[key];
         }
@@ -2175,7 +2186,7 @@
       //   nameTable: nes.ppu.nameTable,
       //   mmap: nes.mmap
       // })
-      let tar = {
+      var tar = {
         cpu: nes.cpu,
         nameTable: nes.ppu.nameTable,
         bgbuffer: nes.ppu.bgbuffer,
@@ -2233,8 +2244,8 @@
         }),
         contentType: "application/json; charset=utf-8",
         dataType: 'json',
-        success: (...args) => {
-          console.log(args);
+        success: function() {
+          console.log(arguments);
           if (localStorage.isNoNeedLoadTeach != '1') {
             toast('存档到云端成功:P <br>点击屏幕上方方块菜单后，存档按钮会变为读档', {
               t: 5000
@@ -2245,14 +2256,15 @@
             });
           }
         },
-        error: (...args) => {
+        error: function() {
+          console.log(arguments);
           console.log('error', args);
           toast('存档失败' + args[0].toString(), {
             t: 1000
           });
         },
-        complete: (...args) => {
-          console.log('complete', args);
+        compvare: function() {
+          console.log('compvare', arguments);
           window.isSaving = false;
           document.getElementById('btnsave').style.opacity = .5;
         }
@@ -2345,8 +2357,8 @@
         if (!window.AudioContext) {
           return 44100;
         }
-        let myCtx = new window.AudioContext();
-        let sampleRate = myCtx.sampleRate;
+        var myCtx = new window.AudioContext();
+        var sampleRate = myCtx.sampleRate;
         myCtx.close();
         return sampleRate;
       }
@@ -2420,7 +2432,7 @@
       // if (window.innerWidth > 512) {
 
       // } else {
-      let height = window.innerWidth < window.innerHeight * .7 ? window.innerWidth : window.innerHeight * .7
+      var height = window.innerWidth < window.innerHeight * .7 ? window.innerWidth : window.innerHeight * .7
       screen[0].style.height = height + "px";
       // }
       var m = (window.innerWidth / 240 * 256 - window.innerWidth) / 2;
@@ -2433,9 +2445,9 @@
       screen[0].style.bottom = 0;
       screen[0].style.margin = "auto auto";
       window.context = screen[0].getContext('2d');
-      setTimeout(() => {
+      setTimeout(function() {
         var screen = $("#canvas");
-        let height = window.innerWidth < window.innerHeight * .7 ? window.innerWidth : window.innerHeight * .7
+        var height = window.innerWidth < window.innerHeight * .7 ? window.innerWidth : window.innerHeight * .7
         screen[0].style.height = height + "px";
         var m = (window.innerWidth / 240 * 256 - window.innerWidth) / 2;
         var n = (window.innerHeight / 240 * 256 - window.innerHeight) / 2;
@@ -2476,19 +2488,19 @@
           return;
         }
         // time.innerText = (Date.now() - sTs) - (frame * 16);
-        let sms = (frame - startFrame) * 16;
-        let ms = ('000' + sms % 1000).substr(-3);
-        let ss = Math.floor(sms / 1000);
-        let s = ('00' + ss % 60).substr(-2);
-        let m = Math.floor(ss / 60);
+        var sms = (frame - startFrame) * 16;
+        var ms = ('000' + sms % 1000).substr(-3);
+        var ss = Math.floor(sms / 1000);
+        var s = ('00' + ss % 60).substr(-2);
+        var m = Math.floor(ss / 60);
         // time.innerText = (Date.now() - sTs) - (frame * 16); // 恒定在 63~68 之间，说明时间还算准确
-        let usedTime = `${m}:${s}.${ms}`
+        var usedTime = `${m}:${s}.${ms}`
         time.innerText = usedTime;
         return usedTime;
       }
 
-      let isOk = false;
-      let isCatch = false;
+      var isOk = false;
+      var isCatch = false;
       window.isDie = false;
       window.isInDieCheck = false;
 
@@ -2507,19 +2519,19 @@
         }
       );
       speakers.start()
-      let lastTs = new Date().getTime();
-      let sendDic = {};
+      var lastTs = new Date().getTime();
+      var sendDic = {};
 
       function createNes() {
         frame = 0;
-        let sTs = Date.now();
+        var sTs = Date.now();
         console.log('nes', nes)
         nes = new jsnes.NES({
           onFrame: function (buffer) {
             var data = imageData.data;
             var pixel, i, j;
-            let c = 0;
-            let transDic = {};
+            var c = 0;
+            var transDic = {};
             frame += 1;
             setTime();
             if (frame > 0) {
@@ -2537,9 +2549,9 @@
               }
               // console.log(c)
               // console.log('transDic', JSON.stringify(transDic).length);
-              let len = Object.keys(transDic).length;
+              var len = Object.keys(transDic).length;
               if (len) {
-                let ts = new Date().getTime();
+                var ts = new Date().getTime();
                 if (ts - lastTs > 200) {
                   // for (i = 0; i < 256 * 240; i++) {
                   //   pixel = buffer[i];
@@ -2555,21 +2567,21 @@
                 if (!isOk) {
                   if (!isDie) {
                     if (startFrame && (frame - startFrame) > 4 * 60) {
-                      let leftTopBlack = context.getImageData(10, 36, 1, 1).data;
-                      let leftBottomBlack = context.getImageData(240, 220, 1, 1).data;
-                      let rightBottomBlack = context.getImageData(10, 220, 1, 1).data;
+                      var leftTopBlack = context.getImageData(10, 36, 1, 1).data;
+                      var leftBottomBlack = context.getImageData(240, 220, 1, 1).data;
+                      var rightBottomBlack = context.getImageData(10, 220, 1, 1).data;
                       if (leftTopBlack[0] == 0 && leftTopBlack[1] == 0 && leftTopBlack[2] == 0 &&
                         leftBottomBlack[0] == 0 && leftBottomBlack[1] == 0 && leftBottomBlack[2] == 0 &&
                         rightBottomBlack[0] == 0 && rightBottomBlack[1] == 0 && rightBottomBlack[2] == 0) {
-                        let marioHat = context.getImageData(105, 105, 1, 1).data;
+                        var marioHat = context.getImageData(105, 105, 1, 1).data;
                         if (marioHat[0] == 188 && marioHat[1] == 25 && marioHat[2] == 0) {
                           isDie = true;
                           if (window.isZZDJS) {
                             toast('录像闯关失败，结束', {
                               t: 10000,
                               isShowConfirmBtn: true,
-                              do: () => window.pause = 1,
-                              cb: () => {
+                              do: function () { window.pause = 1},
+                              cb: function() {
                                 delete window.isZZDJS;
                                 window.arr = {};
                                 isCatch = false;
@@ -2578,7 +2590,7 @@
                               }
                             });
                           } else {
-                            let xhr = new XMLHttpRequest();
+                            var xhr = new XMLHttpRequest();
                             xhr.open('POST', '/market/fc/setWin');
                             xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
                             xhr.onreadystatechange = function (ev) {
@@ -2595,8 +2607,8 @@
                             toast('已阵亡，少侠请重新来过', {
                               t: 10000,
                               isShowConfirmBtn: true,
-                              do: () => window.pause = 1,
-                              cb: () => {
+                              do: function() { window.pause = 1 },
+                              cb: function() {
                                 window.location.reload();
                               }
                             });
@@ -2609,8 +2621,8 @@
                     return;
                   }
                   if (!isCatch) {
-                    for (let i = 0; i < 10; i++) {
-                      let a = context.getImageData(200 + i, 72, 1, 1).data;
+                    for (var i = 0; i < 10; i++) {
+                      var a = context.getImageData(200 + i, 72, 1, 1).data;
                       if (a[0] == 117 && a[1] == 227) {
                         isCatch = true;
                         console.log('okok')
@@ -2619,19 +2631,19 @@
                     }
                   }
                   if (isCatch) {
-                    let lastR;
-                    for (let i = 0; i < 200; i++) {
-                      let r = context.getImageData(40 + i, 186, 1, 1).data[0];
+                    var lastR;
+                    for (var i = 0; i < 200; i++) {
+                      var r = context.getImageData(40 + i, 186, 1, 1).data[0];
                       if (r == 117 && lastR == 255) {
                         if (!isOk) {
                           isOk = true;
-                          let time = setTime();
+                          var time = setTime();
                           if (window.isZZDJS) {
                             toast('录像闯关成功', {
                               t: 10000,
                               isShowConfirmBtn: true,
-                              do: () => window.pause = 1,
-                              cb: () => {
+                              do: function() { window.pause = 1 },
+                              cb: function() {
                                 delete window.isZZDJS;
                                 window.arr = {};
                                 isCatch = false;
@@ -2640,7 +2652,7 @@
                               }
                             });
                           } else {
-                            let xhr = new XMLHttpRequest();
+                            var xhr = new XMLHttpRequest();
                             xhr.open('POST', '/market/fc/setWin');
                             xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
                             xhr.onreadystatechange = function (ev) {
@@ -2648,7 +2660,7 @@
                                 console.log(ev.target.response)
                               }
                             }
-                            let usetimeS = (Number(time.split(':')[0]) * 60 + Number(time.split(':')[
+                            var usetimeS = (Number(time.split(':')[0]) * 60 + Number(time.split(':')[
                               1]))
                             xhr.send(JSON.stringify({
                               "userid": localStorage.userid,
@@ -2660,23 +2672,23 @@
                             isCatch = false;
                             isOk = false;
                             localStorage.isShowRedPack = localStorage.isShowRedPack || '';
-                            let redPacks = ['Tekii模拟器马里奥30秒通过达成']
+                            var redPacks = ['Tekii模拟器马里奥30秒通过达成']
                             if (usetimeS < 30 && !localStorage.isShowRedPack) {
                               localStorage.isShowRedPack = redPacks[Math.random() * redPacks.length | 0];
                               // toast('恭喜，你用时：' + time + '\n支付宝口令红包为：【' + localStorage
                               //   .isShowRedPack + '】', {
                               //     t: 10000,
                               //     isShowConfirmBtn: true,
-                              //     do: () => window.pause = 1,
-                              //     cb: () => {
+                              //     do: function() { window.pause = 1 },
+                              //     cb: function() {
                               //       window.location.reload();
                               //     }
                               //   });
                               toast('恭喜，你用时：' + time, {
                                 t: 10000,
                                 isShowConfirmBtn: true,
-                                do: () => window.pause = 1,
-                                cb: () => {
+                                do: function() { window.pause = 1 },
+                                cb: function() {
                                   window.location.reload();
                                 }
                               });
@@ -2684,8 +2696,8 @@
                               toast('恭喜，你用时：' + time, {
                                 t: 10000,
                                 isShowConfirmBtn: true,
-                                do: () => window.pause = 1,
-                                cb: () => {
+                                do: function() { window.pause = 1 },
+                                cb: function() {
                                   window.location.reload();
                                 }
                               });
@@ -2702,12 +2714,12 @@
               goPikachu()
             }
 
-            let _arr = arr[frame] || [];
-            for (let i = 0; i < _arr.length; i++) {
+            var _arr = arr[frame] || [];
+            for (var i = 0; i < _arr.length; i++) {
               if (_arr.length) {
                 console.log(_arr)
               }
-              const tar = _arr[i];
+              var tar = _arr[i];
               if (tar[2] == 'u') {
                 nes.buttonUp(tar[0], tar[1], true, {
                   isVedio: true
@@ -2734,21 +2746,24 @@
             //   localStorage.nes = JSON.stringify(nes);
             // }
           },
-          onAudioSample: (...arg) => {
+          onAudioSample: function(a,b,c,d,e,f,g) {
             // console.log(arg);
-            speakers.writeSample.bind(speakers)(...arg)
+
+            speakers.writeSample.bind(speakers)(a,b,c,d,e,f,g)
           },
           sampleRate: speakers.getSampleRate()
         });
 
-        let srcButtonUp = nes.buttonUp;
-        let srcButtonDown = nes.buttonDown;
+        var srcButtonUp = nes.buttonUp;
+        var srcButtonDown = nes.buttonDown;
 
         window.arr = {};
         // if (localStorage.arr) {
         //   window.arr = JSON.parse(localStorage.arr);
         // }
-        nes.buttonUp = (k0, k1, isNoEmit=true, config = {}) => {
+        nes.buttonUp = function(k0, k1, isNoEmit, config) {
+          config = config || {}
+          isNoEmit = typeof isNoEmit === 'undefined' ? true : isNoEmit
           console.log('buttonUp', k0, k1, isNoEmit, config)
           if (window.isZZDJS && !config.isVedio) {
             // 演示他人视频时，不能操控
@@ -2762,12 +2777,12 @@
           if (k0 == 1) {
             document.getElementById(keyDomDic[k1]).classList.remove('active')
           }
-          let id = Math.random().toString().substr(2, 3);
-          let fpsDic = window.fpsDic || {}
+          var id = Math.random().toString().substr(2, 3);
+          var fpsDic = window.fpsDic || {}
           fpsDic[id] = Date.now()
-          let m_p = window.playerId;
-          let m_f = nes.f;
-          let m_b = !isNoEmit && socket.emit("m", {
+          var m_p = window.playerId;
+          var m_f = nes.f;
+          var m_b = !isNoEmit && socket.emit("m", {
             key: [k0, k1],
             type: "up",
             ts: Date.now(),
@@ -2786,7 +2801,9 @@
           }
           srcButtonUp(k0, k1);
         }
-        nes.buttonDown = (k0, k1, isNoEmit=true, config = {}) => {
+        nes.buttonDown = function(k0, k1, isNoEmit, config) {
+          config = config || {}
+          isNoEmit = typeof isNoEmit === 'undefined' ? true : isNoEmit
           console.log(k0, k1)
           if (window.isZZDJS && !config.isVedio) {
             // 演示他人视频时，不能操控
@@ -2803,8 +2820,8 @@
           if (k0 == 1) {
             document.getElementById(keyDomDic[k1]).classList.add('active')
           }
-          let id = Math.random().toString().substr(2, 3);
-          let fpsDic = window.fpsDic || {}
+          var id = Math.random().toString().substr(2, 3);
+          var fpsDic = window.fpsDic || {}
           fpsDic[id] = Date.now();
           !isNoEmit && socket.emit('m', {
             key: [k0, k1],
@@ -2848,7 +2865,7 @@
             xhr.overrideMimeType('text/plain; charset=x-user-defined');
             return xhr;
           },
-          complete: function (xhr, status) {
+          compvare: function (xhr, status) {
             nes.loadROM(xhr.responseText);
             nes.start();
           }
@@ -2941,7 +2958,7 @@
         39: 102
       };
 
-      const KEYS = {
+      var KEYS = {
         88: [1, jsnes.Controller.BUTTON_A, "X"], // X
         89: [1, jsnes.Controller.BUTTON_B, "Y"], // Y (Central European keyboard)
         90: [1, jsnes.Controller.BUTTON_B, "Z"], // Z
@@ -2962,7 +2979,7 @@
         102: [2, jsnes.Controller.BUTTON_RIGHT, "Num-6"] // Num-6
       };
       window.KEYS = KEYS;
-      const keyDomDic = {
+      var keyDomDic = {
         0: 'btna',
         1: 'btnb',
         2: 'btnselect',
@@ -3027,13 +3044,13 @@
       }
       // 直接添加监听事件
       $(document).on('touchstart', function (e) {
-        let touches = e.originalEvent.touches;
+        var touches = e.originalEvent.touches;
         touchBtn(touches);
         // e.stopPropagation();
         // return false;
       })
       $(document).on('touchend', function (e) {
-        let touches = e.originalEvent.touches;
+        var touches = e.originalEvent.touches;
         // console.log('touchend', touches, e)
         touchBtn(touches, 'touchend');
         // e.stopPropagation();
@@ -3041,7 +3058,7 @@
       })
 
       $(document).on('touchmove', function (e) {
-        let touches = e.originalEvent.touches;
+        var touches = e.originalEvent.touches;
         touchBtn(touches);
         // console.log('touchmove', touches, e)
         // e.stopPropagation();
@@ -3052,12 +3069,12 @@
         console.log(touches)
         console.log(type)
         // ['btnup', 'btnright', 'btn12', 'btn14', 'btndown', 'btnleft', 'btn23', 'btn34', 'btna', 'btnb']
-        for (let i = 0; i < touches.length; i++) {
-          const tarTouch = touches[i];
+        for (var i = 0; i < touches.length; i++) {
+          var tarTouch = touches[i];
           // toast(`${tarTouch.pageX} ${tarTouch.pageY}|${tarTouch.screenX} ${tarTouch.screenY}|`)
-          let x = tarTouch.clientX;
-          let y = tarTouch.clientY;
-          let dom = document.elementFromPoint(x, y);
+          var x = tarTouch.clientX;
+          var y = tarTouch.clientY;
+          var dom = document.elementFromPoint(x, y);
           if (touchDic[dom.id] === 0) {
             touchDic[dom.id] = 3; // 待处理
           }
@@ -3065,12 +3082,12 @@
             touchDic[dom.id] = 2; // 已处理
           }
         }
-        for (const i in touchDic) {
+        for (var i in touchDic) {
           if (type) {
             console.log(i, touchDic[i])
           }
           if (touchDic.hasOwnProperty(i)) {
-            const tarTouch = touchDic[i];
+            var tarTouch = touchDic[i];
             if (touchDic[i] === 1) {
               touchDic[i] = 0;
               // document.getElementById(i).classList.remove('active') // 已改到函数里面加状态
@@ -3083,7 +3100,7 @@
             }
           }
         }
-        for (const i in touchDic) {
+        for (var i in touchDic) {
           if (touchDic[i] === 3) {
             // document.getElementById(i).classList.add('active') // 已改到函数里面加状态
             processBtn({
@@ -3095,12 +3112,12 @@
         console.log(touchDic);
         return false;
       }
-      let playerId = window.playerId;
+      var playerId = window.playerId;
 
       function processBtn(dom, isDown, playerId) {
         playerId = playerId || window.playerId;
         console.log(arguments);
-        let tarFunc;
+        var tarFunc;
         if (isDown) {
           tarFunc = nes.buttonDown;
         } else {
@@ -3142,7 +3159,7 @@
           tarFunc(playerId, KEYS[89][1]);
         }
       }
-      let twoPlayerRomList = [
+      var twoPlayerRomList = [
         './rom/Chip To Dale No Daisakusen 2 (J).nes',
         './rom/Double Dragon (U).nes',
         './rom/iceclimb.nes',
@@ -3248,11 +3265,11 @@
       
       $('#btnstart').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
-        let startBtn = `<svg t="1599318965085" onclick="startChallenge()" class="rankChallengeBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16010" width="90" height="90">
+        var startBtn = `<svg t="1599318965085" onclick="startChallenge()" class="rankChallengeBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16010" width="90" height="90">
       <path d="M512 1024C229.239467 1024 0 794.760533 0 512S229.239467 0 512 0 1024 229.239467 1024 512 794.760533 1024 512 1024z m326.200889-467.626667c-20.707556-178.084978-57.344-305.743644-173.6704-305.743644-58.936889 0-89.201778 59.892622-141.789867 64.625778-54.158222-4.733156-82.852978-64.625778-141.812622-64.625778-116.303644 0-152.940089 127.658667-172.077511 304.173511-11.150222 94.549333-1.592889 173.351822 57.366755 173.351822 82.830222 0 86.038756-74.069333 144.9984-108.7488 22.300444-11.036444 71.68-15.746844 113.095112-17.339733 41.437867 1.592889 90.840178 6.303289 113.140622 17.339733 58.936889 34.679467 62.122667 108.7488 144.9984 108.7488 57.344 1.592889 65.308444-77.232356 55.751111-171.781689z" p-id="16011" fill="#f7b400"></path>
       <path d="M382.520889 540.626489c-46.193778 0-82.830222-37.842489-82.830222-81.965511 0-44.123022 36.636444-81.942756 82.830222-81.942756 46.193778 0 82.852978 36.2496 82.852978 81.942756 0 45.715911-38.229333 81.965511-82.830223 81.965511z m-47.786667-81.965511c0 12.606578 4.778667 23.643022 14.336 33.109333 7.964444 7.873422 20.707556 14.176711 33.450667 14.176711 12.743111 0 23.893333-4.733156 33.450667-14.176711 7.964444-7.896178 14.336-20.48 14.336-33.109333 0-12.606578-4.778667-23.643022-14.336-33.086578-7.964444-7.873422-20.707556-14.199467-33.450667-14.199467-12.743111 0-23.893333 4.733156-33.450667 14.199467-9.557333 7.873422-14.336 20.48-14.336 33.086578zM753.755022 474.430578h-65.308444v64.625778h-31.857778v-64.625778h-65.353956v-31.516445h65.3312v-63.032889h31.857778v63.032889h65.3312z" p-id="16012" fill="#f7b400"></path>
     </svg>`
-        let closeBtn = `<svg t="1599320359254" onclick="hideRank()" class="rankCloseBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2480" width="90" height="90">
+        var closeBtn = `<svg t="1599320359254" onclick="hideRank()" class="rankCloseBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2480" width="90" height="90">
       <path d="M512.001 15.678C237.414 15.678 14.82 238.273 14.82 512.86S237.414 1010.04 512 1010.04s497.18-222.593 497.18-497.18S786.589 15.678 512.002 15.678z m213.211 645.937c17.798 17.803 17.798 46.657 0 64.456-17.798 17.797-46.658 17.797-64.456 0L512.001 577.315 363.241 726.07c-17.799 17.797-46.652 17.797-64.45 0-17.804-17.799-17.804-46.653 0-64.456L447.545 512.86 298.79 364.104c-17.803-17.798-17.803-46.657 0-64.455 17.799-17.798 46.652-17.798 64.45 0l148.761 148.755 148.755-148.755c17.798-17.798 46.658-17.798 64.456 0 17.798 17.798 17.798 46.657 0 64.455L576.456 512.86l148.756 148.755z m0 0" fill="#bc1900" p-id="2481"></path>
     </svg>`
         if ($('.rankArea')[0].style.display === 'block') {
@@ -3320,7 +3337,7 @@
         return req;
       }
 
-      loadBinary(romurl, (err, data) => {
+      loadBinary(romurl, function(err, data) {
         if (err) {
           // this.setState({ error: `Error loading ROM: ${err.message}` });
           console.log(err);
@@ -3337,8 +3354,8 @@
               goF(nes);
             }
             if (!window.isChallenge && (frame % 100 == 0)) {
-              let ms = Date.now() - window.ts;
-              let f = frame - window.lastF;
+              var ms = Date.now() - window.ts;
+              var f = frame - window.lastF;
               time.style.display = 'inline-block';
               // console.log(ms, frame, ms / frame);
               ms / f ? (time.innerText = (f * 1000 / (ms)).toFixed(2)) : '';
@@ -3346,7 +3363,7 @@
               window.lastF = frame;
             }
             if (window.playerId === 1) {
-              let id = Math.random().toString().substr(2, 3);
+              var id = Math.random().toString().substr(2, 3);
               !window.isNoEmit && socket.emit("m", {
                 key: [],
                 type: "up",
@@ -3368,41 +3385,41 @@
           //     goF(nes);
           //   }
           //   if (!window.isChallenge && (frame % 100 == 0)) {
-          //     let ms = Date.now() - window.ts;
-          //     let f = frame - window.lastF;
+          //     var ms = Date.now() - window.ts;
+          //     var f = frame - window.lastF;
           //     time.style.display = 'inline-block';
           //     // console.log(ms, frame, ms / frame);
           //     ms / f ? (time.innerText = (f * 1000 / (ms)).toFixed(2)) : '';
           //     window.ts = Date.now();
           //     window.lastF = frame;
           //   }
-          //   requestAnimationFrame(()=>{
+          //   requestAnimationFrame(function() {
           //     go()
           //   })
           // }
           // go()
           // 重要！！！ 这里可以证明 只要把整个 nes存下来 就可以 做到存档
-          // setTimeout(()=>{
+          // setTimeout(function() {
           //   nes2 = nes;
           //   createNes();
           //   nes.loadROM(data);
           // }, 15000)
-          // setTimeout(()=>{
+          // setTimeout(function() {
           //   nes = nes2;
           // }, 20000)
           // console.log("nes2['cpu']['mem']", nes2['cpu']['mem'])
           // nes['cpu']['mem'] = nes2['cpu']['mem'];
-          let c = 0;
+          var c = 0;
           /// 哇塞塞！！！好像成功了耶
-          // for (const key in nes2) {
+          // for (var key in nes2) {
           //   c++
           //   if (c==4) {
           //     console.log('key', key);
-          //     const element = nes2[key];
-          //     let d = 0;
-          //     for (const key2 in element) {
+          //     var element = nes2[key];
+          //     var d = 0;
+          //     for (var key2 in element) {
           //       // if (element.hasOwnProperty(key2)) {
-          //       //   const element2 = element[key2];
+          //       //   var element2 = element[key2];
           //       //   nes[key] = nes[key] || nes2[key];
           //       //   nes[key][key2] = element2;
           //       // }
@@ -3412,10 +3429,10 @@
           //   }
           //   if (nes2.hasOwnProperty(key) && c != 4) {
           //     console.log(key);
-          //     const element = nes2[key];
-          //     for (const key2 in element) {
+          //     var element = nes2[key];
+          //     for (var key2 in element) {
           //       if (element.hasOwnProperty(key2)) {
-          //         const element2 = element[key2];
+          //         var element2 = element[key2];
           //         nes[key] = nes[key] || nes2[key];
           //         nes[key][key2] = element2;
           //       }
@@ -3446,9 +3463,9 @@
   </script> -->
   <script>
     // 暂时关闭联机功能
-    let socket = {
-      emit: function emit(...args) {
-        console.log('emit', args);
+    var socket = {
+      emit: function emit() {
+        console.log('emit', arguments);
       },
     }
     // socket = io.connect('ws://192.168.1.47:3000');
@@ -3459,7 +3476,7 @@
       "msg": "hello world"
     });
     // 联机用的心跳包，暂时关闭
-    // setInterval(() => {
+    // setInterval(function() {
     //   if (window.playerId == 1 && nes && nes.f && window.hasP2) {
     //     socket.emit("m", {
     //       hb: 1, // 标记为心跳包heart beat
@@ -3476,11 +3493,11 @@
         return;
       }
       console.log(obj);
-      let key = obj.key;
-      let fpsDic = window.fpsDic || {}
+      var key = obj.key;
+      var fpsDic = window.fpsDic || {}
       console.log('obj.id', obj.id, fpsDic[obj.id])
-      let lTs = obj.ts //fpsDic[obj.id];
-      let nTs = Date.now();
+      var lTs = obj.ts //fpsDic[obj.id];
+      var nTs = Date.now();
       console.log(nTs, lTs, nTs - lTs)
       fps.value = (nTs - lTs).toFixed(2) + 'ms';
       // while (nes.f < obj.f) {
