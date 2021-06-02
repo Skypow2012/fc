@@ -3420,16 +3420,17 @@
       "name": navigator.userAgent,
       "msg": "hello world"
     });
-    setInterval(() => {
-      if (window.playerId == 1 && nes && nes.f && window.hasP2) {
-        socket.emit("m", {
-          hb: 1, // 标记为心跳包heart beat
-          uId: localStorage.userid,
-          rom: window.romurl,
-          f: nes.f,
-        });
-      }
-    }, 16)
+    // 联机用的心跳包，暂时关闭
+    // setInterval(() => {
+    //   if (window.playerId == 1 && nes && nes.f && window.hasP2) {
+    //     socket.emit("m", {
+    //       hb: 1, // 标记为心跳包heart beat
+    //       uId: localStorage.userid,
+    //       rom: window.romurl,
+    //       f: nes.f,
+    //     });
+    //   }
+    // }, 16)
     socket.on("m", function (obj) {
       // return;
       if (obj.uId == '184') {
