@@ -1475,6 +1475,21 @@
   </div>
   <textarea id="copyTextDom" style="zIndex:-1;position: fixed;top: -100px;width: 1px;height: 1px;"></textarea>
   <script>
+    $.get('/market/fc/roms', function(data) {
+      // 获取游戏列表
+      if (data.errCode === 0) {
+        const gameList = document.getElementById('game-list');
+        data.info.map((romName)=>{
+          if (romName.length > 20) return; // 去掉一些名字太长的游戏
+          const dom = document.createElement('p');
+          dom.onclick = () => {
+            localStorage.romurl = `./rom/${romName}`;localStorage.isNeedAuto = '';window.location.href = '/fc';
+          }
+          dom.innerText = romName.split('.')[0];
+          gameList.appendChild(dom);
+        })
+      }
+    })
     function generateUserkey() {
       let charStr = '23456789ABCDEFGHIJKLMNPQSTUVWXYZ';
       let userkey = '';
