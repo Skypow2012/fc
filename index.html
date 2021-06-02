@@ -402,8 +402,8 @@
     #game-list-box {
       display: none;
       position: absolute;
-      top: calc(50vh - 25vw);
-      right: calc(50vw - 40vw);
+      top: calc(50vh - 27vw);
+      right: calc(50vw - 39vw);
       bottom: 0;
       width: 50vw;
       height: 50vw;
@@ -3235,6 +3235,17 @@
           key: [KEYS[17][0], KEYS[17][1]]
         })
       });
+      $('#btna').bind("touchend mouseup", function (evt) {evt.preventDefault();});
+      $('#btnb').bind("touchend mouseup", function (evt) {evt.preventDefault();});
+      $('#btntop').bind("touchend mouseup", function (evt) {evt.preventDefault();});
+      $('#btnright').bind("touchend mouseup", function (evt) {evt.preventDefault();});
+      $('#btnbottom').bind("touchend mouseup", function (evt) {evt.preventDefault();});
+      $('#btnleft').bind("touchend mouseup", function (evt) {evt.preventDefault();});
+      $('#btn12').bind("touchend mouseup", function (evt) {evt.preventDefault();});
+      $('#btn23').bind("touchend mouseup", function (evt) {evt.preventDefault();});
+      $('#btn34').bind("touchend mouseup", function (evt) {evt.preventDefault();});
+      $('#btn14').bind("touchend mouseup", function (evt) {evt.preventDefault();});
+      
       $('#btnstart').bind("touchstart mousedown", function (evt) {
         evt.preventDefault();
         let startBtn = `<svg t="1599318965085" onclick="startChallenge()" class="rankChallengeBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16010" width="90" height="90">
@@ -3430,6 +3441,9 @@
     }
   </script>
   <script src="/socket.io/socket.io.js"></script>
+  <!-- <script>
+    window.location.href='/life-game/'
+  </script> -->
   <script>
     // 暂时关闭联机功能
     let socket = {
