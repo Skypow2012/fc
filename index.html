@@ -399,18 +399,12 @@
       padding-bottom: 15px;
     }
 
-    #games-list {
-      padding-bottom: 15px;
-    }
-
     #game-list-box {
       display: none;
       position: absolute;
       top: calc(50vh - 25vw);
-      /* right: 0; */
       right: calc(50vw - 40vw);
       bottom: 0;
-      /* left: -140px; */
       width: 50vw;
       height: 50vw;
       overflow: hidden;
@@ -421,18 +415,32 @@
 
     #game-list {
       margin-top: 0;
+      padding-bottom: 15px;
       height: 100%;
       overflow: auto;
       background-color: black;
+      font-size: 0;
+      overflow-x: hidden;
     }
 
+    .game-search,
     #game-list-box p {
       margin: 0;
+      width: 100%;
       height: 3rem;
       font-size: 1.5rem;
       line-height: 3rem;
       color: #ffffff;
       border: 1px solid #ffffff;
+      padding: 0;
+      overflow: hidden;
+      display: inline-block;
+      border-top: 0;
+      background: rgba(0,0,0,0);
+      box-sizing: border-box;
+    }
+    .game-search {
+      border-top: 1px solid #ffffff;
     }
 
     #fps,
@@ -765,7 +773,23 @@
     <div class="toast-confirm" id="toast-confirm">确定</div>
   </div>
   <div class="game-list-box" id="game-list-box">
+    <script>
+      function showSearch() {
+        const searhKey = prompt('请输入需要查询的游戏名:');
+        searchGame(searhKey);
+      }
+      function searchGame(searhKey) {
+        const gameListDom = document.getElementById('game-list');
+        [].map.call(gameListDom.children, (item)=>{
+          if (item.tagName !== 'P') return; // 非游戏选项略过
+          if (!searhKey) return item.style.display = 'inline-block'; // 没有查询时，显示全部
+          if (item.innerText.indexOf(searhKey) > -1) return item.style.display = 'inline-block';
+          else return item.style.display = 'none'; // 隐藏没有查询到的游戏
+        })
+      }
+    </script>
     <div class="game-list" id="game-list">
+      <button onclick="showSearch()" class="game-search">查询</button>
       <p
         onclick="localStorage.romurl = './rom/Chip To Dale No Daisakusen 2 (J).nes';localStorage.isNeedAuto = '';window.location.href = '/fc';">
         松鼠大作战</p>
