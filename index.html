@@ -1612,6 +1612,9 @@
     //     t: 3000
     //   })
     // }, 100000)
+    if (window.isShowRank === undefined) {
+      window.isShowRank = true;
+    }
     function changeShowType() {
       window.isShowRank = !window.isShowRank;
       if (window.isShowRank) {
@@ -1815,8 +1818,8 @@
           }
           // 隐藏活动先
           // 1024活动预热开启
-          // document.getElementById('rankArea').style.display = 'block';
-          document.getElementById('missionArea').style.display = 'block';
+          document.getElementById('rankArea').style.display = 'block';
+          // document.getElementById('missionArea').style.display = 'block';
           document.getElementById('tipsArea').style.display = 'block';
         }
       });
