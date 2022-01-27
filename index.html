@@ -21,6 +21,11 @@
       window.location.href = window.location.href.replace('http:', 'https:')
     }
   </script>
+  <style type="text/css">
+    body {
+      image-rendering: pixelated;
+    }
+  </style>
   <script>
     window.addEventListener("gamepadconnected", function (e) {
       window.gp = navigator.getGamepads()[e.gamepad.index];
