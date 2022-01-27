@@ -2757,9 +2757,9 @@
         // if (localStorage.arr) {
         //   window.arr = JSON.parse(localStorage.arr);
         // }
-        nes.buttonUp = (k0, k1, isNoEmit=true, config = {}) => {
+        nes.buttonUp = (k0, k1, isNoEmit=false, config = {}) => {
           console.log('buttonUp', k0, k1, isNoEmit, config)
-          if (window.isZZDJS && !config.isVedio) {
+          if (window.isZZDJS && !config.isVedio) { // ZZDJS 真正的技术
             // 演示他人视频时，不能操控
             return;
           }
@@ -2795,7 +2795,7 @@
           }
           srcButtonUp(k0, k1);
         }
-        nes.buttonDown = (k0, k1, isNoEmit=true, config = {}) => {
+        nes.buttonDown = (k0, k1, isNoEmit=false, config = {}) => {
           console.log(k0, k1)
           if (window.isZZDJS && !config.isVedio) {
             // 演示他人视频时，不能操控
@@ -2809,7 +2809,7 @@
           if (!startFrame && keyDomDic[k1] == 'btnstart') {
             startFrame = frame;
           }
-          if (k0 == 1) {
+          if (k0 == window.playerId) {
             document.getElementById(keyDomDic[k1]).classList.add('active')
           }
           let id = Math.random().toString().substr(2, 3);
@@ -3183,13 +3183,13 @@
             f: nes.f,
           });
         }
-        // if (window.playerId == 2) {
-        //   document.getElementById('canvas').style.display = 'none';
-        //   document.getElementById('canvasTips').innerHTML = '<span>请看P1的屏幕</span>';
-        // } else {
-        //   document.getElementById('canvasTips').innerText = ''
-        //   document.getElementById('canvas').style.display = 'block';
-        // }
+        if (window.playerId == 2) {
+          document.getElementById('canvas').style.display = 'none';
+          document.getElementById('canvasTips').innerHTML = '<span>请看P1的屏幕</span>';
+        } else {
+          document.getElementById('canvasTips').innerText = ''
+          document.getElementById('canvas').style.display = 'block';
+        }
       });
       $('#changePlayer').bind("touchend mouseup", function (evt) {
         evt.preventDefault();
@@ -3354,21 +3354,21 @@
               window.ts = Date.now();
               window.lastF = frame;
             }
-            if (window.playerId === 1) {
-              let id = Math.random().toString().substr(2, 3);
-              !window.isNoEmit && socket.emit("m", {
-                key: [],
-                type: "up",
-                ts: Date.now(),
-                id,
-                cId: window.cId,
-                uId: localStorage.userid,
-                rom: window.romurl,
-                p: window.playerId,
-                f: nes.f,
-                m: ""
-              });
-            }
+            // if (window.playerId === 1) {
+            //   let id = Math.random().toString().substr(2, 3);
+            //   !window.isNoEmit && socket.emit("m", {
+            //     key: [],
+            //     type: "up",
+            //     ts: Date.now(),
+            //     id,
+            //     cId: window.cId,
+            //     uId: localStorage.userid,
+            //     rom: window.romurl,
+            //     p: window.playerId,
+            //     f: nes.f,
+            //     m: ""
+            //   });
+            // }
           }, 16);
           // function go() {
           //   goF(nes);
@@ -3478,12 +3478,22 @@
     //     });
     //   }
     // }, 16)
+    // setInterval(()=>{
+    //   socket.emit("m", {
+    //     "ts": Date.now()
+    //   })
+    // }, 16)
     socket.on("m", function (obj) {
+      // console.log(obj)
+      // if (obj.ts) {
+      //   console.log(Date.now()-obj.ts)
+      // }
+      // return
       // 暂时关闭联动按钮推送，等后续整理开发
-      return;
-      if (obj.uId == '184') {
-        return;
-      }
+      // return;
+      // if (obj.uId == '184') {
+      //   return;
+      // }
       console.log(obj);
       let key = obj.key;
       let fpsDic = window.fpsDic || {}
@@ -3498,18 +3508,20 @@
       if (obj.cId == window.cId) {
         return;
       }
-      if (obj.hb) {
-        if (obj.p2 && obj.rom == localStorage.romurl) {
-          window.hasP2 = true;
-          return;
-        }
-        if (window.playerId == 2) {
-          window.maxF = obj.f;
-        }
-        return;
-      }
+      // if (obj.hb) {
+      //   if (obj.p2 && obj.rom == localStorage.romurl) {
+      //     window.hasP2 = true;
+      //     return;
+      //   }
+      //   if (window.playerId == 2) {
+      //     window.maxF = obj.f;
+      //   }
+      //   return;
+      // }
       if (window.playerId == 1) {
-        if (key && key[0] == 2 && obj.p == 2 && obj.rom == localStorage.romurl) { // 只有p2的指令才会传进游戏
+        console.log('1234', key, obj.p, obj.rom, key && obj.p == 2 && obj.rom == localStorage.romurl)
+        if (key && obj.p == 2 && obj.rom == localStorage.romurl) { // 只有p2的指令才会传进游戏
+        console.log('234234')
           if (obj.type == 'up') {
             nes.buttonUp(key[0], key[1]);
           } else if (obj.type == 'down') {
@@ -3517,16 +3529,16 @@
           }
         }
       } else {
-        if (obj.p == 1 && obj.rom == localStorage.romurl) {
-          if (key[0] != undefined && key[1] != undefined) {
-            window.arr[obj.f] = window.arr[obj.f] || [];
-            window.arr[obj.f].push([key[0], key[1], obj.type == 'up' ? 'u' : 'd']);
-          }
-          window.maxF = obj.f;
-          while (nes.f < obj.f - 2) {
-            goF(nes); // 追上队友的frameCount
-          }
-        }
+        // if (obj.p == 1 && obj.rom == localStorage.romurl) {
+        //   if (key[0] != undefined && key[1] != undefined) {
+        //     window.arr[obj.f] = window.arr[obj.f] || [];
+        //     window.arr[obj.f].push([key[0], key[1], obj.type == 'up' ? 'u' : 'd']);
+        //   }
+        //   window.maxF = obj.f;
+        //   while (nes.f < obj.f - 2) {
+        //     goF(nes); // 追上队友的frameCount
+        //   }
+        // }
       }
     });
     socket.on("u", function (obj) {
