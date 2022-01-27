@@ -2515,6 +2515,7 @@
 
       function createNes() {
         frame = 0;
+        let isMario = localStorage.romurl == './rom/mario.nes';
         let sTs = Date.now();
         console.log('nes', nes)
         nes = new jsnes.NES({
@@ -2535,26 +2536,26 @@
                   data[j + 2] = (pixel >> 16) & 0xFF;
                   prevBuffer[i] = pixel;
                   c++
-                  transDic[i] = pixel;
+                  if (window.isChallenge && isMario) transDic[i] = pixel;
                 }
               }
               // console.log(c)
               // console.log('transDic', JSON.stringify(transDic).length);
-              let len = Object.keys(transDic).length;
-              if (len) {
-                let ts = new Date().getTime();
-                if (ts - lastTs > 200) {
-                  // for (i = 0; i < 256 * 240; i++) {
-                  //   pixel = buffer[i];
-                  //   if (pixel != sendDic[i]) {
-                  //     sendDic[i] = pixel;
-                  //   }
-                  // }
-                  lastTs = ts;
-                }
-              }
               context.putImageData(imageData, 0, 0);
-              if (window.isChallenge) {
+              if (window.isChallenge && isMario) {
+                let len = Object.keys(transDic).length;
+                if (len) {
+                  let ts = new Date().getTime();
+                  if (ts - lastTs > 200) {
+                    // for (i = 0; i < 256 * 240; i++) {
+                    //   pixel = buffer[i];
+                    //   if (pixel != sendDic[i]) {
+                    //     sendDic[i] = pixel;
+                    //   }
+                    // }
+                    lastTs = ts;
+                  }
+                }
                 if (!isOk) {
                   if (!isDie) {
                     if (startFrame && (frame - startFrame) > 4 * 60) {
