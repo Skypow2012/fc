@@ -2769,7 +2769,7 @@
             arr[frame].push([k0, k1, 'u']);
             localStorage.arr = JSON.stringify(arr);
           }
-          if (k0 == 1) {
+          if (k0 == window.playerId) {
             document.getElementById(keyDomDic[k1]).classList.remove('active')
           }
           let id = Math.random().toString().substr(2, 3);
