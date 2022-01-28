@@ -1975,7 +1975,7 @@
     let startFrame = 0;
 
     function goF(nes) {
-      if (window.pause) {
+      if (window.pause || window.playerId == 2) {
         return;
       }
       nes.f = nes.f || 0
@@ -2768,7 +2768,7 @@
             arr[frame].push([k0, k1, 'u']);
             localStorage.arr = JSON.stringify(arr);
           }
-          if (k0 == 1) {
+          if (k0 == window.playerId) {
             document.getElementById(keyDomDic[k1]).classList.remove('active')
           }
           let id = Math.random().toString().substr(2, 3);
@@ -2809,7 +2809,7 @@
           if (!startFrame && keyDomDic[k1] == 'btnstart') {
             startFrame = frame;
           }
-          if (k0 == 1) {
+          if (k0 == window.playerId) {
             document.getElementById(keyDomDic[k1]).classList.add('active')
           }
           let id = Math.random().toString().substr(2, 3);
@@ -3523,9 +3523,9 @@
         if (key && obj.p == 2 && obj.rom == localStorage.romurl) { // 只有p2的指令才会传进游戏
         console.log('234234')
           if (obj.type == 'up') {
-            nes.buttonUp(key[0], key[1]);
+            nes.buttonUp(key[0], key[1], true);
           } else if (obj.type == 'down') {
-            nes.buttonDown(key[0], key[1]);
+            nes.buttonDown(key[0], key[1], true);
           }
         }
       } else {

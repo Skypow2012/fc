@@ -3523,9 +3523,9 @@
         if (key && obj.p == 2 && obj.rom == localStorage.romurl) { // 只有p2的指令才会传进游戏
         console.log('234234')
           if (obj.type == 'up') {
-            nes.buttonUp(key[0], key[1]);
+            nes.buttonUp(key[0], key[1], true);
           } else if (obj.type == 'down') {
-            nes.buttonDown(key[0], key[1]);
+            nes.buttonDown(key[0], key[1], true);
           }
         }
       } else {
