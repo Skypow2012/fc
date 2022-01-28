@@ -1843,6 +1843,7 @@
       window.frame = 0;
       window.clearInterval(window.nesInterval);
       window.nesInterval = setInterval(function () {
+        if (window.playerId == 2) return; // 玩家2的屏幕不用动
         goF(nes);
         if (frameSpeed == 5) {
           goF(nes);
