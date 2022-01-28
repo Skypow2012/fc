@@ -1843,7 +1843,6 @@
       window.frame = 0;
       window.clearInterval(window.nesInterval);
       window.nesInterval = setInterval(function () {
-        if (window.playerId == 2) return; // 玩家2的屏幕不用动
         goF(nes);
         if (frameSpeed == 5) {
           goF(nes);
@@ -1976,7 +1975,7 @@
     let startFrame = 0;
 
     function goF(nes) {
-      if (window.pause) {
+      if (window.pause || window.playerId == 2) {
         return;
       }
       nes.f = nes.f || 0
